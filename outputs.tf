@@ -8,6 +8,11 @@ output "domain_id" {
   value       = "${aws_elasticsearch_domain.es.domain_id}"
 }
 
+output "domain_name" {
+  description = "Name of the Elasticsearch domain"
+  value       = "${aws_elasticsearch_domain.es.domain_name}"
+}
+
 output "endpoint" {
   description = "DNS endpoint of the Elasticsearch domain"
   value       = "${aws_elasticsearch_domain.es.endpoint}"
