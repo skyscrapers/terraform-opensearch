@@ -1,7 +1,7 @@
 resource "aws_elasticsearch_domain" "es" {
   domain_name           = "${var.project}-${var.environment}-${var.name}"
   access_policies       = "${var.access_policies}"
-  advanced_options      = ["${var.advanced_options}"]
+  advanced_options      = "${var.advanced_options}"
   elasticsearch_version = "${var.version}"
 
   cluster_config {
@@ -78,6 +78,3 @@ resource "aws_s3_bucket" "snapshot" {
       "Project", "${var.project}"))
   }"
 }
-
-# IAM elasticsearch > s3
-# IAM elasticsearch > cwlogs
