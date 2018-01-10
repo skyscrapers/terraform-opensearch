@@ -105,3 +105,7 @@ variable "tags" {
   type        = "map"
   default     = {}
 }
+
+variable "zone_awareness_enabled" {
+  default = true
+}

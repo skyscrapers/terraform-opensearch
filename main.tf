@@ -10,7 +10,7 @@ resource "aws_elasticsearch_domain" "es" {
     dedicated_master_enabled = "${var.dedicated_master_enabled}"
     dedicated_master_count   = "${var.dedicated_master_count}"
     dedicated_master_type    = "${var.dedicated_master_type}"
-    zone_awareness_enabled   = true
+    zone_awareness_enabled   = "${var.zone_awareness_enabled}"
   }
 
   ebs_options {
