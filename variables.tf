@@ -26,12 +26,12 @@ variable "advanced_options" {
   default     = []
 }
 
-variable "log_type" {
-  description = "String(optional, \"INDEX_SLOW_LOGS\"): A type of Elasticsearch log. Valid values: INDEX_SLOW_LOGS, SEARCH_SLOW_LOGS"
-  default     = "INDEX_SLOW_LOGS"
+variable "logging_enabled" {
+  description = "Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch"
+  default     = false
 }
 
-variable "log_retention" {
+variable "logging_retention" {
   description = "Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch"
   default     = 30
 }

@@ -21,9 +21,15 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   log_publishing_options {
-    enabled                  = true
-    log_type                 = "${var.log_type}"
-    cloudwatch_log_group_arn = "${aws_cloudwatch_log_group.cwl.arn}"
+    enabled                  = "${var.logging_enabled}"
+    log_type                 = "INDEX_SLOW_LOGS"
+    cloudwatch_log_group_arn = "${aws_cloudwatch_log_group.cwl_index.arn}"
+  }
+
+  log_publishing_options {
+    enabled                  = "${var.logging_enabled}"
+    log_type                 = "SEARCH_SLOW_LOGS"
+    cloudwatch_log_group_arn = "${aws_cloudwatch_log_group.cwl_search.arn}"
   }
 
   snapshot_options {
@@ -48,13 +54,22 @@ resource "aws_elasticsearch_domain" "es" {
   }"
 }
 
-resource "aws_cloudwatch_log_group" "cwl" {
-  name              = "${var.project}-${var.environment}-${var.name}"
-  retention_in_days = "${var.log_retention}"
+resource "aws_cloudwatch_log_group" "cwl_index" {
+  name              = "${var.project}/${var.environment}/${var.name}/index_slow_logs"
+  retention_in_days = "${var.logging_retention}"
 
   tags = "${merge("${var.tags}",
-    map("Name", "${var.project}-${var.environment}-${var.name}",
-      "Environment", "${var.environment}",
+    map("Environment", "${var.environment}",
+      "Project", "${var.project}"))
+  }"
+}
+
+resource "aws_cloudwatch_log_group" "cwl_search" {
+  name              = "${var.project}/${var.environment}/${var.name}/search_slow_logs"
+  retention_in_days = "${var.logging_retention}"
+
+  tags = "${merge("${var.tags}",
+    map("Environment", "${var.environment}",
       "Project", "${var.project}"))
   }"
 }
