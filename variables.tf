@@ -22,8 +22,8 @@ variable "access_policies" {
 
 variable "advanced_options" {
   description = "List(optional, []): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs"
-  type        = "list"
-  default     = []
+  type        = "map"
+  default     = {}
 }
 
 variable "logging_enabled" {

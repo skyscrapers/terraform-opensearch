@@ -1,6 +1,6 @@
 resource "aws_elasticsearch_domain" "es" {
   domain_name           = "${var.project}-${var.environment}-${var.name}"
-  access_policies       = "${var.access_policies}"
+  # access_policies       = "${var.access_policies}"
   advanced_options      = "${var.advanced_options}"
   elasticsearch_version = "${var.version}"
 
@@ -8,8 +8,8 @@ resource "aws_elasticsearch_domain" "es" {
     instance_count           = "${var.instance_count}"
     instance_type            = "${var.instance_type}"
     dedicated_master_enabled = "${var.dedicated_master_enabled}"
-    dedicated_master_count   = "${var.dedicated_master_count}"
-    dedicated_master_type    = "${var.dedicated_master_type}"
+    dedicated_master_count   = "${var.dedicated_master_enabled ? var.dedicated_master_count : 0}"
+    dedicated_master_type    = "${var.dedicated_master_enabled ? var.dedicated_master_type : ""}"
     zone_awareness_enabled   = "${var.zone_awareness_enabled}"
   }
 
