@@ -1,6 +1,6 @@
 resource "aws_elasticsearch_domain" "es" {
   domain_name           = "${var.project}-${var.environment}-${var.name}"
-  # access_policies       = "${var.access_policies}"
+  access_policies       = "${var.access_policies}"
   advanced_options      = "${var.advanced_options}"
   elasticsearch_version = "${var.version}"
 

@@ -10,7 +10,6 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`environment`]: String(required): Environment name
 * [`name`]: String(optional, \"es\"): Name to use for the Elasticsearch domain
 * [`version`]: String(optional, \"5.5\": Version of the Elasticsearch domain
-* [`access_policies`]: String(optional, \"\"): IAM policy document specifying the access policies for Elasticsearch
 * [`advanced_options`]: List(optional, []): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs
 * [`logging_enabled`]: Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch
 * [`logging_retention`]: Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch
@@ -54,12 +53,31 @@ module "elasticsearch" {
   vpc_id                   = "${data.terraform_remote_state.static.vpc_id}"
   subnet_ids               = ["${slice(data.terraform_remote_state.static.db_subnets,0,var.es_instance_count)}"]
   dedicated_master_enabled = false
-  access_policies          = "${data.aws_iam_policy_document.es_policy.json}"
 
   advanced_options {
     "indices.fielddata.cache.size"           = ""
     "rest.action.multi.allow_explicit_index" = "true"
   }
+}
+
+resource "aws_elasticsearch_domain_policy" "es_policy" {
+  domain_name = "${module.elasticsearch.domain_name}"
+
+  access_policies = <<POLICY
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "es:*",
+            "Principal": [
+              "AWS": "${aws_iam_user.es_user.arn}"
+            ],
+            "Effect": "Allow",
+            "Resource": "${module.elasticsearch.arn}/*"
+        }
+    ]
+}
+POLICY
 }
 ```
 

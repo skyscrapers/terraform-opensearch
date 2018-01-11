@@ -15,11 +15,6 @@ variable "version" {
   default     = "5.5"
 }
 
-variable "access_policies" {
-  description = "String(optional, \"\"): IAM policy document specifying the access policies for Elasticsearch"
-  default     = ""
-}
-
 variable "advanced_options" {
   description = "List(optional, []): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs"
   type        = "map"
