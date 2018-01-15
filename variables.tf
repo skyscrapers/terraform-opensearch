@@ -16,7 +16,7 @@ variable "version" {
 }
 
 variable "advanced_options" {
-  description = "List(optional, []): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs"
+  description = "Map(optional, {}): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs"
   type        = "map"
   default     = {}
 }
@@ -71,12 +71,14 @@ variable "volume_iops" {
 }
 
 variable "vpc_id" {
-  description = "String(required): VPC ID where to deploy the Elasticsearch domain"
+  description = "String(optional): VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain"
+  default     = ""
 }
 
 variable "subnet_ids" {
-  description = "List(required): Subnet IDs for the Elasticsearch domain endpoints to be created in"
+  description = "List(required if vpc_id is specified): Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in"
   type        = "list"
+  default     = []
 }
 
 variable "security_group_ids" {

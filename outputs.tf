@@ -1,26 +1,26 @@
 output "arn" {
   description = "ARN of the Elasticsearch domain"
-  value       = "${aws_elasticsearch_domain.es.arn}"
+  value       = "${element(concat(aws_elasticsearch_domain.es.*.arn, aws_elasticsearch_domain.public_es.*.arn), 0)}"
 }
 
 output "domain_id" {
   description = "ID of the Elasticsearch domain"
-  value       = "${aws_elasticsearch_domain.es.domain_id}"
+  value       = "${element(concat(aws_elasticsearch_domain.es.*.domain_id, aws_elasticsearch_domain.public_es.*.domain_id), 0)}"
 }
 
 output "domain_name" {
   description = "Name of the Elasticsearch domain"
-  value       = "${aws_elasticsearch_domain.es.domain_name}"
+  value       = "${element(concat(aws_elasticsearch_domain.es.*.domain_name, aws_elasticsearch_domain.public_es.*.domain_name), 0)}"
 }
 
 output "endpoint" {
   description = "DNS endpoint of the Elasticsearch domain"
-  value       = "${aws_elasticsearch_domain.es.endpoint}"
+  value       = "${element(concat(aws_elasticsearch_domain.es.*.endpoint, aws_elasticsearch_domain.public_es.*.endpoint), 0)}"
 }
 
 output "sg_id" {
   description = "ID of the Elasticsearch security group"
-  value       = "${aws_security_group.sg.id}"
+  value       = "${aws_security_group.sg.*.id}"
 }
 
 output "role_arn" {

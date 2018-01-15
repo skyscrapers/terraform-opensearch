@@ -10,7 +10,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`environment`]: String(required): Environment name
 * [`name`]: String(optional, \"es\"): Name to use for the Elasticsearch domain
 * [`version`]: String(optional, \"5.5\": Version of the Elasticsearch domain
-* [`advanced_options`]: List(optional, []): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs
+* [`advanced_options`]: Map(optional, {}): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs
 * [`logging_enabled`]: Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch
 * [`logging_retention`]: Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch
 * [`instance_count`]: Int(optional, 1): Size of the Elasticsearch domain
@@ -21,12 +21,14 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`volume_type`]: String(optional, \"gp2\"): EBS volume type to use for the Elasticsearch domain
 * [`volume_size`]: Int(required): EBS volume size (in GB) to use for the Elasticsearch domain
 * [`volume_iops`]: Int(required if volume_type=\"io1\"): Amount of provisioned IOPS for the EBS volume
-* [`vpc_id`]: String(required): VPC ID where to deploy the Elasticsearch domain
-* [`subnet_ids`]: List(required): Subnet IDs for the Elasticsearch domain endpoints to be created in
+* [`vpc_id`]: String(required*): VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain
+* [`subnet_ids`]: List(required*): Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in"
 * [`security_group_ids`]: List(optional): Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs
 * [`snapshot_start_hour`]: Int(optional, 3): Hour during which an automated daily snapshot is taken of the Elasticsearch indices
 * [`snapshot_bucket_enabled`]: Bool(optional, false): Whether to create a bucket for custom Elasticsearch backups (other than the default daily one)
 * [`tags`]: Map(optional, {}): Optional tags
+
+**(*)** If the `vpc_id` and `subnet_ids` are not specified, this module will create a public Elasticsearch domain. 
 
 ### Outputs
 
