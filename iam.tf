@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "cwl_policy" {
 }
 
 data "aws_iam_policy_document" "snapshot_policy" {
-  count  = "${var.snapshot_bucket_enabled ? 1 : 0}"
+  count = "${var.snapshot_bucket_enabled ? 1 : 0}"
 
   statement {
     actions = [
