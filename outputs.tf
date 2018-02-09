@@ -20,7 +20,7 @@ output "endpoint" {
 
 output "sg_id" {
   description = "ID of the Elasticsearch security group"
-  value       = "${format("%s", aws_security_group.sg.*.id)}"
+  value       = "${join("", aws_security_group.sg.*.id)}"
 }
 
 output "role_arn" {
