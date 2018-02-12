@@ -10,6 +10,9 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`environment`]: String(required): Environment name
 * [`name`]: String(optional, \"es\"): Name to use for the Elasticsearch domain
 * [`version`]: String(optional, \"6.0\": Version of the Elasticsearch domain
+* [`options_rest_action_multi_allow_explicit_index`]: Bool(optional, true): Sets the `rest.action.multi.allow_explicit_index` advanced option. If you want to configure access to domain sub-resources, such as specific indices, you must set this property to "false". Setting this property to "false" prevents users from bypassing access control for sub-resources
+* [`options_indices_fielddata_cache_size`]: String(optional, \"unbounded\"): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata
+* [`options_indices_query_bool_max_clause_count`]: Int(optional, 1024): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query
 * [`logging_enabled`]: Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch
 * [`logging_retention`]: Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch
 * [`instance_count`]: Int(optional, 1): Size of the Elasticsearch domain

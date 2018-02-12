@@ -15,6 +15,21 @@ variable "version" {
   default     = "6.0"
 }
 
+variable "options_rest_action_multi_allow_explicit_index" {
+  description = "Bool(optional, true): Sets the `rest.action.multi.allow_explicit_index` advanced option. If you want to configure access to domain sub-resources, such as specific indices, you must set this property to `false`. Setting this property to `false` prevents users from bypassing access control for sub-resources"
+  default     = true
+}
+
+variable "options_indices_fielddata_cache_size" {
+  description = "String(optional, \"unbounded\"): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata"
+  default     = "unbounded"
+}
+
+variable "options_indices_query_bool_max_clause_count" {
+  description = "Int(optional, 1024): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query"
+  default     = 1024
+}
+
 variable "logging_enabled" {
   description = "Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch"
   default     = false
