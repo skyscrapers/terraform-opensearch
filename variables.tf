@@ -11,14 +11,8 @@ variable "name" {
 }
 
 variable "version" {
-  description = "String(optional, \"5.5\": Version of the Elasticsearch domain"
-  default     = "5.5"
-}
-
-variable "advanced_options" {
-  description = "Map(optional, {}): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs"
-  type        = "map"
-  default     = {}
+  description = "String(optional, \"6.0\": Version of the Elasticsearch domain"
+  default     = "6.0"
 }
 
 variable "logging_enabled" {

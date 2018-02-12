@@ -9,8 +9,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`project`]: String(required): Project name
 * [`environment`]: String(required): Environment name
 * [`name`]: String(optional, \"es\"): Name to use for the Elasticsearch domain
-* [`version`]: String(optional, \"5.5\": Version of the Elasticsearch domain
-* [`advanced_options`]: Map(optional, {}): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs
+* [`version`]: String(optional, \"6.0\": Version of the Elasticsearch domain
 * [`logging_enabled`]: Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch
 * [`logging_retention`]: Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch
 * [`instance_count`]: Int(optional, 1): Size of the Elasticsearch domain
