@@ -8,11 +8,11 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 
 * [`project`]: String(required): Project name
 * [`environment`]: String(required): Environment name
-* [`name`]: String(optional, \"es\"): Name to use for the Elasticsearch domain
-* [`elasticsearch_version`]: String(optional, \"6.0\": Version of the Elasticsearch domain
-* [`options_rest_action_multi_allow_explicit_index`]: Bool(optional, true): Sets the `rest.action.multi.allow_explicit_index` advanced option. If you want to configure access to domain sub-resources, such as specific indices, you must set this property to "false". Setting this property to "false" prevents users from bypassing access control for sub-resources
-* [`options_indices_fielddata_cache_size`]: String(optional, \"unbounded\"): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata
-* [`options_indices_query_bool_max_clause_count`]: Int(optional, 1024): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query
+* [`name`]: String(optional, "es"): Name to use for the Elasticsearch domain
+* [`elasticsearch_version`]: String(optional, "6.0": Version of the Elasticsearch domain
+* [`options_rest_action_multi_allow_explicit_index`]: String(optional, "true"): Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to "false". Setting this property to "false" prevents users from bypassing access control for sub-resources
+* [`options_indices_fielddata_cache_size`]: String(optional, ""): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata
+* [`options_indices_query_bool_max_clause_count`]: String(optional, "1024"): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query
 * [`logging_enabled`]: Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch
 * [`logging_retention`]: Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch
 * [`instance_count`]: Int(optional, 1): Size of the Elasticsearch domain
@@ -20,9 +20,9 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`dedicated_master_enabled`]: Bool(optional, false): Whether dedicated master nodes are enabled for the domain
 * [`dedicated_master_type`]: String(optional, t2.small.elasticsearch): Instance type of the dedicated master nodes in the domain
 * [`dedicated_master_count`]: Int(optional, 1): Number of dedicated master nodes in the domain
-* [`volume_type`]: String(optional, \"gp2\"): EBS volume type to use for the Elasticsearch domain
+* [`volume_type`]: String(optional, "gp2"): EBS volume type to use for the Elasticsearch domain
 * [`volume_size`]: Int(required): EBS volume size (in GB) to use for the Elasticsearch domain
-* [`volume_iops`]: Int(required if volume_type=\"io1\"): Amount of provisioned IOPS for the EBS volume
+* [`volume_iops`]: Int(required if volume_type="io1"): Amount of provisioned IOPS for the EBS volume
 * [`vpc_id`]: String(required*): VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain
 * [`subnet_ids`]: List(required*): Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in"
 * [`security_group_ids`]: List(optional): Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs
@@ -30,7 +30,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`snapshot_bucket_enabled`]: Bool(optional, false): Whether to create a bucket for custom Elasticsearch backups (other than the default daily one)
 * [`tags`]: Map(optional, {}): Optional tags
 
-**(*)** If the `vpc_id` and `subnet_ids` are not specified, this module will create a public Elasticsearch domain. 
+**(*)** If the `vpc_id` and `subnet_ids` are not specified, this module will create a public Elasticsearch domain.
 
 ### Outputs
 
@@ -57,11 +57,6 @@ module "elasticsearch" {
   vpc_id                   = "${data.terraform_remote_state.static.vpc_id}"
   subnet_ids               = ["${slice(data.terraform_remote_state.static.db_subnets,0,var.es_instance_count)}"]
   dedicated_master_enabled = false
-
-  advanced_options {
-    "indices.fielddata.cache.size"           = ""
-    "rest.action.multi.allow_explicit_index" = "true"
-  }
 }
 
 resource "aws_elasticsearch_domain_policy" "es_policy" {
