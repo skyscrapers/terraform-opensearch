@@ -10,15 +10,27 @@ variable "name" {
   description = "String(optional, \"es\"): Name to use for the Elasticsearch domain"
 }
 
-variable "version" {
-  description = "String(optional, \"5.5\": Version of the Elasticsearch domain"
-  default     = "5.5"
+variable "elasticsearch_version" {
+  description = "String(optional, \"6.0\": Version of the Elasticsearch domain"
+  default     = "6.0"
 }
 
-variable "advanced_options" {
-  description = "Map(optional, {}): An Elasticsearch advanced_options block, which consists of Elasticsearch configuration options as key-value pairs"
-  type        = "map"
-  default     = {}
+variable "options_rest_action_multi_allow_explicit_index" {
+  description = "Bool(optional, \"true\"): Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to \"false\". Setting this property to \"false\" prevents users from bypassing access control for sub-resources"
+  type        = "string"
+  default     = "true"
+}
+
+variable "options_indices_fielddata_cache_size" {
+  description = "String(optional, \"\"): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata"
+  type        = "string"
+  default     = ""
+}
+
+variable "options_indices_query_bool_max_clause_count" {
+  description = "String(optional, \"1024\"): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query"
+  type        = "string"
+  default     = "1024"
 }
 
 variable "logging_enabled" {

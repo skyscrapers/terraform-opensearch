@@ -36,12 +36,17 @@ locals {
 resource "aws_elasticsearch_domain" "es" {
   count                 = "${local.vpc_enabled ? 1 : 0}"
   domain_name           = "${var.project}-${var.environment}-${var.name}"
-  elasticsearch_version = "${var.version}"
-  advanced_options      = "${var.advanced_options}"
+  elasticsearch_version = "${var.elasticsearch_version}"
   cluster_config        = ["${local.cluster_config}"]
   ebs_options           = ["${local.ebs_options}"]
   snapshot_options      = ["${local.snapshot_options}"]
   tags                  = "${local.tags}"
+
+  advanced_options {
+    "rest.action.multi.allow_explicit_index" = "${var.options_rest_action_multi_allow_explicit_index}"
+    "indices.fielddata.cache.size"           = "${var.options_indices_fielddata_cache_size}"
+    "indices.query.bool.max_clause_count"    = "${var.options_indices_query_bool_max_clause_count}"
+  }
 
   log_publishing_options {
     enabled                  = "${var.logging_enabled}"
@@ -64,12 +69,17 @@ resource "aws_elasticsearch_domain" "es" {
 resource "aws_elasticsearch_domain" "public_es" {
   count                 = "${local.vpc_enabled ? 0 : 1}"
   domain_name           = "${var.project}-${var.environment}-${var.name}"
-  elasticsearch_version = "${var.version}"
-  advanced_options      = "${var.advanced_options}"
+  elasticsearch_version = "${var.elasticsearch_version}"
   cluster_config        = ["${local.cluster_config}"]
   ebs_options           = ["${local.ebs_options}"]
   snapshot_options      = ["${local.snapshot_options}"]
   tags                  = "${local.tags}"
+
+  advanced_options {
+    "rest.action.multi.allow_explicit_index" = "${var.options_rest_action_multi_allow_explicit_index}"
+    "indices.fielddata.cache.size"           = "${var.options_indices_fielddata_cache_size}"
+    "indices.query.bool.max_clause_count"    = "${var.options_indices_query_bool_max_clause_count}"
+  }
 
   log_publishing_options {
     enabled                  = "${var.logging_enabled}"
