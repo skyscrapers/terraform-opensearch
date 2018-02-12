@@ -10,7 +10,7 @@ variable "name" {
   description = "String(optional, \"es\"): Name to use for the Elasticsearch domain"
 }
 
-variable "version" {
+variable "elasticsearch_version" {
   description = "String(optional, \"6.0\": Version of the Elasticsearch domain"
   default     = "6.0"
 }

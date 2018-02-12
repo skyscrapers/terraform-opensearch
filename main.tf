@@ -36,7 +36,7 @@ locals {
 resource "aws_elasticsearch_domain" "es" {
   count                 = "${local.vpc_enabled ? 1 : 0}"
   domain_name           = "${var.project}-${var.environment}-${var.name}"
-  elasticsearch_version = "${var.version}"
+  elasticsearch_version = "${var.elasticsearch_version}"
   cluster_config        = ["${local.cluster_config}"]
   ebs_options           = ["${local.ebs_options}"]
   snapshot_options      = ["${local.snapshot_options}"]
@@ -69,7 +69,7 @@ resource "aws_elasticsearch_domain" "es" {
 resource "aws_elasticsearch_domain" "public_es" {
   count                 = "${local.vpc_enabled ? 0 : 1}"
   domain_name           = "${var.project}-${var.environment}-${var.name}"
-  elasticsearch_version = "${var.version}"
+  elasticsearch_version = "${var.elasticsearch_version}"
   cluster_config        = ["${local.cluster_config}"]
   ebs_options           = ["${local.ebs_options}"]
   snapshot_options      = ["${local.snapshot_options}"]
