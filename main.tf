@@ -18,7 +18,7 @@ locals {
     dedicated_master_enabled = "${var.dedicated_master_enabled}"
     dedicated_master_count   = "${var.dedicated_master_enabled ? var.dedicated_master_count : 0}"
     dedicated_master_type    = "${var.dedicated_master_enabled ? var.dedicated_master_type : ""}"
-    zone_awareness_enabled   = "${var.instance_count > 1 ? true : false}"
+    zone_awareness_enabled   = "${var.zone_awareness_enabled}"
   }
 
   ebs_options = {

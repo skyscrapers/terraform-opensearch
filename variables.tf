@@ -58,6 +58,11 @@ variable "dedicated_master_enabled" {
   default     = false
 }
 
+variable "zone_awareness_enabled" {
+  description = "Bool(optional, false): Whether to enable zone_awareness or not"
+  default     = false
+}
+
 variable "dedicated_master_type" {
   description = "String(optional, t2.small.elasticsearch): Instance type of the dedicated master nodes in the domain"
   default     = "t2.small.elasticsearch"
