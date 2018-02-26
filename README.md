@@ -18,6 +18,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`instance_count`]: Int(optional, 1): Size of the Elasticsearch domain
 * [`instance_type`]: String(optional, t2.small.elasticsearch): Instance type to use for the Elasticsearch domain
 * [`dedicated_master_enabled`]: Bool(optional, false): Whether dedicated master nodes are enabled for the domain
+* [`zone_awareness_enabled`]: Bool(optional, false): Whether to enable zone_awareness or not
 * [`dedicated_master_type`]: String(optional, t2.small.elasticsearch): Instance type of the dedicated master nodes in the domain
 * [`dedicated_master_count`]: Int(optional, 1): Number of dedicated master nodes in the domain
 * [`volume_type`]: String(optional, "gp2"): EBS volume type to use for the Elasticsearch domain
