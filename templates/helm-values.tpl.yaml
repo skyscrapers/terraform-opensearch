@@ -1,0 +1,8 @@
+## Prometheus MatchLabel selectors
+prometheus:
+  labels:
+    ${prometheus_labels}
+
+elasticsearch-exporter:
+  es:
+    uri: ${elasticsearch_endpoint}

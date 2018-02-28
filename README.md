@@ -30,6 +30,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`snapshot_start_hour`]: Int(optional, 3): Hour during which an automated daily snapshot is taken of the Elasticsearch indices
 * [`snapshot_bucket_enabled`]: Bool(optional, false): Whether to create a bucket for custom Elasticsearch backups (other than the default daily one)
 * [`tags`]: Map(optional, {}): Optional tags
+* [`prometheus_labels`]: Map(optional, {}): Prometheus MatchLabel labels for generating the elasticsearch-monitoring Helm chart. When empty, no values file is generated
 
 **(*)** If the `vpc_id` and `subnet_ids` are not specified, this module will create a public Elasticsearch domain.
 
@@ -90,3 +91,7 @@ It's possible to create a custom backup schedule by using the normal Elasticsear
 ## Logging
 
 This module by default creates Cloudwatch Log Groups & IAM permissions for ElasticSearch slow logging, but we don't enable these logs by default. You can control logging behavior via the `logging_enabled` and `logging_retention` parameters. When enabling this, make sure you also enable this on Elasticsearch side, following the [AWS documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-slow-logs).
+
+## Monitoring
+
+This module generates a Helm values file which can be used for the [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart.

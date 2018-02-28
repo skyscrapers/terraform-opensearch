@@ -119,3 +119,8 @@ variable "tags" {
   type        = "map"
   default     = {}
 }
+
+variable "prometheus_labels" {
+  description = "Map(optional, {}): Prometheus MatchLabel labels for generating the elasticsearch-monitoring Helm chart. When empty, no values file is generated"
+  default = {}
+}
