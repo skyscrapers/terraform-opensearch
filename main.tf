@@ -48,6 +48,10 @@ resource "aws_elasticsearch_domain" "es" {
     "indices.query.bool.max_clause_count"    = "${var.options_indices_query_bool_max_clause_count}"
   }
 
+  encrypt_at_rest {
+    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.ebs_encryption_list, var.instance_type)}"
+  }
+
   log_publishing_options {
     enabled                  = "${var.logging_enabled}"
     log_type                 = "INDEX_SLOW_LOGS"
@@ -79,6 +83,10 @@ resource "aws_elasticsearch_domain" "public_es" {
     "rest.action.multi.allow_explicit_index" = "${var.options_rest_action_multi_allow_explicit_index}"
     "indices.fielddata.cache.size"           = "${var.options_indices_fielddata_cache_size}"
     "indices.query.bool.max_clause_count"    = "${var.options_indices_query_bool_max_clause_count}"
+  }
+
+  encrypt_at_rest {
+    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.ebs_encryption_list, var.instance_type)}"
   }
 
   log_publishing_options {

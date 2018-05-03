@@ -124,3 +124,8 @@ variable "prometheus_labels" {
   description = "Map(optional, {}): Prometheus MatchLabel labels for generating the elasticsearch-monitoring Helm chart. When empty, no values file is generated"
   default = {}
 }
+
+variable "disable_encrypt_at_rest" {
+  description = "Bool(optional, false): Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. You can set this to `true` if you want to scale up the instance_type on an existing Amazon ES domain with encryption disabled."
+  default     = false
+}
