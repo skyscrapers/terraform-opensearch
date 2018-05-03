@@ -124,3 +124,8 @@ variable "prometheus_labels" {
   description = "Map(optional, {}): Prometheus MatchLabel labels for generating the elasticsearch-monitoring Helm chart. When empty, no values file is generated"
   default = {}
 }
+
+variable "disable_encrypt_at_rest" {
+  description = "Bool(optional, false): Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster!"
+  default     = false
+}

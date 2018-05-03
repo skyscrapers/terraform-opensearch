@@ -31,6 +31,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`snapshot_bucket_enabled`]: Bool(optional, false): Whether to create a bucket for custom Elasticsearch backups (other than the default daily one)
 * [`tags`]: Map(optional, {}): Optional tags
 * [`prometheus_labels`]: Map(optional, {}): Prometheus MatchLabel labels for generating the elasticsearch-monitoring Helm chart. When empty, no values file is generated
+* [`disable_encrypt_at_rest`]: Bool(optional, false): Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster!
 
 **(*)** If the `vpc_id` and `subnet_ids` are not specified, this module will create a public Elasticsearch domain.
 
@@ -48,7 +49,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 
 ```terraform
 module "elasticsearch" {
-  source                   = "github.com/skyscrapers/terraform-awselasticsearch?ref=0.1"
+  source                   = "github.com/skyscrapers/terraform-awselasticsearch?ref=2.0"
   name                     = "es"
   project                  = "${var.project}"
   environment              = "${terraform.workspace}"
