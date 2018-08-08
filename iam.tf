@@ -73,3 +73,53 @@ resource "aws_iam_role_policy_attachment" "snapshot_policy_attachment" {
   role       = "${aws_iam_role.role.id}"
   policy_arn = "${aws_iam_policy.snapshot_policy.arn}"
 }
+
+## The following role can be used for the prometheus-cloudwatch-exporter
+
+data "aws_iam_policy_document" "cloudwatch_exporter_assume" {
+  count    = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
+
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["${var.cloudwatch_exporter_allowed_assume_role}"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "cloudwatch_exporter" {
+  count    = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:ListMetrics",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role" "cloudwatch_exporter" {
+  count              = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
+  name               = "cloudwatch_es_${var.project}_${var.environment}"
+  path               = "${var.cloudwatch_exporter_role_path}"
+  assume_role_policy = "${data.aws_iam_policy_document.cloudwatch_exporter_assume.json}"
+}
+
+resource "aws_iam_policy" "cloudwatch_exporter" {
+  count  = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
+  name   = "cloudwatch_es_${var.project}_${var.environment}"
+  policy = "${data.aws_iam_policy_document.cloudwatch_exporter.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_exporter" {
+  count      = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
+  role       = "${aws_iam_role.cloudwatch_exporter.name}"
+  policy_arn = "${aws_iam_policy.cloudwatch_exporter.arn}"
+}

@@ -3,6 +3,13 @@ prometheus:
   labels:
     ${prometheus_labels}
 
+amazonService:
+  enabled: true
+
 elasticsearch-exporter:
   es:
     uri: ${elasticsearch_endpoint}
+
+prometheus-cloudwatch-exporter:
+  aws:
+    role: "${cloudwatch_exporter_role}"
