@@ -112,15 +112,14 @@ resource "aws_iam_role" "cloudwatch_exporter" {
   assume_role_policy = "${data.aws_iam_policy_document.cloudwatch_exporter_assume.json}"
 }
 
-resource "aws_iam_policy_attachment" "cloudwatch_exporter" {
-  count      = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
-  name       = "cloudwatch_es_${var.project}_${var.environment}"
-  roles      = ["${aws_iam_role.cloudwatch_exporter.name}"]
-  policy_arn = "${aws_iam_policy.cloudwatch_exporter.arn}"
-}
-
 resource "aws_iam_policy" "cloudwatch_exporter" {
   count  = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
   name   = "cloudwatch_es_${var.project}_${var.environment}"
   policy = "${data.aws_iam_policy_document.cloudwatch_exporter.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_exporter" {
+  count      = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
+  role       = "${aws_iam_role.cloudwatch_exporter.name}"
+  policy_arn = "${aws_iam_policy.cloudwatch_exporter.arn}"
 }
