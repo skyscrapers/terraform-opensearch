@@ -7,8 +7,9 @@ data "template_file" "helm_values" {
   template = "${file("${path.module}/templates/helm-values.tpl.yaml")}"
 
   vars {
-    elasticsearch_endpoint = "${local.elasticsearch_endpoint}"
-    prometheus_labels      = "${indent(4, join("\n", data.template_file.prometheus_kv_mapping.*.rendered))}"
+    elasticsearch_endpoint   = "${local.elasticsearch_endpoint}"
+    prometheus_labels        = "${indent(4, join("\n", data.template_file.prometheus_kv_mapping.*.rendered))}"
+    cloudwatch_exporter_role = "${aws_iam_role.cloudwatch_exporter.arn}"
   }
 }
 
