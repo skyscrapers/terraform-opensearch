@@ -3,7 +3,8 @@ prometheus:
   labels:
     ${prometheus_labels}
 
-amazonService: true
+amazonService:
+  enabled: true
 
 elasticsearch-exporter:
   es:
