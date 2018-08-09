@@ -13,3 +13,14 @@ elasticsearch-exporter:
 prometheus-cloudwatch-exporter:
   aws:
     role: "${cloudwatch_exporter_role}"
+  config: |-
+    region: ${region}
+    period_seconds: 60
+    set_timestamp: false
+    metrics:
+    - aws_namespace: AWS/ES
+      aws_metric_name: FreeStorageSpace
+      aws_dimensions: [ClientId, DomainName]
+      aws_dimension_select:
+        DomainName: [${elasticsearch_domain}]
+      aws_statistics: [Minimum, Maximum, Average, Sum]
