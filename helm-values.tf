@@ -2,6 +2,8 @@ locals {
   elasticsearch_endpoint = "https://${element(concat(aws_elasticsearch_domain.es.*.endpoint, aws_elasticsearch_domain.public_es.*.endpoint), 0)}"
 }
 
+data "aws_region" "current" {}
+
 data "template_file" "helm_values" {
   count    = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
   template = "${file("${path.module}/templates/helm-values.tpl.yaml")}"
@@ -10,6 +12,8 @@ data "template_file" "helm_values" {
     elasticsearch_endpoint   = "${local.elasticsearch_endpoint}"
     prometheus_labels        = "${indent(4, join("\n", data.template_file.prometheus_kv_mapping.*.rendered))}"
     cloudwatch_exporter_role = "${aws_iam_role.cloudwatch_exporter.arn}"
+    region                   = "${data.aws_region.current.name}"
+    elasticsearch_domain     = "${element(concat(aws_elasticsearch_domain.es.*.domain_name, aws_elasticsearch_domain.public_es.*.domain_name), 0)}"
   }
 }
 
