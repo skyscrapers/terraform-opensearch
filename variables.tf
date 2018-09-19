@@ -11,8 +11,8 @@ variable "name" {
 }
 
 variable "elasticsearch_version" {
-  description = "String(optional, \"6.0\": Version of the Elasticsearch domain"
-  default     = "6.0"
+  description = "String(optional, \"6.3\": Version of the Elasticsearch domain"
+  default     = "6.3"
 }
 
 variable "options_rest_action_multi_allow_explicit_index" {
