@@ -49,7 +49,7 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   encrypt_at_rest {
-    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.ebs_encryption_list, var.instance_type)}"
+    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.encryption_list, var.instance_type)}"
   }
 
   log_publishing_options {
@@ -86,7 +86,7 @@ resource "aws_elasticsearch_domain" "public_es" {
   }
 
   encrypt_at_rest {
-    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.ebs_encryption_list, var.instance_type)}"
+    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.encryption_list, var.instance_type)}"
   }
 
   log_publishing_options {
