@@ -21,7 +21,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`zone_awareness_enabled`]: Bool(optional, false): Whether to enable zone_awareness or not
 * [`dedicated_master_type`]: String(optional, t2.small.elasticsearch): Instance type of the dedicated master nodes in the domain
 * [`dedicated_master_count`]: Int(optional, 1): Number of dedicated master nodes in the domain
-* [`volume_type`]: String(optional, "gp2"): EBS volume type to use for the Elasticsearch domain
+* [`volume_type`]: String(optional, "gp2"): EBS volume type to use for the Elasticsearch domain. If you use an instance type which supports ephemeral storage, these options will be ignored.
 * [`volume_size`]: Int(required): EBS volume size (in GB) to use for the Elasticsearch domain
 * [`volume_iops`]: Int(required if volume_type="io1"): Amount of provisioned IOPS for the EBS volume
 * [`vpc_id`]: String(required*): VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain
