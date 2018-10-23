@@ -1,6 +1,6 @@
 # List all instances which support encryption at rest
 # https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/aes-supported-instance-types.html
-variable "ebs_encryption_list" {
+variable "encryption_list" {
   type = "list"
 
   default = [
@@ -22,5 +22,11 @@ variable "ebs_encryption_list" {
     "r4.16xlarge.elasticsearch",
     "i2.xlarge.elasticsearch",
     "i2.2xlarge.elasticsearch",
+    "i3.large.elasticsearch",
+    "i3.xlarge.elasticsearch",
+    "i3.2xlarge.elasticsearch",
+    "i3.4xlarge.elasticsearch",
+    "i3.8xlarge.elasticsearch",
+    "i3.16xlarge.elasticsearch",
   ]
 }

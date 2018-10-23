@@ -22,9 +22,9 @@ locals {
   }
 
   ebs_options = {
-    ebs_enabled = true
-    volume_type = "${var.volume_type}"
-    volume_size = "${var.volume_size}"
+    ebs_enabled = "${contains(var.ephemeral_list, var.instance_type) ? false : true }"
+    volume_type = "${contains(var.ephemeral_list, var.instance_type) ? "" : var.volume_type }"
+    volume_size = "${contains(var.ephemeral_list, var.instance_type) ? 0 : var.volume_size }"
     iops        = "${var.volume_type == "io1" ? var.volume_iops : 0}"
   }
 
@@ -49,7 +49,7 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   encrypt_at_rest {
-    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.ebs_encryption_list, var.instance_type)}"
+    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.encryption_list, var.instance_type)}"
   }
 
   log_publishing_options {
@@ -86,7 +86,7 @@ resource "aws_elasticsearch_domain" "public_es" {
   }
 
   encrypt_at_rest {
-    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.ebs_encryption_list, var.instance_type)}"
+    enabled = "${var.disable_encrypt_at_rest ? false : contains(var.encryption_list, var.instance_type)}"
   }
 
   log_publishing_options {
