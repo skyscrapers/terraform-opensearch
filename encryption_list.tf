@@ -22,6 +22,7 @@ variable "encryption_list" {
     "r4.16xlarge.elasticsearch",
     "i2.xlarge.elasticsearch",
     "i2.2xlarge.elasticsearch",
+    "i3.large.elasticsearch",
     "i3.xlarge.elasticsearch",
     "i3.2xlarge.elasticsearch",
     "i3.4xlarge.elasticsearch",
