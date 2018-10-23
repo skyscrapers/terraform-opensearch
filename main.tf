@@ -22,7 +22,7 @@ locals {
   }
 
   ebs_options = {
-    ebs_enabled = true
+    ebs_enabled = "${contains(var.ephemeral_list, var.instance_type) ? false : true }"
     volume_type = "${var.volume_type}"
     volume_size = "${var.volume_size}"
     iops        = "${var.volume_type == "io1" ? var.volume_iops : 0}"
