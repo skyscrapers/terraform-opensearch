@@ -7,10 +7,24 @@ amazonService:
   enabled: true
 
 elasticsearch-exporter:
+  resources:
+    limits:
+      cpu: 10m
+      memory: 40Mi
+    requests:
+      cpu: 5m
+      memory: 20Mi
   es:
     uri: ${elasticsearch_endpoint}
 
 prometheus-cloudwatch-exporter:
+  resources:
+    limits:
+      cpu: 10m
+      memory: 300Mi
+    requests:
+      cpu: 5m
+      memory: 150Mi
   aws:
     role: "${cloudwatch_exporter_role}"
   config: |-
