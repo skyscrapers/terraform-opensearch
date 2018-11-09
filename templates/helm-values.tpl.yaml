@@ -20,7 +20,6 @@ elasticsearch-exporter:
 prometheus-cloudwatch-exporter:
   resources:
     limits:
-      cpu: 10m
       memory: 300Mi
     requests:
       cpu: 5m
