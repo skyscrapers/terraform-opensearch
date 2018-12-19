@@ -98,3 +98,5 @@ This module by default creates Cloudwatch Log Groups & IAM permissions for Elast
 ## Monitoring
 
 This module generates a Helm values file which can be used for the [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart.
+
+The file, `helm_values.yaml` needs to be created in the same folder as the Terraform code that is calling this module.

@@ -30,5 +30,6 @@ data "template_file" "prometheus_kv_mapping" {
 resource "local_file" "helm_values_file" {
   count    = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
   content  = "${data.template_file.helm_values.rendered}"
+  # The file needs to be in the same folder as the TF code calling this module.
   filename = "helm-values.yaml"
 }
