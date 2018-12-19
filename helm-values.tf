@@ -10,7 +10,7 @@ data "aws_region" "current" {}
 
 data "template_file" "helm_values" {
   count    = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
-  template = "${file("${local.template_filename}")}"
+  template = "${file("${path.module}/templates/helm-values.tpl.yaml")}"
 
   vars {
     elasticsearch_endpoint   = "${local.elasticsearch_endpoint}"
