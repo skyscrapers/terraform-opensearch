@@ -1,12 +1,16 @@
 locals {
   elasticsearch_endpoint = "https://${element(concat(aws_elasticsearch_domain.es.*.endpoint, aws_elasticsearch_domain.public_es.*.endpoint), 0)}"
+
+  template_filename = "${substr("${path.module}/templates/helm-values.tpl.yaml", length(path.cwd) + 1, -1)}"
+  // +1 for removing the "/"
+  helm_values_filename = "${substr("${path.module}/helm-values.yaml", length(path.cwd) + 1, -1)}"
 }
 
 data "aws_region" "current" {}
 
 data "template_file" "helm_values" {
   count    = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
-  template = "${file("${path.module}/templates/helm-values.tpl.yaml")}"
+  template = "${local.template_filename}"
 
   vars {
     elasticsearch_endpoint   = "${local.elasticsearch_endpoint}"
@@ -30,5 +34,5 @@ data "template_file" "prometheus_kv_mapping" {
 resource "local_file" "helm_values_file" {
   count    = "${length(var.prometheus_labels) != 0 ? 1 : 0}"
   content  = "${data.template_file.helm_values.rendered}"
-  filename = "${path.cwd}/helm-values.yaml"
+  filename = "${local.helm_values_filename}"
 }
