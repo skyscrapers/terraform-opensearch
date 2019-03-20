@@ -33,9 +33,6 @@ locals {
   }
 }
 
-resource "aws_iam_service_linked_role" "es" {
-  aws_service_name = "es.amazonaws.com"
-}
 
 resource "aws_elasticsearch_domain" "es" {
   count                 = "${local.vpc_enabled ? 1 : 0}"
@@ -72,8 +69,6 @@ resource "aws_elasticsearch_domain" "es" {
     security_group_ids = ["${aws_security_group.sg.id}", "${var.security_group_ids}"]
     subnet_ids         = ["${var.subnet_ids}"]
   }
-
-  depends_on = ["aws_iam_service_linked_role.es"]
 }
 
 resource "aws_elasticsearch_domain" "public_es" {
