@@ -100,3 +100,14 @@ This module by default creates Cloudwatch Log Groups & IAM permissions for Elast
 This module generates a Helm values file which can be used for the [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart.
 
 The file, `helm_values.yaml` needs to be created in the same folder as the Terraform code that is calling this module.
+
+## NOTES
+
+This module will not work without the ES default role [AWSServiceRoleForAmazonElasticsearchService](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/slr-es.html). This service role needs to be created per-account so you will need to add it to the `general` stack if not present. 
+
+Here is a code sample you can use:
+```
+resource "aws_iam_service_linked_role" "es" {
+  aws_service_name = "es.amazonaws.com"
+}
+```
