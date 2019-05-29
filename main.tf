@@ -33,7 +33,6 @@ locals {
   }
 }
 
-
 resource "aws_elasticsearch_domain" "es" {
   count                 = "${local.vpc_enabled ? 1 : 0}"
   domain_name           = "${var.project}-${var.environment}-${var.name}"
@@ -68,6 +67,13 @@ resource "aws_elasticsearch_domain" "es" {
   vpc_options {
     security_group_ids = ["${aws_security_group.sg.id}", "${var.security_group_ids}"]
     subnet_ids         = ["${var.subnet_ids}"]
+  }
+
+  cognito_options {
+    enabled          = "${var.cognito_enabled}"
+    user_pool_id     = "${var.cognito_user_pool_id}"
+    identity_pool_id = "${var.cognito_identity_pool_id}"
+    role_arn         = "${var.cognito_role_arn}"
   }
 }
 
