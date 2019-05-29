@@ -14,9 +14,9 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 * [`options_indices_fielddata_cache_size`]: String(optional, ""): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata
 * [`options_indices_query_bool_max_clause_count`]: String(optional, "1024"): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query
 * [`cognito_enabled`]: Bool(optional, false): Whether to enable Cognito for authentication in Kibana
-* [`cognito_user_pool_id`]: String(required): ID of the Cognito User Pool to use
-* [`cognito_identity_pool_id`]: String(required): ID of the Cognito Identity Pool to use
-* [`cognito_role_arn`]: String(required): ARN of the IAM role that has the AmazonESCognitoAccess policy attached
+* [`cognito_user_pool_id`]: String(required when cognito_enabled is enabled): ID of the Cognito User Pool to use
+* [`cognito_identity_pool_id`]: String(required when cognito_enabled is enabled): ID of the Cognito Identity Pool to use
+* [`cognito_role_arn`]: String(required when cognito_enabled is enabled): ARN of the IAM role that has the AmazonESCognitoAccess policy attached
 * [`logging_enabled`]: Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch
 * [`logging_retention`]: Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch
 * [`instance_count`]: Int(optional, 1): Size of the Elasticsearch domain
