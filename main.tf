@@ -33,6 +33,8 @@ locals {
   }
 }
 
+data "aws_region" "current" {}
+
 resource "aws_elasticsearch_domain" "es" {
   count                 = "${local.vpc_enabled ? 1 : 0}"
   domain_name           = "${var.project}-${var.environment}-${var.name}"

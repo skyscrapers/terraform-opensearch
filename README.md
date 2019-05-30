@@ -8,8 +8,6 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| cloudwatch\_exporter\_allowed\_assume\_role | String(required if prometheus_labels is specified): Instance profile role which is allowed to assume the Cloudwatch exporter role (eg. via kube2iam) | string | `""` | no |
-| cloudwatch\_exporter\_role\_path | String(optional, /kube2iam/): Path where the Cloudwatch exporter IAM role will be created | string | `"/kube2iam/"` | no |
 | cognito\_enabled | Bool(optional, false): Whether to enable Cognito for authentication in Kibana | string | `"false"` | no |
 | cognito\_identity\_pool\_id | String(required when cognito_enabled is enabled) ID of the Cognito Identity Pool to use | string | `""` | no |
 | cognito\_role\_arn | String(required when cognito_enabled is enabled) ARN of the IAM role that has the AmazonESCognitoAccess policy attached | string | `""` | no |
@@ -31,12 +29,10 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | options\_indices\_query\_bool\_max\_clause\_count | String(optional, "1024"): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | string | `"1024"` | no |
 | options\_rest\_action\_multi\_allow\_explicit\_index | Bool(optional, "true"): Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to "false". Setting this property to "false" prevents users from bypassing access control for sub-resources | string | `"true"` | no |
 | project | String(required): Project name | string | n/a | yes |
-| prometheus\_labels | Map(optional, {}): Prometheus MatchLabel labels for generating the elasticsearch-monitoring Helm chart. When empty, no values file is generated | map | `<map>` | no |
 | security\_group\_ids | List(optional): Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs | list | `<list>` | no |
 | snapshot\_bucket\_enabled | Bool(optional, false): Whether to create a bucket for custom Elasticsearch backups (other than the default daily one) | string | `"false"` | no |
 | snapshot\_start\_hour | Int(optional, 3): Hour during which an automated daily snapshot is taken of the Elasticsearch indices | string | `"3"` | no |
 | subnet\_ids | List(required if vpc_id is specified): Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in | list | `<list>` | no |
-| tags | Map(optional, {}): Optional tags | map | `<map>` | no |
 | volume\_iops | Int(required if volume_type="io1"): Amount of provisioned IOPS for the EBS volume | string | `"0"` | no |
 | volume\_size | Int(required): EBS volume size (in GB) to use for the Elasticsearch domain | string | n/a | yes |
 | volume\_type | String(optional, "gp2"): EBS volume type to use for the Elasticsearch domain | string | `"gp2"` | no |
@@ -50,6 +46,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | arn | ARN of the Elasticsearch domain |
 | domain\_id | ID of the Elasticsearch domain |
 | domain\_name | Name of the Elasticsearch domain |
+| domain\_region | Region of the Elasticsearch domain |
 | endpoint | DNS endpoint of the Elasticsearch domain |
 | role\_arn | ARN of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
 | role\_id | ID of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
