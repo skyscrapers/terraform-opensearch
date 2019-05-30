@@ -18,6 +18,11 @@ output "endpoint" {
   value       = "${element(concat(aws_elasticsearch_domain.es.*.endpoint, aws_elasticsearch_domain.public_es.*.endpoint), 0)}"
 }
 
+output "domain_region" {
+  description = "Region of the Elasticsearch domain"
+  value       = "${data.aws_region.current.name}"
+}
+
 output "sg_id" {
   description = "ID of the Elasticsearch security group"
   value       = "${join("", aws_security_group.sg.*.id)}"

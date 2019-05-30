@@ -134,27 +134,6 @@ variable "snapshot_bucket_enabled" {
   default     = false
 }
 
-variable "tags" {
-  description = "Map(optional, {}): Optional tags"
-  type        = "map"
-  default     = {}
-}
-
-variable "prometheus_labels" {
-  description = "Map(optional, {}): Prometheus MatchLabel labels for generating the elasticsearch-monitoring Helm chart. When empty, no values file is generated"
-  default     = {}
-}
-
-variable "cloudwatch_exporter_allowed_assume_role" {
-  description = "String(required if prometheus_labels is specified): Instance profile role which is allowed to assume the Cloudwatch exporter role (eg. via kube2iam)"
-  default     = ""
-}
-
-variable "cloudwatch_exporter_role_path" {
-  description = "String(optional, /kube2iam/): Path where the Cloudwatch exporter IAM role will be created"
-  default     = "/kube2iam/"
-}
-
 variable "disable_encrypt_at_rest" {
   description = "Bool(optional, false): Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster!"
   default     = false
