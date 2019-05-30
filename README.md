@@ -33,6 +33,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | snapshot\_bucket\_enabled | Bool(optional, false): Whether to create a bucket for custom Elasticsearch backups (other than the default daily one) | string | `"false"` | no |
 | snapshot\_start\_hour | Int(optional, 3): Hour during which an automated daily snapshot is taken of the Elasticsearch indices | string | `"3"` | no |
 | subnet\_ids | List(required if vpc_id is specified): Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in | list | `<list>` | no |
+| tags | Map(optional, {}): Optional tags | map | `<map>` | no |
 | volume\_iops | Int(required if volume_type="io1"): Amount of provisioned IOPS for the EBS volume | string | `"0"` | no |
 | volume\_size | Int(required): EBS volume size (in GB) to use for the Elasticsearch domain | string | n/a | yes |
 | volume\_type | String(optional, "gp2"): EBS volume type to use for the Elasticsearch domain | string | `"gp2"` | no |
