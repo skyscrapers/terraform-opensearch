@@ -1,146 +1,169 @@
 variable "project" {
-  description = "String(required): Project name"
+  type        = string
+  description = "Project name"
 }
 
 variable "environment" {
-  description = "String(required): Environment name"
+  type        = string
+  description = "Environment name"
 }
 
 variable "name" {
-  description = "String(optional, \"es\"): Name to use for the Elasticsearch domain"
+  type        = string
+  description = "Name to use for the Elasticsearch domain"
 }
 
 variable "elasticsearch_version" {
-  description = "String(optional, \"6.3\": Version of the Elasticsearch domain"
+  type        = string
+  description = "Version of the Elasticsearch domain"
   default     = "6.3"
 }
 
 variable "options_rest_action_multi_allow_explicit_index" {
-  description = "Bool(optional, \"true\"): Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to \"false\". Setting this property to \"false\" prevents users from bypassing access control for sub-resources"
   type        = string
+  description = "Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to \"false\". Setting this property to \"false\" prevents users from bypassing access control for sub-resources"
   default     = "true"
 }
 
 variable "options_indices_fielddata_cache_size" {
-  description = "String(optional, \"\"): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata"
   type        = string
+  description = "Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata"
   default     = ""
 }
 
 variable "options_indices_query_bool_max_clause_count" {
-  description = "String(optional, \"1024\"): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query"
   type        = string
+  description = "Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query"
   default     = "1024"
 }
 
 variable "cognito_enabled" {
-  description = "Bool(optional, false): Whether to enable Cognito for authentication in Kibana"
+  type        = bool
+  description = "Whether to enable Cognito for authentication in Kibana"
   default     = false
 }
 
 variable "cognito_user_pool_id" {
-  description = "String(required when cognito_enabled is enabled) ID of the Cognito User Pool to use"
+  type        = string
+  description = "Required when cognito_enabled is enabled: ID of the Cognito User Pool to use"
   default     = ""
 }
 
 variable "cognito_identity_pool_id" {
-  description = "String(required when cognito_enabled is enabled) ID of the Cognito Identity Pool to use"
+  type        = string
+  description = "Required when cognito_enabled is enabled: ID of the Cognito Identity Pool to use"
   default     = ""
 }
 
 variable "cognito_role_arn" {
-  description = "String(required when cognito_enabled is enabled) ARN of the IAM role that has the AmazonESCognitoAccess policy attached"
+  type        = string
+  description = "Required when `cognito_enabled` is enabled: ARN of the IAM role that has the AmazonESCognitoAccess policy attached"
   default     = ""
 }
 
 variable "logging_enabled" {
-  description = "Bool(optional, false): Whether to enable Elasticsearch slow logs in Cloudwatch"
+  type        = bool
+  description = "Whether to enable Elasticsearch slow logs in Cloudwatch"
   default     = false
 }
 
 variable "logging_retention" {
-  description = "Int(optional, 30): How many days to retain Elasticsearch logs in Cloudwatch"
+  type        = number
+  description = "How many days to retain Elasticsearch logs in Cloudwatch"
   default     = 30
 }
 
 variable "instance_count" {
-  description = "Int(optional, 1): Size of the Elasticsearch domain"
+  type        = number
+  description = "Size of the Elasticsearch domain"
   default     = 1
 }
 
 variable "instance_type" {
-  description = "String(optional, t2.small.elasticsearch): Instance type to use for the Elasticsearch domain"
+  type        = string
+  description = "Instance type to use for the Elasticsearch domain"
   default     = "t2.small.elasticsearch"
 }
 
 variable "dedicated_master_enabled" {
-  description = "Bool(optional, false): Whether dedicated master nodes are enabled for the domain"
+  type        = bool
+  description = "Whether dedicated master nodes are enabled for the domain"
   default     = false
 }
 
 variable "zone_awareness_enabled" {
-  description = "Bool(optional, false): Whether to enable zone_awareness or not"
+  type        = bool
+  description = "Whether to enable zone_awareness or not"
   default     = false
 }
 
 variable "dedicated_master_type" {
-  description = "String(optional, t2.small.elasticsearch): Instance type of the dedicated master nodes in the domain"
+  type        = string
+  description = "Instance type of the dedicated master nodes in the domain"
   default     = "t2.small.elasticsearch"
 }
 
 variable "dedicated_master_count" {
-  description = "Int(optional, 1): Number of dedicated master nodes in the domain"
+  type        = number
+  description = "Number of dedicated master nodes in the domain"
   default     = 1
 }
 
 variable "volume_type" {
-  description = "String(optional, \"gp2\"): EBS volume type to use for the Elasticsearch domain"
+  type        = string
+  description = "EBS volume type to use for the Elasticsearch domain"
   default     = "gp2"
 }
 
 variable "volume_size" {
-  description = "Int(required): EBS volume size (in GB) to use for the Elasticsearch domain"
+  type        = number
+  description = "EBS volume size (in GB) to use for the Elasticsearch domain"
 }
 
 variable "volume_iops" {
-  description = "Int(required if volume_type=\"io1\"): Amount of provisioned IOPS for the EBS volume"
+  type        = number
+  description = "Required if volume_type=\"io1\": Amount of provisioned IOPS for the EBS volume"
   default     = 0
 }
 
 variable "vpc_id" {
-  description = "String(optional): VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain"
-  default     = ""
+  type        = string
+  description = "VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain"
+  default     = null
 }
 
 variable "subnet_ids" {
-  description = "List(required if vpc_id is specified): Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in"
   type        = list(string)
+  description = "Required if vpc_id is specified: Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in"
   default     = []
 }
 
 variable "security_group_ids" {
-  description = "List(optional): Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs"
   type        = list(string)
+  description = "Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs"
   default     = []
 }
 
 variable "snapshot_start_hour" {
-  description = "Int(optional, 3): Hour during which an automated daily snapshot is taken of the Elasticsearch indices"
+  type        = number
+  description = "Hour during which an automated daily snapshot is taken of the Elasticsearch indices"
   default     = 3
 }
 
 variable "snapshot_bucket_enabled" {
-  description = "Bool(optional, false): Whether to create a bucket for custom Elasticsearch backups (other than the default daily one)"
+  type        = bool
+  description = "Whether to create a bucket for custom Elasticsearch backups (other than the default daily one)"
   default     = false
 }
 
 variable "tags" {
-  description = "Map(optional, {}): Optional tags"
   type        = map(string)
+  description = "Optional tags"
   default     = {}
 }
 
 variable "disable_encrypt_at_rest" {
-  description = "Bool(optional, false): Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster!"
+  type        = bool
+  description = "Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster!"
   default     = false
 }

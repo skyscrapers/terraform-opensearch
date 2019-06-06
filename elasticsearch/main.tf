@@ -1,5 +1,5 @@
 locals {
-  vpc_enabled = var.vpc_id == "" ? false : true
+  vpc_enabled = var.vpc_id != null ? true : false
 
   tags = merge(
     var.tags,
