@@ -1,7 +1,3 @@
-terraform {
-  required_version = ">= 0.12"
-}
-
 locals {
   vpc_enabled = var.vpc_id == "" ? false : true
 
@@ -116,7 +112,7 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   vpc_options {
-    security_group_ids = [aws_security_group.sg[0].id, var.security_group_ids]
+    security_group_ids = concat(aws_security_group.sg.*.id, var.security_group_ids)
     subnet_ids         = var.subnet_ids
   }
 
@@ -224,4 +220,3 @@ resource "aws_s3_bucket" "snapshot" {
     }
   }
 }
-
