@@ -3,7 +3,7 @@
 
 # m3 and r3 are supported by aws using ephemeral storage but are a lecacy instance type
 variable "ephemeral_list" {
-  type = "list"
+  type = list(string)
 
   default = [
     "i2.xlarge.elasticsearch",
@@ -15,7 +15,6 @@ variable "ephemeral_list" {
     "i3.8xlarge.elasticsearch",
     "i3.16xlarge.elasticsearch",
   ]
-
   # "m3.medium.elasticsearch",
   # "m3.large.elasticsearch",
   # "m3.xlarge.elasticsearch",
@@ -26,3 +25,4 @@ variable "ephemeral_list" {
   # "r3.4xlarge.elasticsearch",
   # "r3.8xlarge.elasticsearch",
 }
+

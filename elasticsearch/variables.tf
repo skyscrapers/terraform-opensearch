@@ -17,19 +17,19 @@ variable "elasticsearch_version" {
 
 variable "options_rest_action_multi_allow_explicit_index" {
   description = "Bool(optional, \"true\"): Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to \"false\". Setting this property to \"false\" prevents users from bypassing access control for sub-resources"
-  type        = "string"
+  type        = string
   default     = "true"
 }
 
 variable "options_indices_fielddata_cache_size" {
   description = "String(optional, \"\"): Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata"
-  type        = "string"
+  type        = string
   default     = ""
 }
 
 variable "options_indices_query_bool_max_clause_count" {
   description = "String(optional, \"1024\"): Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query"
-  type        = "string"
+  type        = string
   default     = "1024"
 }
 
@@ -114,13 +114,13 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   description = "List(required if vpc_id is specified): Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
 variable "security_group_ids" {
   description = "List(optional): Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs"
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -136,7 +136,7 @@ variable "snapshot_bucket_enabled" {
 
 variable "tags" {
   description = "Map(optional, {}): Optional tags"
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
 
@@ -144,3 +144,4 @@ variable "disable_encrypt_at_rest" {
   description = "Bool(optional, false): Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster!"
   default     = false
 }
+
