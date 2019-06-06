@@ -8,7 +8,7 @@ provider "helm" {
 }
 
 locals {
-  elasticsearch_domain_endpoint = "https://${var.elasticsearch_domain_name}:443"
+  elasticsearch_domain_endpoint = "https://${var.elasticsearch_endpoint}:443"
 }
 
 data "aws_caller_identity" "current" {}

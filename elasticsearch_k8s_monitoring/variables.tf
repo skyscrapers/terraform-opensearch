@@ -4,6 +4,11 @@ variable "elasticsearch_monitoring_chart_version" {
   default     = "0.2.5"
 }
 
+variable "elasticsearch_endpoint" {
+  type        = string
+  description = "Endpoint of the AWS Elasticsearch domain"
+}
+
 variable "elasticsearch_domain_name" {
   type        = string
   description = "Domain name of the AWS Elasticsearch domain"
