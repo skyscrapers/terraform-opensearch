@@ -30,7 +30,7 @@ variable "kubernetes_namespace" {
 }
 
 variable "kubernetes_worker_instance_role_arns" {
-  type        = list
+  type        = list(string)
   description = "Role ARNs of the Kubernetes nodes to attach the kube2iam assume_role to"
 }
 

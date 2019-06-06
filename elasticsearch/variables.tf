@@ -46,19 +46,19 @@ variable "cognito_enabled" {
 variable "cognito_user_pool_id" {
   type        = string
   description = "Required when cognito_enabled is enabled: ID of the Cognito User Pool to use"
-  default     = ""
+  default     = null
 }
 
 variable "cognito_identity_pool_id" {
   type        = string
   description = "Required when cognito_enabled is enabled: ID of the Cognito Identity Pool to use"
-  default     = ""
+  default     = null
 }
 
 variable "cognito_role_arn" {
   type        = string
   description = "Required when `cognito_enabled` is enabled: ARN of the IAM role that has the AmazonESCognitoAccess policy attached"
-  default     = ""
+  default     = null
 }
 
 variable "logging_enabled" {
