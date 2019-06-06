@@ -46,6 +46,7 @@ resource "aws_elasticsearch_domain" "es" {
   count                 = local.vpc_enabled ? 1 : 0
   domain_name           = "${var.project}-${var.environment}-${var.name}"
   elasticsearch_version = var.elasticsearch_version
+
   dynamic "cluster_config" {
     for_each = [local.cluster_config]
     content {
@@ -62,6 +63,7 @@ resource "aws_elasticsearch_domain" "es" {
       zone_awareness_enabled   = lookup(cluster_config.value, "zone_awareness_enabled", null)
     }
   }
+
   dynamic "ebs_options" {
     for_each = [local.ebs_options]
     content {
@@ -76,6 +78,7 @@ resource "aws_elasticsearch_domain" "es" {
       volume_type = lookup(ebs_options.value, "volume_type", null)
     }
   }
+
   dynamic "snapshot_options" {
     for_each = [local.snapshot_options]
     content {
@@ -87,6 +90,7 @@ resource "aws_elasticsearch_domain" "es" {
       automated_snapshot_start_hour = snapshot_options.value.automated_snapshot_start_hour
     }
   }
+
   tags = local.tags
 
   advanced_options = {
@@ -128,6 +132,7 @@ resource "aws_elasticsearch_domain" "public_es" {
   count                 = local.vpc_enabled ? 0 : 1
   domain_name           = "${var.project}-${var.environment}-${var.name}"
   elasticsearch_version = var.elasticsearch_version
+
   dynamic "cluster_config" {
     for_each = [local.cluster_config]
     content {
@@ -144,6 +149,7 @@ resource "aws_elasticsearch_domain" "public_es" {
       zone_awareness_enabled   = lookup(cluster_config.value, "zone_awareness_enabled", null)
     }
   }
+
   dynamic "ebs_options" {
     for_each = [local.ebs_options]
     content {
@@ -158,6 +164,7 @@ resource "aws_elasticsearch_domain" "public_es" {
       volume_type = lookup(ebs_options.value, "volume_type", null)
     }
   }
+
   dynamic "snapshot_options" {
     for_each = [local.snapshot_options]
     content {
@@ -169,6 +176,7 @@ resource "aws_elasticsearch_domain" "public_es" {
       automated_snapshot_start_hour = snapshot_options.value.automated_snapshot_start_hour
     }
   }
+
   tags = local.tags
 
   advanced_options = {
