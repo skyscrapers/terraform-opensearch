@@ -15,7 +15,7 @@ variable "kubernetes_namespace" {
 
 variable "gatekeeper_image" {
   type        = string
-  description = ""
+  description = "Docker image to use for the gatekeeper deployment"
   default     = "keycloak/keycloak-gatekeeper:6.0.1"
 }
 
