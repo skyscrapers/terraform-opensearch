@@ -1,7 +1,7 @@
 # List all instances which support encryption at rest
 # https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/aes-supported-instance-types.html
 variable "encryption_list" {
-  type = "list"
+  type = list(string)
 
   default = [
     "m4.large.elasticsearch",
@@ -30,3 +30,4 @@ variable "encryption_list" {
     "i3.16xlarge.elasticsearch",
   ]
 }
+
