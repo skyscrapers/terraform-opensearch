@@ -1,12 +1,3 @@
-provider "helm" {
-  version        = ">= 0.9"
-  install_tiller = false
-
-  kubernetes {
-    config_context = var.kubernetes_context
-  }
-}
-
 provider "kubernetes" {
   version        = ">= 1.7"
   config_context = var.kubernetes_context

@@ -26,9 +26,9 @@ variable "options_rest_action_multi_allow_explicit_index" {
 }
 
 variable "options_indices_fielddata_cache_size" {
-  type        = string
+  type        = number
   description = "Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata"
-  default     = ""
+  default     = null
 }
 
 variable "options_indices_query_bool_max_clause_count" {
