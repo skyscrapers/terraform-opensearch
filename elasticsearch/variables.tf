@@ -16,7 +16,7 @@ variable "name" {
 variable "elasticsearch_version" {
   type        = string
   description = "Version of the Elasticsearch domain"
-  default     = "6.3"
+  default     = "6.7"
 }
 
 variable "options_rest_action_multi_allow_explicit_index" {
