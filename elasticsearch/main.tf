@@ -68,7 +68,7 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   dynamic "vpc_options" {
-    for_each = [var.vpc_id]
+    for_each = var.vpc_id == null ? [] : [var.vpc_id]
 
     content {
       security_group_ids = concat(aws_security_group.sg.*.id, var.security_group_ids)
