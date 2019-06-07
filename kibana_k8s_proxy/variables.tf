@@ -3,6 +3,11 @@ variable "elasticsearch_endpoint" {
   description = "Endpoint of the AWS Elasticsearch domain"
 }
 
+variable "elasticsearch_domain_name" {
+  type        = string
+  description = "Domain name of the AWS Elasticsearch domain"
+}
+
 variable "kubernetes_context" {
   type        = string
   description = "Kubeconfig context to use for deploying the `skyscrapers/elasticsearch-monitoring` chart"

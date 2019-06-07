@@ -13,7 +13,9 @@ provider "kubernetes" {
 }
 
 locals {
-  name = "kibana-gatekeeper"
+  app    = "kibana-gatekeeper"
+  domain = var.elasticsearch_domain_name
+  name   = "${local.app}-${local.domain}"
 }
 
 resource "random_string" "encryption_key" {
@@ -27,7 +29,8 @@ resource "kubernetes_deployment" "gatekeeper" {
     namespace = var.kubernetes_namespace
 
     labels = {
-      app = local.name
+      app    = local.app
+      domain = local.domain
     }
   }
 
@@ -36,20 +39,22 @@ resource "kubernetes_deployment" "gatekeeper" {
 
     selector {
       match_labels = {
-        app = local.name
+        app    = local.app
+        domain = local.domain
       }
     }
 
     template {
       metadata {
         labels = {
-          app = local.name
+          app    = local.app
+          domain = local.domain
         }
       }
 
       spec {
         container {
-          name  = local.name
+          name  = "gatekeeper"
           image = var.gatekeeper_image
           args  = concat([
             "--listen=0.0.0.0:3000",
@@ -117,7 +122,8 @@ resource "kubernetes_service" "gatekeeper" {
     namespace = var.kubernetes_namespace
 
     labels = {
-      app = local.name
+      app    = local.app
+      domain = local.domain
     }
   }
 
@@ -125,7 +131,8 @@ resource "kubernetes_service" "gatekeeper" {
     type = "ClusterIP"
 
     selector = {
-      app = local.name
+      app    = local.app
+      domain = local.domain
     }
 
     port {
@@ -141,7 +148,8 @@ resource "kubernetes_ingress" "gatekeeper" {
     namespace = var.kubernetes_namespace
 
     labels = {
-      app = local.name
+      app    = local.app
+      domain = local.domain
     }
 
     annotations = {

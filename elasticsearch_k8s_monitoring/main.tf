@@ -65,7 +65,7 @@ data "template_file" "elasticsearch_monitoring_helm_values" {
 }
 
 resource "helm_release" "elasticsearch_monitoring" {
-  name       = "logging-es-monitor"
+  name       = "es-monitoring-${var.elasticsearch_domain_name}"
   repository = "https://skyscrapers.github.io/charts"
   chart      = "elasticsearch-monitoring"
   version    = var.elasticsearch_monitoring_chart_version

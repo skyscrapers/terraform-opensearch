@@ -23,9 +23,9 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | logging\_enabled | Whether to enable Elasticsearch slow logs in Cloudwatch | bool | `false` | no |
 | logging\_retention | How many days to retain Elasticsearch logs in Cloudwatch | number | `30` | no |
 | name | Name to use for the Elasticsearch domain | string | n/a | yes |
-| options\_indices\_fielddata\_cache\_size | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | string | `""` | no |
-| options\_indices\_query\_bool\_max\_clause\_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | string | `"1024"` | no |
-| options\_rest\_action\_multi\_allow\_explicit\_index | Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to "false". Setting this property to "false" prevents users from bypassing access control for sub-resources | string | `"true"` | no |
+| options\_indices\_fielddata\_cache\_size | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | number | `null` | no |
+| options\_indices\_query\_bool\_max\_clause\_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | number | `1024` | no |
+| options\_rest\_action\_multi\_allow\_explicit\_index | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body | bool | `true` | no |
 | project | Project name | string | n/a | yes |
 | security\_group\_ids | Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs | list(string) | `[]` | no |
 | snapshot\_bucket\_enabled | Whether to create a bucket for custom Elasticsearch backups (other than the default daily one) | string | `"false"` | no |
@@ -142,6 +142,7 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
+| elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
 | kubernetes\_context | Kubeconfig context to use for deploying the `skyscrapers/elasticsearch-monitoring` chart | string | n/a | yes |
 | kubernetes\_namespace | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | string | n/a | yes |
 | gatekeeper\_image | Docker image to use for the gatekeeper deployment | string | `"keycloak/keycloak-gatekeeper:6.0.1"` | no |
@@ -152,3 +153,9 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | gatekeeper\_oidc\_groups | Groups that will be granted access. When using Dex with GitHub, teams are defined in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins` | string | n/a | yes |
 | gatekeeper\_timeout | Upstream timeouts to use for the proxy | string | `"500s"` | no |
 | gatekeeper\_extra\_args | Additional keycloack-gatekeeper command line arguments | list(string) | `[]` | no |
+
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |

@@ -20,9 +20,9 @@ variable "elasticsearch_version" {
 }
 
 variable "options_rest_action_multi_allow_explicit_index" {
-  type        = string
-  description = "Sets the `rest.action.multi.allow_explicit_index` advanced option (must be string, not bool!). If you want to configure access to domain sub-resources, such as specific indices, you must set this property to \"false\". Setting this property to \"false\" prevents users from bypassing access control for sub-resources"
-  default     = "true"
+  type        = bool
+  description = "Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body"
+  default     = true
 }
 
 variable "options_indices_fielddata_cache_size" {
@@ -32,9 +32,9 @@ variable "options_indices_fielddata_cache_size" {
 }
 
 variable "options_indices_query_bool_max_clause_count" {
-  type        = string
+  type        = number
   description = "Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query"
-  default     = "1024"
+  default     = 1024
 }
 
 variable "cognito_enabled" {
