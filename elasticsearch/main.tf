@@ -78,9 +78,9 @@ resource "aws_elasticsearch_domain" "es" {
 
   cognito_options {
     enabled          = var.cognito_enabled
-    user_pool_id     = var.cognito_user_pool_id
-    identity_pool_id = var.cognito_identity_pool_id
-    role_arn         = var.cognito_role_arn
+    user_pool_id     = var.cognito_enabled ? var.cognito_user_pool_id : ""
+    identity_pool_id = var.cognito_enabled ? var.cognito_identity_pool_id : ""
+    role_arn         = var.cognito_enabled ? var.cognito_role_arn : ""
   }
 }
 
