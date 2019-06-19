@@ -20,7 +20,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | environment | Environment name | string | n/a | yes |
 | instance\_count | Size of the Elasticsearch domain | number | `1` | no |
 | instance\_type | Instance type to use for the Elasticsearch domain | string | `"t2.small.elasticsearch"` | no |
-| application_logging\_enabled | Whether to enable Elasticsearch appliaction logs in Cloudwatch | bool | `false` | no |
+| application_logging\_enabled | Whether to enable Elasticsearch application logs in Cloudwatch | bool | `false` | no |
 | logging\_enabled | Whether to enable Elasticsearch slow logs in Cloudwatch | bool | `false` | no |
 | logging\_retention | How many days to retain Elasticsearch logs in Cloudwatch | number | `30` | no |
 | name | Name to use for the Elasticsearch domain | string | n/a | yes |
