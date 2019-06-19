@@ -8,6 +8,7 @@ data "aws_iam_policy_document" "cwl_policy" {
     resources = [
       "${aws_cloudwatch_log_group.cwl_index.arn}:*",
       "${aws_cloudwatch_log_group.cwl_search.arn}:*",
+      "${aws_cloudwatch_log_group.cwl_app.arn}:*",
     ]
 
     principals {
