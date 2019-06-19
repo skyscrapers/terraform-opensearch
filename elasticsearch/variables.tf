@@ -67,6 +67,12 @@ variable "logging_enabled" {
   default     = false
 }
 
+variable "application_logging_enabled" {
+  type        = bool
+  description = "Whether to enable Elasticsearch application logs in Cloudwatch"
+  default     = false
+}
+
 variable "logging_retention" {
   type        = number
   description = "How many days to retain Elasticsearch logs in Cloudwatch"

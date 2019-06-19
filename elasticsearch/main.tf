@@ -67,6 +67,12 @@ resource "aws_elasticsearch_domain" "es" {
     cloudwatch_log_group_arn = aws_cloudwatch_log_group.cwl_search.arn
   }
 
+  log_publishing_options {
+    enabled                  = var.application_logging_enabled
+    log_type                 = "ES_APPLICATION_LOGS"
+    cloudwatch_log_group_arn = aws_cloudwatch_log_group.cwl_application.arn
+  }
+
   dynamic "vpc_options" {
     for_each = var.vpc_id == null ? [] : [var.vpc_id]
 
@@ -92,6 +98,12 @@ resource "aws_cloudwatch_log_group" "cwl_index" {
 
 resource "aws_cloudwatch_log_group" "cwl_search" {
   name              = "${var.project}/${var.environment}/${var.name}/search_slow_logs"
+  retention_in_days = var.logging_retention
+  tags              = local.tags_noname
+}
+
+resource "aws_cloudwatch_log_group" "cwl_application" {
+  name              = "${var.project}/${var.environment}/${var.name}/application_logs"
   retention_in_days = var.logging_retention
   tags              = local.tags_noname
 }
