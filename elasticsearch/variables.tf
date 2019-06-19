@@ -67,7 +67,7 @@ variable "logging_enabled" {
   default     = false
 }
 
-variable "app_logging_enabled" {
+variable "application_logging_enabled" {
   type        = bool
   description = "Whether to enable Elasticsearch application logs in Cloudwatch"
   default     = false
