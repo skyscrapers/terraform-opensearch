@@ -23,11 +23,6 @@ resource "kubernetes_service" "kibana" {
   spec {
     type          = "ExternalName"
     external_name = var.elasticsearch_endpoint
-
-    port {
-      port        = 443
-      target_port = 443
-    }
   }
 }
 
@@ -45,6 +40,7 @@ resource "kubernetes_ingress" "kibana" {
       "kubernetes.io/ingress.class"                       = "nginx",
       "kubernetes.io/tls-acme"                            = "true",
       "nginx.ingress.kubernetes.io/app-root"              = "/_plugin/kibana/",
+      "nginx.ingress.kubernetes.io/backend-protocol"      = "HTTPS"
       "nginx.ingress.kubernetes.io/auth-url"              = var.ingress_auth_url,
       "nginx.ingress.kubernetes.io/auth-signin"           = var.ingress_auth_signin,
       "nginx.ingress.kubernetes.io/configuration-snippet" = var.ingress_configuration_snippet,
@@ -59,7 +55,6 @@ resource "kubernetes_ingress" "kibana" {
         path {
           backend {
             service_name = local.name
-            service_port = 443
           }
 
           path = "/"
