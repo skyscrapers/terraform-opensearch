@@ -134,7 +134,24 @@ This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrap
 | kubernetes\_worker\_instance\_role\_arns | Role ARNs of the Kubernetes nodes to attach the kube2iam assume_role to | list(string) | n/a | yes |
 | force\_helm\_update | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on | string | `"1"` | no |
 
-## kibana_k8s_proxy
+## kibana_k8s_auth_ingress
+
+This module deploys an Ingress with [external authentication](https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/) on Kubernetes to reach the AWS Elasticsearch Kibana endpoint.
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
+| elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
+| kubernetes\_context | Kubeconfig context to use for deploying the Ingress | string | n/a | yes |
+| kubernetes\_namespace | Kubernetes namespace where to deploy the Ingress | string | n/a | yes |
+| ingress\_host | Hostname to use for the Ingress | string | n/a | yes |
+| ingress\_auth\_url | Value to set for the `nginx.ingress.kubernetes.io/auth-url` annotation | string | n/a | yes |
+| ingress\_auth\_signin | Value to set for the `nginx.ingress.kubernetes.io/auth-signin` annotation | string | n/a | yes |
+| ingress\_auth\_configuration\_snippet | Value to set for the `nginx.ingress.kubernetes.io/configuration-snippet` annotation | string | `null` | no |
+
+## kibana_k8s_auth_proxy
 
 This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-gatekeeper) as OIDC proxy on Kubernetes to reach the AWS Elasticsearch Kibana endpoint.
 
@@ -144,9 +161,9 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 |------|-------------|:----:|:-----:|:-----:|
 | elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
 | elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
-| kubernetes\_context | Kubeconfig context to use for deploying the `skyscrapers/elasticsearch-monitoring` chart | string | n/a | yes |
-| kubernetes\_namespace | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | string | n/a | yes |
-| gatekeeper\_image | Docker image to use for the gatekeeper deployment | string | `"keycloak/keycloak-gatekeeper:6.0.1"` | no |
+| kubernetes\_context | Kubeconfig context to use for deploying the Keycloack-gatekeeper proxy | string | n/a | yes |
+| kubernetes\_namespace | Kubernetes namespace where to deploy the Keycloack-gatekeeper proxy chart | string | n/a | yes |
+| gatekeeper\_image | Docker image to use for the Keycloack-gatekeeper deployment | string | `"keycloak/keycloak-gatekeeper:6.0.1"` | no |
 | gatekeeper\_ingress\_host | Hostname to use for the Ingress | string | n/a | yes |
 | gatekeeper\_discovery\_url | URL for OpenID autoconfiguration | string | n/a | yes |
 | gatekeeper\_client\_id | Client ID for OpenID server | string | n/a | yes |
