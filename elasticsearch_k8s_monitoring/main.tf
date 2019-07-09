@@ -1,12 +1,3 @@
-provider "helm" {
-  version        = ">= 0.9"
-  install_tiller = false
-
-  kubernetes {
-    config_context = var.kubernetes_context
-  }
-}
-
 locals {
   elasticsearch_domain_endpoint = "https://${var.elasticsearch_endpoint}:443"
 }

@@ -1,8 +1,3 @@
-provider "kubernetes" {
-  version        = ">= 1.7"
-  config_context = var.kubernetes_context
-}
-
 locals {
   app    = "kibana-ingress"
   domain = var.elasticsearch_domain_name
@@ -55,6 +50,7 @@ resource "kubernetes_ingress" "kibana" {
         path {
           backend {
             service_name = local.name
+            service_port = 443
           }
 
           path = "/"
