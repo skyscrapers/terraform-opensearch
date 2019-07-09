@@ -129,7 +129,6 @@ This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrap
 | elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
 | elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
 | elasticsearch\_domain\_region | Region of the AWS Elasticsearch domain | string | n/a | yes |
-| kubernetes\_context | Kubeconfig context to use for deploying the `skyscrapers/elasticsearch-monitoring` chart | string | n/a | yes |
 | kubernetes\_namespace | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | string | n/a | yes |
 | kubernetes\_worker\_instance\_role\_arns | Role ARNs of the Kubernetes nodes to attach the kube2iam assume_role to | list(string) | n/a | yes |
 | force\_helm\_update | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on | string | `"1"` | no |
@@ -144,7 +143,6 @@ This module deploys an Ingress with [external authentication](https://kubernetes
 |------|-------------|:----:|:-----:|:-----:|
 | elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
 | elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
-| kubernetes\_context | Kubeconfig context to use for deploying the Ingress | string | n/a | yes |
 | kubernetes\_namespace | Kubernetes namespace where to deploy the Ingress | string | n/a | yes |
 | ingress\_host | Hostname to use for the Ingress | string | n/a | yes |
 | ingress\_auth\_url | Value to set for the `nginx.ingress.kubernetes.io/auth-url` annotation | string | n/a | yes |
@@ -161,7 +159,6 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 |------|-------------|:----:|:-----:|:-----:|
 | elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
 | elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
-| kubernetes\_context | Kubeconfig context to use for deploying the Keycloack-gatekeeper proxy | string | n/a | yes |
 | kubernetes\_namespace | Kubernetes namespace where to deploy the Keycloack-gatekeeper proxy chart | string | n/a | yes |
 | gatekeeper\_image | Docker image to use for the Keycloack-gatekeeper deployment | string | `"keycloak/keycloak-gatekeeper:6.0.1"` | no |
 | gatekeeper\_ingress\_host | Hostname to use for the Ingress | string | n/a | yes |

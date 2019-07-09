@@ -19,11 +19,6 @@ variable "elasticsearch_domain_region" {
   description = "Region of the AWS Elasticsearch domain"
 }
 
-variable "kubernetes_context" {
-  type        = string
-  description = "Kubeconfig context to use for deploying the `skyscrapers/elasticsearch-monitoring` chart"
-}
-
 variable "kubernetes_namespace" {
   type        = string
   description = "Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart"

@@ -8,11 +8,6 @@ variable "elasticsearch_domain_name" {
   description = "Domain name of the AWS Elasticsearch domain"
 }
 
-variable "kubernetes_context" {
-  type        = string
-  description = "Kubeconfig context to use for deploying the Keycloack-gatekeeper proxy"
-}
-
 variable "kubernetes_namespace" {
   type        = string
   description = "Kubernetes namespace where to deploy the Keycloack-gatekeeper proxy"

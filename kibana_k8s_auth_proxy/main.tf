@@ -1,8 +1,3 @@
-provider "kubernetes" {
-  version        = ">= 1.7"
-  config_context = var.kubernetes_context
-}
-
 locals {
   app    = "kibana-gatekeeper"
   domain = var.elasticsearch_domain_name
