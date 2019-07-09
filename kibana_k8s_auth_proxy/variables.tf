@@ -10,17 +10,17 @@ variable "elasticsearch_domain_name" {
 
 variable "kubernetes_context" {
   type        = string
-  description = "Kubeconfig context to use for deploying the `skyscrapers/elasticsearch-monitoring` chart"
+  description = "Kubeconfig context to use for deploying the Keycloack-gatekeeper proxy"
 }
 
 variable "kubernetes_namespace" {
   type        = string
-  description = "Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart"
+  description = "Kubernetes namespace where to deploy the Keycloack-gatekeeper proxy"
 }
 
 variable "gatekeeper_image" {
   type        = string
-  description = "Docker image to use for the gatekeeper deployment"
+  description = "Docker image to use for the Keycloack-gatekeeper deployment"
   default     = "keycloak/keycloak-gatekeeper:6.0.1"
 }
 
