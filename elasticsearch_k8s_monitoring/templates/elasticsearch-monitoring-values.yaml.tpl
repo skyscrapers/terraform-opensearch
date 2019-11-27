@@ -4,20 +4,20 @@ amazonService:
 elasticsearch-exporter:
   resources:
     limits:
-      memory: 40Mi
+      memory: 48Mi
     requests:
       cpu: 5m
-      memory: 40Mi
+      memory: 48Mi
   es:
     uri: ${elasticsearch_endpoint}
 
 prometheus-cloudwatch-exporter:
   resources:
     limits:
-      memory: 150Mi
+      memory: 160Mi
     requests:
       cpu: 5m
-      memory: 150Mi
+      memory: 160Mi
   aws:
     role: "${cloudwatch_exporter_role}"
   config: |-
