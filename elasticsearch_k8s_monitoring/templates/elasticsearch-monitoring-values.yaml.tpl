@@ -1,5 +1,4 @@
-amazonService:
-  enabled: true
+amazonService: true
 
 elasticsearch-exporter:
   resources:
