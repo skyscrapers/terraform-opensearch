@@ -1,21 +1,21 @@
 output "arn" {
   description = "ARN of the Elasticsearch domain"
-  value = aws_elasticsearch_domain.es.arn
+  value       = aws_elasticsearch_domain.es.arn
 }
 
 output "domain_id" {
   description = "ID of the Elasticsearch domain"
-  value = aws_elasticsearch_domain.es.domain_id
+  value       = aws_elasticsearch_domain.es.domain_id
 }
 
 output "domain_name" {
   description = "Name of the Elasticsearch domain"
-  value = aws_elasticsearch_domain.es.domain_name
+  value       = aws_elasticsearch_domain.es.domain_name
 }
 
 output "endpoint" {
   description = "DNS endpoint of the Elasticsearch domain"
-  value = aws_elasticsearch_domain.es.endpoint
+  value       = aws_elasticsearch_domain.es.endpoint
 }
 
 output "domain_region" {

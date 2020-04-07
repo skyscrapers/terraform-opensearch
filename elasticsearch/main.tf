@@ -19,6 +19,24 @@ locals {
 
 data "aws_region" "current" {}
 
+data "aws_subnet" "private" {
+  count = length(var.subnet_ids)
+  id    = var.subnet_ids[count.index]
+}
+
+locals {
+  # For Public domains, get number of multiple zones instances can span
+  instance_az = var.vpc_id == null && var.instance_count >= 3 ? 3 : var.vpc_id == null && var.instance_count == 2 ? 2 : null
+
+  # For private domains, get number of multiple zones instances can span within available subnets
+  #subnet_az = var.instance_count >= 3 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 3 ? 3 : var.instance_count >= 2 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 2 ? 2 : null
+  subnet_az = var.instance_count >= 3 && length(distinct(var.subnet_ids)) >= 3 ? 3 : var.instance_count >= 2 && length(distinct(var.subnet_ids)) >= 2 ? 2 : null
+
+  zone_awareness_enabled = local.instance_az != null ? true : local.subnet_az != null ? true : false
+
+  availability_zone_count = local.instance_az == 3 ? 3 : local.subnet_az == 3 ? 3 : 2
+}
+
 resource "aws_elasticsearch_domain" "es" {
   domain_name           = "${var.project}-${var.environment}-${var.name}"
   elasticsearch_version = var.elasticsearch_version
@@ -29,7 +47,13 @@ resource "aws_elasticsearch_domain" "es" {
     dedicated_master_enabled = var.dedicated_master_enabled
     dedicated_master_count   = var.dedicated_master_enabled ? var.dedicated_master_count : 0
     dedicated_master_type    = var.dedicated_master_enabled ? var.dedicated_master_type : ""
-    zone_awareness_enabled   = var.zone_awareness_enabled
+    zone_awareness_enabled   = var.zone_awareness_enabled != null ? var.zone_awareness_enabled : local.zone_awareness_enabled
+    dynamic "zone_awareness_config" {
+      for_each = var.zone_awareness_enabled != null ? var.zone_awareness_enabled : local.zone_awareness_enabled
+      content {
+        availability_zone_count = var.availability_zone_count != null ? var.availability_zone_count : local.availability_zone_count
+      }
+    }
   }
 
   ebs_options {
