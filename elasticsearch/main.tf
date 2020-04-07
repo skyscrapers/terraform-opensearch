@@ -30,7 +30,6 @@ locals {
 
   # For private domains, get number of multiple zones instances can span within available subnets
   subnet_az = var.instance_count >= 3 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 3 ? 3 : var.instance_count >= 2 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 2 ? 2 : null
-  
 
   zone_awareness_enabled = local.instance_az != null ? true : local.subnet_az != null ? true : false
 
@@ -49,7 +48,7 @@ resource "aws_elasticsearch_domain" "es" {
     dedicated_master_type    = var.dedicated_master_enabled ? var.dedicated_master_type : ""
     zone_awareness_enabled   = var.zone_awareness_enabled != null ? var.zone_awareness_enabled : local.zone_awareness_enabled
     dynamic "zone_awareness_config" {
-      for_each = var.zone_awareness_enabled != null ? var.zone_awareness_enabled : local.zone_awareness_enabled
+      for_each = var.zone_awareness_enabled == true || local.zone_awareness_enabled == true ? [1] : []
       content {
         availability_zone_count = var.availability_zone_count != null ? var.availability_zone_count : local.availability_zone_count
       }
