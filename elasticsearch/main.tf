@@ -29,8 +29,8 @@ locals {
   instance_az = var.vpc_id == null && var.instance_count >= 3 ? 3 : var.vpc_id == null && var.instance_count == 2 ? 2 : null
 
   # For private domains, get number of multiple zones instances can span within available subnets
-  #subnet_az = var.instance_count >= 3 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 3 ? 3 : var.instance_count >= 2 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 2 ? 2 : null
-  subnet_az = var.instance_count >= 3 && length(distinct(var.subnet_ids)) >= 3 ? 3 : var.instance_count >= 2 && length(distinct(var.subnet_ids)) >= 2 ? 2 : null
+  subnet_az = var.instance_count >= 3 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 3 ? 3 : var.instance_count >= 2 && length(distinct(data.aws_subnet.private[*].availability_zone)) >= 2 ? 2 : null
+  
 
   zone_awareness_enabled = local.instance_az != null ? true : local.subnet_az != null ? true : false
 
