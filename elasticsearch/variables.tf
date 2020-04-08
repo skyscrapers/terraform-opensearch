@@ -99,8 +99,14 @@ variable "dedicated_master_enabled" {
 
 variable "zone_awareness_enabled" {
   type        = bool
-  description = "Whether to enable zone_awareness or not"
-  default     = false
+  description = "Whether to enable zone_awareness or not, if not set, multi az is enabled by default and configured through number of instances/subnets available"
+  default     = null
+}
+
+variable "availability_zone_count" {
+  type        = number
+  description = "Number of Availability Zones for the domain to use with zone_awareness_enabled.Valid values: 2 or 3. Automatically configured through number of instances/subnets available if not set."
+  default     = null
 }
 
 variable "dedicated_master_type" {

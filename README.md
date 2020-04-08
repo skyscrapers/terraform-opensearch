@@ -37,7 +37,8 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | volume\_size | EBS volume size (in GB) to use for the Elasticsearch domain | number | n/a | yes |
 | volume\_type | EBS volume type to use for the Elasticsearch domain | string | `"gp2"` | no |
 | vpc\_id | VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain | string | `null` | no |
-| zone\_awareness\_enabled | Whether to enable zone_awareness or not | bool | `false` | no |
+| zone\_awareness\_enabled | Whether to enable zone_awareness or not, if not set, multi az is enabled by default and configured through number of instances/subnets available | bool | `null` | no |
+| availability\_zone\_count | Number of Availability Zones for the domain to use with zone_awareness_enabled.Valid values: 2 or 3. Automatically configured through number of instances/subnets available if not set | number | `null` | no 
 
 ### Outputs
 
