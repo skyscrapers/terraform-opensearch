@@ -121,18 +121,38 @@ resource "aws_iam_service_linked_role" "es" {
 
 This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart on Kubernetes.
 
+### Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.24 |
+| aws | >= 2.55.0 |
+| helm | >= 1.1.1 |
+| kubernetes | >= 1.11.1 |
+
+### Providers
+
+| Name | Version |
+|------|---------|
+| helm | >= 1.1.1 |
+| template | n/a |
+
 ### Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
+|------|-------------|------|---------|:--------:|
+| cloudwatch_exporter_role_arn | IAM role ARN to use for the CloudWatch exporter. Used via either IRSA or kube2iam (see `var.irsa_enabled`) | `string` | n/a | yes |
+| elasticsearch_domain_name | Domain name of the AWS Elasticsearch domain | `string` | n/a | yes |
+| elasticsearch_domain_region | Region of the AWS Elasticsearch domain | `string` | n/a | yes |
+| elasticsearch_endpoint | Endpoint of the AWS Elasticsearch domain | `string` | n/a | yes |
+| kubernetes_namespace | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | `string` | n/a | yes |
+| elasticsearch_monitoring_chart_version | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.2.1"` | no |
+| force_helm_update | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on the deployed values | `string` | `"1"` | no |
+| irsa_enabled | Whether to use [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html). When `true`, the Cloudwatch exporter's SA is appropriately annotated. If `false` a [kube2iam](https://github.com/jtblin/kube2iam) Pod annotation is set instead | `bool` | `true` | no |
 
-| elasticsearch\_monitoring\_chart\_version | elasticsearch-monitoring Helm chart version to deploy | string | `"0.2.5"` | no |
-| elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
-| elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
-| elasticsearch\_domain\_region | Region of the AWS Elasticsearch domain | string | n/a | yes |
-| kubernetes\_namespace | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | string | n/a | yes |
-| kubernetes\_worker\_instance\_role\_arns | Role ARNs of the Kubernetes nodes to attach the kube2iam assume_role to | list(string) | n/a | yes |
-| force\_helm\_update | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on | string | `"1"` | no |
+### Outputs
+
+No output.
 
 ## kibana_k8s_auth_ingress
 
