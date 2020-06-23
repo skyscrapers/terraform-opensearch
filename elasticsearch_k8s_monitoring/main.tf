@@ -26,7 +26,8 @@ resource "helm_release" "elasticsearch_monitoring" {
     data.template_file.elasticsearch_monitoring_helm_values.rendered,
   ]
 
-  set_string {
+  set {
+    type  = "string"
     name  = "terraform_force_update_this_is_not_used"
     value = var.force_helm_update
   }
