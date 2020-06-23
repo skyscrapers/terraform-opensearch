@@ -2,56 +2,15 @@ locals {
   elasticsearch_domain_endpoint = "https://${var.elasticsearch_endpoint}:443"
 }
 
-data "aws_caller_identity" "current" {}
-
-data "aws_region" "current" {}
-
-data "aws_iam_policy_document" "cloudwatch_exporter_assume" {
-  statement {
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type = "AWS"
-
-      identifiers = var.kubernetes_worker_instance_role_arns
-    }
-  }
-}
-
-data "aws_iam_policy_document" "cloudwatch_exporter" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "cloudwatch:GetMetricStatistics",
-      "cloudwatch:ListMetrics",
-    ]
-
-    resources = ["*"]
-  }
-}
-
-resource "aws_iam_role" "cloudwatch_exporter" {
-  name               = "${var.elasticsearch_domain_name}_elasticsearch_monitoring"
-  path               = "/kube2iam/"
-  assume_role_policy = data.aws_iam_policy_document.cloudwatch_exporter_assume.json
-}
-
-resource "aws_iam_role_policy" "cloudwatch_exporter" {
-  role   = aws_iam_role.cloudwatch_exporter.id
-  policy = data.aws_iam_policy_document.cloudwatch_exporter.json
-}
-
 data "template_file" "elasticsearch_monitoring_helm_values" {
   template = file("${path.module}/templates/elasticsearch-monitoring-values.yaml.tpl")
 
   vars = {
-    elasticsearch_endpoint   = local.elasticsearch_domain_endpoint
-    cloudwatch_exporter_role = aws_iam_role.cloudwatch_exporter.arn
-    region                   = var.elasticsearch_domain_region
+    cloudwatch_exporter_role = var.cloudwatch_exporter_role_arn
     elasticsearch_domain     = var.elasticsearch_domain_name
+    elasticsearch_endpoint   = local.elasticsearch_domain_endpoint
+    irsa_enabled             = var.irsa_enabled
+    region                   = var.elasticsearch_domain_region
   }
 }
 
@@ -67,7 +26,8 @@ resource "helm_release" "elasticsearch_monitoring" {
     data.template_file.elasticsearch_monitoring_helm_values.rendered,
   ]
 
-  set_string {
+  set {
+    type  = "string"
     name  = "terraform_force_update_this_is_not_used"
     value = var.force_helm_update
   }

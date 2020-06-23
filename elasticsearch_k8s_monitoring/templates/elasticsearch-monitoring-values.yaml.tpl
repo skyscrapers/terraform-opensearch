@@ -18,7 +18,19 @@ prometheus-cloudwatch-exporter:
       cpu: 5m
       memory: 160Mi
   aws:
+    region: ${region}
+%{if ! irsa_enabled ~}
     role: "${cloudwatch_exporter_role}"
+%{ endif ~}
+  serviceAccount:
+    create: true
+%{if irsa_enabled ~}
+    annotations:
+      eks.amazonaws.com/role-arn: "${cloudwatch_exporter_role}"
+%{ endif ~}
+  securityContext:
+    runAsUser: 65534
+    fsGroup: 65534
   config: |-
     region: ${region}
     period_seconds: 60
