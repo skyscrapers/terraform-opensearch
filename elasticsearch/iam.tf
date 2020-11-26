@@ -24,14 +24,21 @@ data "aws_iam_policy_document" "snapshot_policy" {
   statement {
     actions = [
       "s3:ListBucket",
-      "s3:GetObject",
-      "s3:PutObject",
-      "s3:DeleteObject",
-      "iam:PassRole",
     ]
 
     resources = [
       aws_s3_bucket.snapshot[0].arn,
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+    ]
+
+    resources = [
       "${aws_s3_bucket.snapshot[0].arn}/*",
     ]
   }
