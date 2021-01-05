@@ -174,8 +174,8 @@ variable "tags" {
   default     = {}
 }
 
-variable "disable_encrypt_at_rest" {
+variable "encrypt_at_rest" {
   type        = bool
-  description = "Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster!"
-  default     = false
+  description = "Whether to enable encryption at rest for the cluster. Changing this on an existing cluster will force a new resource!"
+  default     = true
 }

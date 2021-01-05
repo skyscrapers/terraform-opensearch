@@ -75,7 +75,7 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   encrypt_at_rest {
-    enabled = var.disable_encrypt_at_rest ? false : contains(var.encryption_list, var.instance_type)
+    enabled = var.encrypt_at_rest
   }
 
   log_publishing_options {
