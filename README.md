@@ -146,7 +146,7 @@ This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrap
 | elasticsearch_domain_region | Region of the AWS Elasticsearch domain | `string` | n/a | yes |
 | elasticsearch_endpoint | Endpoint of the AWS Elasticsearch domain | `string` | n/a | yes |
 | kubernetes_namespace | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | `string` | n/a | yes |
-| elasticsearch_monitoring_chart_version | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.2.1"` | no |
+| elasticsearch_monitoring_chart_version | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.2.3"` | no |
 | force_helm_update | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on the deployed values | `string` | `"1"` | no |
 | irsa_enabled | Whether to use [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html). When `true`, the Cloudwatch exporter's SA is appropriately annotated. If `false` a [kube2iam](https://github.com/jtblin/kube2iam) Pod annotation is set instead | `bool` | `true` | no |
 
