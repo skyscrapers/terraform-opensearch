@@ -7,38 +7,38 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 ### Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| cognito\_enabled | Whether to enable Cognito for authentication in Kibana | bool | `false` | no |
-| cognito\_identity\_pool\_id | Rrequired when cognito_enabled is enabled: ID of the Cognito Identity Pool to use | string | `null` | no |
-| cognito\_role\_arn | Required when cognito_enabled is enabled: ARN of the IAM role that has the AmazonESCognitoAccess policy attached | string | `null` | no |
-| cognito\_user\_pool\_id | Required when cognito_enabled is enabled: ID of the Cognito User Pool to use | string | `null` | no |
-| dedicated\_master\_count | Number of dedicated master nodes in the domain | number | `1` | no |
-| dedicated\_master\_enabled | Whether dedicated master nodes are enabled for the domain | bool | `false` | no |
-| dedicated\_master\_type | Instance type of the dedicated master nodes in the domain | string | `"t2.small.elasticsearch"` | no |
-| disable\_encrypt\_at\_rest | Whether to force-disable encryption at rest, overriding the default to enable encryption if it is supported by the chosen `instance_type`. If you want to keep encryption disabled on an `instance_type` that is compatible with encryption you need to set this parameter to `true`. This is especially important for existing Amazon ES clusters, since enabling/disabling encryption at rest will destroy your cluster! | bool | `false` | no |
-| elasticsearch\_version | Version of the Elasticsearch domain | string | `"6.7"` | no |
-| environment | Environment name | string | n/a | yes |
-| instance\_count | Size of the Elasticsearch domain | number | `1` | no |
-| instance\_type | Instance type to use for the Elasticsearch domain | string | `"t2.small.elasticsearch"` | no |
-| application_logging\_enabled | Whether to enable Elasticsearch application logs in Cloudwatch | bool | `false` | no |
-| logging\_enabled | Whether to enable Elasticsearch slow logs in Cloudwatch | bool | `false` | no |
-| logging\_retention | How many days to retain Elasticsearch logs in Cloudwatch | number | `30` | no |
-| name | Name to use for the Elasticsearch domain | string | n/a | yes |
-| options\_indices\_fielddata\_cache\_size | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | number | `null` | no |
-| options\_indices\_query\_bool\_max\_clause\_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | number | `1024` | no |
-| options\_rest\_action\_multi\_allow\_explicit\_index | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body | bool | `true` | no |
-| project | Project name | string | n/a | yes |
-| security\_group\_ids | Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs | list(string) | `[]` | no |
-| snapshot\_bucket\_enabled | Whether to create a bucket for custom Elasticsearch backups (other than the default daily one) | string | `"false"` | no |
-| snapshot\_start\_hour | Int(optional, 3): Hour during which an automated daily snapshot is taken of the Elasticsearch indices | number | `3` | no |
-| subnet\_ids | Required if vpc_id is specified: Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in | list(string) | `[]` | no |
-| tags | Optional tags | map | `{}` | no |
-| volume\_iops | Required if volume_type="io1": Amount of provisioned IOPS for the EBS volume | number | `0` | no |
-| volume\_size | EBS volume size (in GB) to use for the Elasticsearch domain | number | n/a | yes |
-| volume\_type | EBS volume type to use for the Elasticsearch domain | string | `"gp2"` | no |
-| vpc\_id | VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain | string | `null` | no |
-| zone\_awareness\_enabled | Whether to enable zone_awareness or not, if not set, multi az is enabled by default and configured through number of instances/subnets available | bool | `null` | no |
-| availability\_zone\_count | Number of Availability Zones for the domain to use with zone_awareness_enabled.Valid values: 2 or 3. Automatically configured through number of instances/subnets available if not set | number | `null` | no 
+|------|-------------|------|---------|:--------:|
+| environment | Environment name | `string` | n/a | yes |
+| name | Name to use for the Elasticsearch domain | `string` | n/a | yes |
+| project | Project name | `string` | n/a | yes |
+| volume_size | EBS volume size (in GB) to use for the Elasticsearch domain | `number` | n/a | yes |
+| application_logging_enabled | Whether to enable Elasticsearch application logs in Cloudwatch | `bool` | `false` | no |
+| availability_zone_count | Number of Availability Zones for the domain to use with zone_awareness_enabled.Valid values: 2 or 3. Automatically configured through number of instances/subnets available if not set. | `number` | `null` | no |
+| cognito_enabled | Whether to enable Cognito for authentication in Kibana | `bool` | `false` | no |
+| cognito_identity_pool_id | Required when cognito_enabled is enabled: ID of the Cognito Identity Pool to use | `string` | `null` | no |
+| cognito_role_arn | Required when `cognito_enabled` is enabled: ARN of the IAM role that has the AmazonESCognitoAccess policy attached | `string` | `null` | no |
+| cognito_user_pool_id | Required when cognito_enabled is enabled: ID of the Cognito User Pool to use | `string` | `null` | no |
+| dedicated_master_count | Number of dedicated master nodes in the domain | `number` | `1` | no |
+| dedicated_master_enabled | Whether dedicated master nodes are enabled for the domain | `bool` | `false` | no |
+| dedicated_master_type | Instance type of the dedicated master nodes in the domain | `string` | `"t2.small.elasticsearch"` | no |
+| elasticsearch_version | Version of the Elasticsearch domain | `string` | `"6.7"` | no |
+| encrypt_at_rest | Whether to enable encryption at rest for the cluster. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
+| instance_count | Size of the Elasticsearch domain | `number` | `1` | no |
+| instance_type | Instance type to use for the Elasticsearch domain | `string` | `"t2.small.elasticsearch"` | no |
+| logging_enabled | Whether to enable Elasticsearch slow logs in Cloudwatch | `bool` | `false` | no |
+| logging_retention | How many days to retain Elasticsearch logs in Cloudwatch | `number` | `30` | no |
+| options_indices_fielddata_cache_size | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | `number` | `null` | no |
+| options_indices_query_bool_max_clause_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
+| options_rest_action_multi_allow_explicit_index | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
+| security_group_ids | Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
+| snapshot_bucket_enabled | Whether to create a bucket for custom Elasticsearch backups (other than the default daily one) | `bool` | `false` | no |
+| snapshot_start_hour | Hour during which an automated daily snapshot is taken of the Elasticsearch indices | `number` | `3` | no |
+| subnet_ids | Required if vpc_id is specified: Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in | `list(string)` | `[]` | no |
+| tags | Optional tags | `map(string)` | `{}` | no |
+| volume_iops | Required if volume_type="io1": Amount of provisioned IOPS for the EBS volume | `number` | `0` | no |
+| volume_type | EBS volume type to use for the Elasticsearch domain | `string` | `"gp2"` | no |
+| vpc_id | VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain | `string` | `null` | no |
+| zone_awareness_enabled | Whether to enable zone_awareness or not, if not set, multi az is enabled by default and configured through number of instances/subnets available | `bool` | `null` | no |
 
 ### Outputs
 
