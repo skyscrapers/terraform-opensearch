@@ -38,7 +38,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | encrypt_at_rest | Whether to enable encryption at rest for the cluster. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | encrypt_at_rest_kms_key_id | The KMS key id to encrypt the Elasticsearch domain with. If not specified then it defaults to using the `aws/es` service KMS key | `string` | `null` | no |
 | endpoint_enforce_https | Whether or not to require HTTPS | `bool` | `true` | no |
-| endpoint_tls_security_policy | The name of the TLS security policy that needs to be applied to the HTTPS endpoint. Valid values: `Policy-Min-TLS-1-0-2019-07` and `Policy-Min-TLS-1-2-2019-07`. Terraform will only perform drift detection if a configuration value is provided | `string` | `null` | no |
+| endpoint_tls_security_policy | The name of the TLS security policy that needs to be applied to the HTTPS endpoint. Valid values: `Policy-Min-TLS-1-0-2019-07` and `Policy-Min-TLS-1-2-2019-07` | `string` | `"Policy-Min-TLS-1-2-2019-07"` | no |
 | ephemeral_list | m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type | `list(string)` | <pre>[<br>  "i2.xlarge.elasticsearch",<br>  "i2.2xlarge.elasticsearch",<br>  "i3.large.elasticsearch",<br>  "i3.xlarge.elasticsearch",<br>  "i3.2xlarge.elasticsearch",<br>  "i3.4xlarge.elasticsearch",<br>  "i3.8xlarge.elasticsearch",<br>  "i3.16xlarge.elasticsearch"<br>]</pre> | no |
 | instance_count | Size of the Elasticsearch domain | `number` | `1` | no |
 | logging_enabled | Whether to enable Elasticsearch slow logs (index & search) in Cloudwatch | `bool` | `false` | no |
