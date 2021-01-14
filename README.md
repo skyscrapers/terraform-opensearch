@@ -4,29 +4,46 @@
 
 Terraform module to setup all resources needed for setting up an AWS Elasticsearch Service domain.
 
+### Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.13 |
+
+### Providers
+
+| Name | Version |
+|------|---------|
+| aws | n/a |
+
 ### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | environment | Environment name | `string` | n/a | yes |
+| instance_type | Instance type to use for the Elasticsearch domain | `string` | n/a | yes |
 | name | Name to use for the Elasticsearch domain | `string` | n/a | yes |
 | project | Project name | `string` | n/a | yes |
 | volume_size | EBS volume size (in GB) to use for the Elasticsearch domain | `number` | n/a | yes |
-| application_logging_enabled | Whether to enable Elasticsearch application logs in Cloudwatch | `bool` | `false` | no |
+| application_logging_enabled | Whether to enable Elasticsearch application logs (error) in Cloudwatch | `bool` | `false` | no |
 | availability_zone_count | Number of Availability Zones for the domain to use with zone_awareness_enabled.Valid values: 2 or 3. Automatically configured through number of instances/subnets available if not set. | `number` | `null` | no |
 | cognito_enabled | Whether to enable Cognito for authentication in Kibana | `bool` | `false` | no |
 | cognito_identity_pool_id | Required when cognito_enabled is enabled: ID of the Cognito Identity Pool to use | `string` | `null` | no |
 | cognito_role_arn | Required when `cognito_enabled` is enabled: ARN of the IAM role that has the AmazonESCognitoAccess policy attached | `string` | `null` | no |
 | cognito_user_pool_id | Required when cognito_enabled is enabled: ID of the Cognito User Pool to use | `string` | `null` | no |
-| dedicated_master_count | Number of dedicated master nodes in the domain | `number` | `1` | no |
-| dedicated_master_enabled | Whether dedicated master nodes are enabled for the domain | `bool` | `false` | no |
-| dedicated_master_type | Instance type of the dedicated master nodes in the domain | `string` | `"t2.small.elasticsearch"` | no |
+| dedicated_master_count | Number of dedicated master nodes in the domain (can be 3 or 5) | `number` | `3` | no |
+| dedicated_master_enabled | Whether dedicated master nodes are enabled for the domain. Automatically enabled when `warm_enabled = true` | `bool` | `false` | no |
+| dedicated_master_type | Instance type of the dedicated master nodes in the domain | `string` | `"t3.small.elasticsearch"` | no |
 | elasticsearch_version | Version of the Elasticsearch domain | `string` | `"6.7"` | no |
 | encrypt_at_rest | Whether to enable encryption at rest for the cluster. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
+| encrypt_at_rest_kms_key_id | The KMS key id to encrypt the Elasticsearch domain with. If not specified then it defaults to using the `aws/es` service KMS key | `string` | `null` | no |
+| endpoint_enforce_https | Whether or not to require HTTPS | `bool` | `true` | no |
+| endpoint_tls_security_policy | The name of the TLS security policy that needs to be applied to the HTTPS endpoint. Valid values: `Policy-Min-TLS-1-0-2019-07` and `Policy-Min-TLS-1-2-2019-07` | `string` | `"Policy-Min-TLS-1-2-2019-07"` | no |
+| ephemeral_list | m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type | `list(string)` | <pre>[<br>  "i2.xlarge.elasticsearch",<br>  "i2.2xlarge.elasticsearch",<br>  "i3.large.elasticsearch",<br>  "i3.xlarge.elasticsearch",<br>  "i3.2xlarge.elasticsearch",<br>  "i3.4xlarge.elasticsearch",<br>  "i3.8xlarge.elasticsearch",<br>  "i3.16xlarge.elasticsearch"<br>]</pre> | no |
 | instance_count | Size of the Elasticsearch domain | `number` | `1` | no |
-| instance_type | Instance type to use for the Elasticsearch domain | `string` | `"t2.small.elasticsearch"` | no |
-| logging_enabled | Whether to enable Elasticsearch slow logs in Cloudwatch | `bool` | `false` | no |
+| logging_enabled | Whether to enable Elasticsearch slow logs (index & search) in Cloudwatch | `bool` | `false` | no |
 | logging_retention | How many days to retain Elasticsearch logs in Cloudwatch | `number` | `30` | no |
+| node_to_node_encryption | Whether to enable node-to-node encryption. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | options_indices_fielddata_cache_size | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | `number` | `null` | no |
 | options_indices_query_bool_max_clause_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
 | options_rest_action_multi_allow_explicit_index | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
@@ -38,6 +55,9 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | volume_iops | Required if volume_type="io1": Amount of provisioned IOPS for the EBS volume | `number` | `0` | no |
 | volume_type | EBS volume type to use for the Elasticsearch domain | `string` | `"gp2"` | no |
 | vpc_id | VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain | `string` | `null` | no |
+| warm_count | Number of warm nodes (2 - 150) | `number` | `2` | no |
+| warm_enabled | Whether to enable warm storage | `bool` | `false` | no |
+| warm_type | Instance type of the warm nodes | `string` | `"ultrawarm1.medium.elasticsearch"` | no |
 | zone_awareness_enabled | Whether to enable zone_awareness or not, if not set, multi az is enabled by default and configured through number of instances/subnets available | `bool` | `null` | no |
 
 ### Outputs
@@ -45,13 +65,14 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | Name | Description |
 |------|-------------|
 | arn | ARN of the Elasticsearch domain |
-| domain\_id | ID of the Elasticsearch domain |
-| domain\_name | Name of the Elasticsearch domain |
-| domain\_region | Region of the Elasticsearch domain |
+| domain_id | ID of the Elasticsearch domain |
+| domain_name | Name of the Elasticsearch domain |
+| domain_region | Region of the Elasticsearch domain |
 | endpoint | DNS endpoint of the Elasticsearch domain |
-| role\_arn | ARN of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
-| role\_id | ID of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
-| sg\_id | ID of the Elasticsearch security group |
+| kibana_endpoint | DNS endpoint of Kibana |
+| role_arn | ARN of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
+| role_id | ID of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
+| sg_id | ID of the Elasticsearch security group |
 
 ### Example
 

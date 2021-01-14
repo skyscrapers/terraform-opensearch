@@ -43,10 +43,17 @@ resource "aws_elasticsearch_domain" "es" {
   cluster_config {
     instance_count           = var.instance_count
     instance_type            = var.instance_type
-    dedicated_master_enabled = var.dedicated_master_enabled
-    dedicated_master_count   = var.dedicated_master_enabled ? var.dedicated_master_count : 0
-    dedicated_master_type    = var.dedicated_master_enabled ? var.dedicated_master_type : ""
+
+    dedicated_master_enabled = var.warm_enabled || var.dedicated_master_enabled
+    dedicated_master_count   = var.warm_enabled || var.dedicated_master_enabled ? var.dedicated_master_count : null
+    dedicated_master_type    = var.warm_enabled || var.dedicated_master_enabled ? var.dedicated_master_type : null
+
+    warm_enabled = var.warm_enabled
+    warm_count   = var.warm_enabled ? var.warm_count : null
+    warm_type    = var.warm_enabled ? var.warm_type : null
+
     zone_awareness_enabled   = var.zone_awareness_enabled != null ? var.zone_awareness_enabled : local.zone_awareness_enabled
+
     dynamic "zone_awareness_config" {
       for_each = var.zone_awareness_enabled == true || local.zone_awareness_enabled == true ? [1] : []
       content {
@@ -75,7 +82,17 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   encrypt_at_rest {
-    enabled = var.encrypt_at_rest
+    enabled    = var.encrypt_at_rest
+    kms_key_id = var.encrypt_at_rest_kms_key_id
+  }
+
+  node_to_node_encryption {
+    enabled = var.node_to_node_encryption
+  }
+
+  domain_endpoint_options {
+    enforce_https       = var.endpoint_enforce_https
+    tls_security_policy = var.endpoint_tls_security_policy
   }
 
   log_publishing_options {
