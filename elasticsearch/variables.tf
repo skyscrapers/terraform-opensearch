@@ -63,13 +63,13 @@ variable "cognito_role_arn" {
 
 variable "logging_enabled" {
   type        = bool
-  description = "Whether to enable Elasticsearch slow logs in Cloudwatch"
+  description = "Whether to enable Elasticsearch slow logs (index & search) in Cloudwatch"
   default     = false
 }
 
 variable "application_logging_enabled" {
   type        = bool
-  description = "Whether to enable Elasticsearch application logs in Cloudwatch"
+  description = "Whether to enable Elasticsearch application logs (error) in Cloudwatch"
   default     = false
 }
 
@@ -88,13 +88,6 @@ variable "instance_count" {
 variable "instance_type" {
   type        = string
   description = "Instance type to use for the Elasticsearch domain"
-  default     = "t2.small.elasticsearch"
-}
-
-variable "dedicated_master_enabled" {
-  type        = bool
-  description = "Whether dedicated master nodes are enabled for the domain"
-  default     = false
 }
 
 variable "zone_awareness_enabled" {
@@ -109,16 +102,40 @@ variable "availability_zone_count" {
   default     = null
 }
 
+variable "dedicated_master_enabled" {
+  type        = bool
+  description = "Whether dedicated master nodes are enabled for the domain. Automatically enabled when `warm_enabled = true`"
+  default     = false
+}
+
 variable "dedicated_master_type" {
   type        = string
   description = "Instance type of the dedicated master nodes in the domain"
-  default     = "t2.small.elasticsearch"
+  default     = "t3.small.elasticsearch"
 }
 
 variable "dedicated_master_count" {
   type        = number
-  description = "Number of dedicated master nodes in the domain"
-  default     = 1
+  description = "Number of dedicated master nodes in the domain (can be 3 or 5)"
+  default     = 3
+}
+
+variable "warm_enabled" {
+  type        = bool
+  description = "Whether to enable warm storage"
+  default     = false
+}
+
+variable "warm_type" {
+  type        = string
+  description = "Instance type of the warm nodes"
+  default     = "ultrawarm1.medium.elasticsearch"
+}
+
+variable "warm_count" {
+  type        = number
+  description = "Number of warm nodes (2 - 150)"
+  default     = 2
 }
 
 variable "volume_type" {
@@ -178,4 +195,28 @@ variable "encrypt_at_rest" {
   type        = bool
   description = "Whether to enable encryption at rest for the cluster. Changing this on an existing cluster will force a new resource!"
   default     = true
+}
+
+variable "encrypt_at_rest_kms_key_id" {
+  type        = string
+  description = "The KMS key id to encrypt the Elasticsearch domain with. If not specified then it defaults to using the `aws/es` service KMS key"
+  default     = null
+}
+
+variable "node_to_node_encryption" {
+  type        = bool
+  description = "Whether to enable node-to-node encryption"
+  default     = true
+}
+
+variable "endpoint_enforce_https" {
+  type        = bool
+  description = "Whether or not to require HTTPS"
+  default     = true
+}
+
+variable "endpoint_tls_security_policy" {
+  type        = string
+  description = "The name of the TLS security policy that needs to be applied to the HTTPS endpoint. Valid values: `Policy-Min-TLS-1-0-2019-07` and `Policy-Min-TLS-1-2-2019-07`. Terraform will only perform drift detection if a configuration value is provided"
+  default     = null
 }

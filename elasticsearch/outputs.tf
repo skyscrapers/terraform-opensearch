@@ -18,6 +18,11 @@ output "endpoint" {
   value       = aws_elasticsearch_domain.es.endpoint
 }
 
+output "kibana_endpoint" {
+  description = "DNS endpoint of Kibana"
+  value       = aws_elasticsearch_domain.es.endpoint
+}
+
 output "domain_region" {
   description = "Region of the Elasticsearch domain"
   value       = data.aws_region.current.name

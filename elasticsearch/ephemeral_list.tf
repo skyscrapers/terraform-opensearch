@@ -1,6 +1,3 @@
-# List all instances which support encryption at rest
-# https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/aes-supported-instance-types.html
-
 # m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type
 variable "ephemeral_list" {
   type = list(string)
