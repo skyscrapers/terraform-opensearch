@@ -43,7 +43,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | instance_count | Size of the Elasticsearch domain | `number` | `1` | no |
 | logging_enabled | Whether to enable Elasticsearch slow logs (index & search) in Cloudwatch | `bool` | `false` | no |
 | logging_retention | How many days to retain Elasticsearch logs in Cloudwatch | `number` | `30` | no |
-| node_to_node_encryption | Whether to enable node-to-node encryption | `bool` | `true` | no |
+| node_to_node_encryption | Whether to enable node-to-node encryption. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | options_indices_fielddata_cache_size | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | `number` | `null` | no |
 | options_indices_query_bool_max_clause_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
 | options_rest_action_multi_allow_explicit_index | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |

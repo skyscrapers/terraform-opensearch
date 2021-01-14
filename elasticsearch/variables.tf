@@ -205,7 +205,7 @@ variable "encrypt_at_rest_kms_key_id" {
 
 variable "node_to_node_encryption" {
   type        = bool
-  description = "Whether to enable node-to-node encryption"
+  description = "Whether to enable node-to-node encryption. Changing this on an existing cluster will force a new resource!"
   default     = true
 }
 
