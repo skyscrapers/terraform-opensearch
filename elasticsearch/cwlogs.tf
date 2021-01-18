@@ -1,4 +1,3 @@
-
 resource "aws_cloudwatch_log_group" "cwl_index" {
   name              = "${var.project}/${var.environment}/${var.name}/index_slow_logs"
   retention_in_days = var.logging_retention

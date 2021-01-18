@@ -1,0 +1,4 @@
+functions/**
+!functions/requirements.txt
+!functions/snapshot.py
+!snapshot_lambda.zip

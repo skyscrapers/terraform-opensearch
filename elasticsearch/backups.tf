@@ -208,6 +208,7 @@ resource "aws_security_group_rule" "snapshot_lambda_ingress" {
 
 ## LAMBDA
 
+## Enable to (re-)build the zip
 # data "archive_file" "snapshot_lambda" {
 #   count = local.snapshot_enabled_count
 
@@ -223,10 +224,8 @@ resource "aws_lambda_function" "snapshot_lambda" {
   description   = "Function to create S3-based Elasticsearch snapshots"
   tags          = local.tags_noname
 
-  runtime = "python3.8"
-  handler = "snapshot.lambda_handler"
-  # filename         = data.archive_file.snapshot_lambda[0].output_path
-  # source_code_hash = data.archive_file.snapshot_lambda[0].output_base64sha256
+  runtime          = "python3.8"
+  handler          = "snapshot.lambda_handler"
   filename         = "${path.module}/snapshot_lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/snapshot_lambda.zip")
   role             = aws_iam_role.snapshot_lambda[0].arn
