@@ -11,12 +11,13 @@ variable "environment" {
 variable "name" {
   type        = string
   description = "Name to use for the Elasticsearch domain"
+  default     = "es"
 }
 
 variable "elasticsearch_version" {
   type        = string
   description = "Version of the Elasticsearch domain"
-  default     = "6.7"
+  default     = "7.9"
 }
 
 variable "options_rest_action_multi_allow_explicit_index" {
@@ -179,10 +180,28 @@ variable "snapshot_start_hour" {
   default     = 3
 }
 
-variable "snapshot_bucket_enabled" {
+variable "lambda_snapshots_enabled" {
   type        = bool
-  description = "Whether to create a bucket for custom Elasticsearch backups (other than the default daily one)"
+  description = "Whether to create a custom snapshot S3 bucket and enable automated snapshots through Lambda"
   default     = false
+}
+
+variable "lambda_snapshots_schedule_expression" {
+  type        = string
+  description = "The scheduling expression for running the Lambda-based Elasticsearch snapshots (eg. every day at 2AM)"
+  default     = "cron(0 2 * * ? *)"
+}
+
+variable "lambda_snapshots_retention" {
+  type        = number
+  description = "How many days to retain the Lambda-based Elasticsearch snapshots in S3"
+  default     = 30
+}
+
+variable "lambda_snapshots_logs_retention" {
+  type        = number
+  description = "How many days to retain logs for the Lambda-based Elasticsearch snapshots"
+  default     = 30
 }
 
 variable "tags" {
