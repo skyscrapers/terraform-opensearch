@@ -123,7 +123,7 @@ data "aws_iam_policy_document" "snapshot_lambda" {
 
   statement {
     effect    = "Allow"
-    actions   = ["es:ESHttpPut"]
+    actions   = ["es:ESHttp*"]
     resources = ["${aws_elasticsearch_domain.es.arn}/*"]
   }
 
@@ -229,6 +229,7 @@ resource "aws_lambda_function" "snapshot_lambda" {
   filename         = "${path.module}/snapshot_lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/snapshot_lambda.zip")
   role             = aws_iam_role.snapshot_lambda[0].arn
+  timeout          = 180
 
   environment {
     variables = {
