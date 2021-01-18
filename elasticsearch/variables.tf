@@ -180,27 +180,27 @@ variable "snapshot_start_hour" {
   default     = 3
 }
 
-variable "lambda_snapshots_enabled" {
+variable "s3_snapshots_enabled" {
   type        = bool
   description = "Whether to create a custom snapshot S3 bucket and enable automated snapshots through Lambda"
   default     = false
 }
 
-variable "lambda_snapshots_schedule_expression" {
+variable "s3_snapshots_schedule_expression" {
   type        = string
-  description = "The scheduling expression for running the Lambda-based Elasticsearch snapshots (eg. every day at 2AM)"
+  description = "The scheduling expression for running the S3 based Elasticsearch snapshot Lambda (eg. every day at 2AM)"
   default     = "cron(0 2 * * ? *)"
 }
 
-variable "lambda_snapshots_retention" {
+variable "s3_snapshots_retention" {
   type        = number
-  description = "How many days to retain the Lambda-based Elasticsearch snapshots in S3"
+  description = "How many days to retain the Elasticsearch snapshots in S3"
   default     = 30
 }
 
-variable "lambda_snapshots_logs_retention" {
+variable "s3_snapshots_logs_retention" {
   type        = number
-  description = "How many days to retain logs for the Lambda-based Elasticsearch snapshots"
+  description = "How many days to retain logs for the S3 snapshot Lambda function"
   default     = 30
 }
 

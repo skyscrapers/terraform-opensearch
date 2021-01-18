@@ -1,7 +1,7 @@
 locals {
   snapshot_resource_name     = "${var.project}-${var.environment}-${var.name}-snapshot"
-  snapshot_enabled_count     = var.lambda_snapshots_enabled ? 1 : 0
-  snapshot_enabled_vpc_count = var.lambda_snapshots_enabled && var.vpc_id != null ? 1 : 0
+  snapshot_enabled_count     = var.s3_snapshots_enabled ? 1 : 0
+  snapshot_enabled_vpc_count = var.s3_snapshots_enabled && var.vpc_id != null ? 1 : 0
 }
 
 ## BUCKET
@@ -37,7 +37,7 @@ resource "aws_s3_bucket_public_access_block" "snapshot" {
 resource "aws_cloudwatch_log_group" "snapshot_lambda" {
   name              = "/aws/lambda/${var.project}-${var.environment}-${var.name}-snapshot"
   tags              = local.tags_noname
-  retention_in_days = var.lambda_snapshots_logs_retention
+  retention_in_days = var.s3_snapshots_logs_retention
 }
 
 ## CREATE SNAPSHOT IAM ROLE
@@ -237,7 +237,7 @@ resource "aws_lambda_function" "snapshot_lambda" {
       HOST       = aws_elasticsearch_domain.es.endpoint
       REGION     = data.aws_region.current.name
       REPOSITORY = "s3-manual"
-      RETENTION  = var.lambda_snapshots_retention
+      RETENTION  = var.s3_snapshots_retention
       ROLE_ARN   = aws_iam_role.snapshot_create[0].arn
     }
   }
@@ -259,7 +259,7 @@ resource "aws_cloudwatch_event_rule" "snapshot_lambda" {
 
   name                = local.snapshot_resource_name
   tags                = local.tags_noname
-  schedule_expression = var.lambda_snapshots_schedule_expression
+  schedule_expression = var.s3_snapshots_schedule_expression
 }
 
 resource "aws_cloudwatch_event_target" "snapshot_lambda" {
