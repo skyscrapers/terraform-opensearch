@@ -281,3 +281,13 @@ resource "aws_lambda_permission" "snapshot_lambda" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.snapshot_lambda[0].arn
 }
+
+## MONITORING
+
+module "snapshot_lambda_monitoring" {
+  count = var.s3_snapshots_monitoring_sns_topic_arn != null ? 1 : 0
+
+  source          = "github.com/skyscrapers/terraform-cloudwatch//lambda_function?ref=2.0.0"
+  lambda_function = aws_lambda_function.snapshot_lambda[0].function_name
+  sns_topic_arn   = var.s3_snapshots_monitoring_sns_topic_arn
+}

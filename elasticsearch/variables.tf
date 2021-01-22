@@ -210,6 +210,12 @@ variable "s3_snapshots_logs_retention" {
   default     = 30
 }
 
+variable "s3_snapshots_monitoring_sns_topic_arn" {
+  type        = string
+  description = "ARN for the SNS Topic to send alerts to from the S3 snapshot Lambda function. Enables monitoring of the Lambda function"
+  default     = null
+}
+
 variable "tags" {
   type        = map(string)
   description = "Optional tags"
