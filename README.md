@@ -1,5 +1,32 @@
 # terraform-awselasticsearch
 
+- [terraform-awselasticsearch](#terraform-awselasticsearch)
+  - [elasticsearch](#elasticsearch)
+    - [Requirements](#requirements)
+    - [Providers](#providers)
+    - [Inputs](#inputs)
+    - [Outputs](#outputs)
+    - [Example](#example)
+    - [Backups](#backups)
+    - [Logging](#logging)
+    - [Monitoring](#monitoring)
+    - [NOTES](#notes)
+  - [elasticsearch_k8s_monitoring](#elasticsearch_k8s_monitoring)
+    - [Requirements](#requirements-1)
+    - [Providers](#providers-1)
+    - [Inputs](#inputs-1)
+    - [Outputs](#outputs-1)
+  - [kibana_k8s_auth_ingress](#kibana_k8s_auth_ingress)
+    - [Requirements](#requirements-2)
+    - [Providers](#providers-2)
+    - [Inputs](#inputs-2)
+    - [Outputs](#outputs-2)
+  - [kibana_k8s_auth_proxy](#kibana_k8s_auth_proxy)
+    - [Inputs](#inputs-3)
+    - [Outputs](#outputs-3)
+  - [Upgrading](#upgrading)
+    - [Version 6.0.0 to 7.0.0](#version-600-to-700)
+
 ## elasticsearch
 
 Terraform module to setup all resources needed for setting up an AWS Elasticsearch Service domain.
@@ -22,7 +49,6 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 |------|-------------|------|---------|:--------:|
 | environment | Environment name | `string` | n/a | yes |
 | instance_type | Instance type to use for the Elasticsearch domain | `string` | n/a | yes |
-| name | Name to use for the Elasticsearch domain | `string` | n/a | yes |
 | project | Project name | `string` | n/a | yes |
 | volume_size | EBS volume size (in GB) to use for the Elasticsearch domain | `number` | n/a | yes |
 | application_logging_enabled | Whether to enable Elasticsearch application logs (error) in Cloudwatch | `bool` | `false` | no |
@@ -34,7 +60,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | dedicated_master_count | Number of dedicated master nodes in the domain (can be 3 or 5) | `number` | `3` | no |
 | dedicated_master_enabled | Whether dedicated master nodes are enabled for the domain. Automatically enabled when `warm_enabled = true` | `bool` | `false` | no |
 | dedicated_master_type | Instance type of the dedicated master nodes in the domain | `string` | `"t3.small.elasticsearch"` | no |
-| elasticsearch_version | Version of the Elasticsearch domain | `string` | `"6.7"` | no |
+| elasticsearch_version | Version of the Elasticsearch domain | `string` | `"7.9"` | no |
 | encrypt_at_rest | Whether to enable encryption at rest for the cluster. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | encrypt_at_rest_kms_key_id | The KMS key id to encrypt the Elasticsearch domain with. If not specified then it defaults to using the `aws/es` service KMS key | `string` | `null` | no |
 | endpoint_enforce_https | Whether or not to require HTTPS | `bool` | `true` | no |
@@ -43,12 +69,18 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | instance_count | Size of the Elasticsearch domain | `number` | `1` | no |
 | logging_enabled | Whether to enable Elasticsearch slow logs (index & search) in Cloudwatch | `bool` | `false` | no |
 | logging_retention | How many days to retain Elasticsearch logs in Cloudwatch | `number` | `30` | no |
+| name | Name to use for the Elasticsearch domain | `string` | `"es"` | no |
 | node_to_node_encryption | Whether to enable node-to-node encryption. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | options_indices_fielddata_cache_size | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | `number` | `null` | no |
 | options_indices_query_bool_max_clause_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
 | options_rest_action_multi_allow_explicit_index | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
+| s3_snapshots_enabled | Whether to create a custom snapshot S3 bucket and enable automated snapshots through Lambda | `bool` | `false` | no |
+| s3_snapshots_lambda_timeout | The execution timeout for the S3 snapshotting Lambda function | `number` | `180` | no |
+| s3_snapshots_logs_retention | How many days to retain logs for the S3 snapshot Lambda function | `number` | `30` | no |
+| s3_snapshots_monitoring_sns_topic_arn | ARN for the SNS Topic to send alerts to from the S3 snapshot Lambda function. Enables monitoring of the Lambda function | `string` | `null` | no |
+| s3_snapshots_retention | How many days to retain the Elasticsearch snapshots in S3 | `number` | `30` | no |
+| s3_snapshots_schedule_expression | The scheduling expression for running the S3 based Elasticsearch snapshot Lambda (eg. every day at 2AM) | `string` | `"cron(0 2 * * ? *)"` | no |
 | security_group_ids | Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
-| snapshot_bucket_enabled | Whether to create a bucket for custom Elasticsearch backups (other than the default daily one) | `bool` | `false` | no |
 | snapshot_start_hour | Hour during which an automated daily snapshot is taken of the Elasticsearch indices | `number` | `3` | no |
 | subnet_ids | Required if vpc_id is specified: Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in | `list(string)` | `[]` | no |
 | tags | Optional tags | `map(string)` | `{}` | no |
@@ -70,61 +102,72 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | domain_region | Region of the Elasticsearch domain |
 | endpoint | DNS endpoint of the Elasticsearch domain |
 | kibana_endpoint | DNS endpoint of Kibana |
-| role_arn | ARN of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
-| role_id | ID of the IAM role (eg to attach to an instance or user) allowing access to the Elasticsearch snapshot bucket |
 | sg_id | ID of the Elasticsearch security group |
 
 ### Example
 
 ```terraform
 module "elasticsearch" {
-  source        = "github.com/skyscrapers/terraform-awselasticsearch//elasticsearch?ref=4.0.0"
-  name           = "es"
-  project        = var.project
+  source = "github.com/skyscrapers/terraform-awselasticsearch//elasticsearch?ref=7.0.0"
+
+  project        = "logs"
   environment    = terraform.workspace
   instance_count = 3
   instance_type  = "m5.large.elasticsearch"
   volume_size    = 100
   vpc_id         = data.terraform_remote_state.networking.outputs.vpc_id
   subnet_ids     = data.terraform_remote_state.networking.outputs.private_db_subnets
+
+  s3_snapshots_enabled             = true
+  s3_snapshots_schedule_expression = "rate(12 hours)"
+  s3_snapshots_retention           = 14
 }
 
-resource "aws_elasticsearch_domain_policy" "es_policy" {
-  domain_name = "${module.elasticsearch.domain_name}"
+data "aws_iam_policy_document" "elasticsearch" {
+  statement {
+    effect = "Allow"
 
-  access_policies = <<POLICY
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": "es:*",
-            "Principal": [
-              "AWS": "${aws_iam_user.es_user.arn}"
-            ],
-            "Effect": "Allow",
-            "Resource": "${module.elasticsearch.arn}/*"
-        }
-    ]
+    principals {
+      type        = "AWS"
+      identifiers = ["${aws_iam_user.es_user.arn}"]
+    }
+
+    actions   = ["es:*"]
+    resources = ["${module.elasticsearch.arn}/*"]
+  }
 }
-POLICY
+
+resource "aws_elasticsearch_domain_policy" "elasticsearch" {
+  domain_name     = module.elasticsearch.domain_name
+  access_policies = data.aws_iam_policy_document.elasticsearch.json
 }
 ```
 
 ### Backups
 
-The AWS Elasticsearch Service handles backups automatically via daily snapshots. You can control when this happens by setting `snapshot_start_hour`.
+**Important**: Behavior of this module in function of backups has changed much between versions 6.0.0 and 7.0.0. Make sure to read the [upgrade guide](#version-600-to-700).
 
-It's possible to create a custom backup schedule by using the normal Elasticsearch API for snapshotting. This module can create an S3 bucket and IAM role allowing such scenario's (`snapshot_bucket_enabled = true`). More info on how to create custom snapshots can be found in the [AWS documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-snapshots.html).
+The AWS Elasticsearch Service handles backups [automatically via daily (<= 5.1) or hourly (>= 5.3) snapshots](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-snapshots.html).
+
+Next to the built-in AWS snapshots, this module also offers creating your own backups to an S3 bucket by setting `s3_snapshots_enabled = true`. This will create an S3 bucket for storing the snapshots, a Lambda function and all required resources to automatically:
+
+- Register the S3 bucket as snapshot repository (`s3-manual`) in Elasticsearch
+- Delete (automated) snapshots in this repo that are older than `s3_snapshots_retention`
+- Create a new snapshot in this repo with name `automatic-<datetime>`
+
+Check the table above for all available `s3_snapshots_*` inputs.
 
 ### Logging
 
-This module by default creates Cloudwatch Log Groups & IAM permissions for ElasticSearch slow logging, but we don't enable these logs by default. You can control logging behavior via the `logging_enabled` and `logging_retention` parameters. When enabling this, make sure you also enable this on Elasticsearch side, following the [AWS documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-slow-logs).
+This module by default creates Cloudwatch Log Groups & IAM permissions for ElasticSearch slow logging (search & index), but we don't enable these logs by default. You can control logging behavior via the `logging_enabled` and `logging_retention` parameters. When enabling this, make sure you also enable this on Elasticsearch side, following the [AWS documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createdomain-configure-slow-logs.html).
+
+You can also enable Elasticsearch error logs via `application_logging_enabled = true`.
 
 ### Monitoring
 
-This module generates a Helm values file which can be used for the [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart.
+For a CloudWatch based solution, check out our [`terraform-cloudwatch` modules](https://github.com/skyscrapers/terraform-cloudwatch).
 
-The file, `helm_values.yaml` needs to be created in the same folder as the Terraform code that is calling this module.
+For a Kubernetes & Prometheus based solution, see the [`elasticsearch_k8s_monitoring` module](#elasticsearch_k8s_monitoring) below.
 
 ### NOTES
 
@@ -179,19 +222,37 @@ No output.
 
 This module deploys an Ingress with [external authentication](https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/) on Kubernetes to reach the AWS Elasticsearch Kibana endpoint.
 
+### Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12 |
+
+### Providers
+
+| Name | Version |
+|------|---------|
+| kubernetes | n/a |
+
 ### Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| elasticsearch\_endpoint | Endpoint of the AWS Elasticsearch domain | string | n/a | yes |
-| elasticsearch\_domain\_name | Domain name of the AWS Elasticsearch domain | string | n/a | yes |
-| kubernetes\_namespace | Kubernetes namespace where to deploy the Ingress | string | n/a | yes |
-| ingress\_host | Hostname to use for the Ingress | string | n/a | yes |
-| ingress\_auth\_url | Value to set for the `nginx.ingress.kubernetes.io/auth-url` annotation | string | n/a | yes |
-| ingress\_auth\_signin | Value to set for the `nginx.ingress.kubernetes.io/auth-signin` annotation | string | n/a | yes |
-| ingress\_auth\_configuration\_snippet | Value to set for the `nginx.ingress.kubernetes.io/configuration-snippet` annotation | string | `null` | no |
+|------|-------------|------|---------|:--------:|
+| elasticsearch_domain_name | Domain name of the AWS Elasticsearch domain | `string` | n/a | yes |
+| elasticsearch_endpoint | Endpoint of the AWS Elasticsearch domain | `string` | n/a | yes |
+| ingress_auth_signin | Value to set for the `nginx.ingress.kubernetes.io/auth-signin` annotation | `string` | n/a | yes |
+| ingress_auth_url | Value to set for the `nginx.ingress.kubernetes.io/auth-url` annotation | `string` | n/a | yes |
+| ingress_host | Hostname to use for the Ingress | `string` | n/a | yes |
+| kubernetes_namespace | Kubernetes namespace where to deploy the Ingress | `string` | n/a | yes |
+| ingress_configuration_snippet | Value to set for the `nginx.ingress.kubernetes.io/configuration-snippet` annotation | `string` | `null` | no |
+
+### Outputs
+
+No output.
 
 ## kibana_k8s_auth_proxy
+
+**This module is no longer maintained!**
 
 This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-gatekeeper) as OIDC proxy on Kubernetes to reach the AWS Elasticsearch Kibana endpoint.
 
@@ -216,3 +277,17 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | Name | Description |
 |------|-------------|
 | callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |
+
+## Upgrading
+
+### Version 6.0.0 to 7.0.0
+
+Behavior of this module in function of backups has changed much between versions 6.0.0 and 7.0.0:
+
+- Replace the `snapshot_bucket_enabled` variable with `s3_snapshots_enabled`
+  - Note: This will also enable the Lambda for automated backups
+  - If you just want to keep the bucket, you can remove it from the terraform state and manage it outside the module: `terraform state rm aws_s3_bucket.snapshot[0]`
+- The IAM role for taking snapshots has been renamed. If you want to keep the old role too, you should remove it from the terraform state: `terraform state rm module.registrations.aws_iam_role.role[0]`
+  - Otherwise just let it destroy the old role and it will create a new one
+
+Also note that some default values for variables has beem changed, mostly related to encryption. If this triggers an unwanted change, you can override this by explicitly setting the variable with it's old value.

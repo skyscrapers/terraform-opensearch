@@ -129,36 +129,3 @@ resource "aws_elasticsearch_domain" "es" {
     role_arn         = var.cognito_enabled ? var.cognito_role_arn : ""
   }
 }
-
-resource "aws_cloudwatch_log_group" "cwl_index" {
-  name              = "${var.project}/${var.environment}/${var.name}/index_slow_logs"
-  retention_in_days = var.logging_retention
-  tags              = local.tags_noname
-}
-
-resource "aws_cloudwatch_log_group" "cwl_search" {
-  name              = "${var.project}/${var.environment}/${var.name}/search_slow_logs"
-  retention_in_days = var.logging_retention
-  tags              = local.tags_noname
-}
-
-resource "aws_cloudwatch_log_group" "cwl_application" {
-  name              = "${var.project}/${var.environment}/${var.name}/application_logs"
-  retention_in_days = var.logging_retention
-  tags              = local.tags_noname
-}
-
-resource "aws_s3_bucket" "snapshot" {
-  count  = var.snapshot_bucket_enabled ? 1 : 0
-  bucket = "${var.project}-${var.environment}-${var.name}-snapshot"
-  acl    = "private"
-  tags   = local.tags
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "aws:kms"
-      }
-    }
-  }
-}

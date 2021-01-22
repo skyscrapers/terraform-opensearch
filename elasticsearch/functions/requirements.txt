@@ -1,0 +1,2 @@
+elasticsearch-curator
+requests_aws4auth
