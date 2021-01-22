@@ -35,6 +35,8 @@ resource "aws_s3_bucket_public_access_block" "snapshot" {
 ## CW LOGS
 
 resource "aws_cloudwatch_log_group" "snapshot_lambda" {
+  count = local.snapshot_enabled_count
+
   name              = "/aws/lambda/${var.project}-${var.environment}-${var.name}-snapshot"
   tags              = local.tags_noname
   retention_in_days = var.s3_snapshots_logs_retention
@@ -137,8 +139,8 @@ data "aws_iam_policy_document" "snapshot_lambda" {
     ]
 
     resources = [
-      aws_cloudwatch_log_group.snapshot_lambda.arn,
-      "${aws_cloudwatch_log_group.snapshot_lambda.arn}:*",
+      aws_cloudwatch_log_group.snapshot_lambda[0].arn,
+      "${aws_cloudwatch_log_group.snapshot_lambda[0].arn}:*",
     ]
   }
 
