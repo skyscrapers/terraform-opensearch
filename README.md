@@ -281,7 +281,7 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 
 ### Version 6.0.0 to 7.0.0
 
-Behavior of this module in function of backups has changed much between versions 6.0.0 and 7.0.0. Make sure to read the [upgrade guide](#version-600-to-700).
+Behavior of this module in function of backups has changed much between versions 6.0.0 and 7.0.0:
 
 - Replace the `snapshot_bucket_enabled` variable with `s3_snapshots_enabled`
   - Note: This will also enable the Lambda for automated backups
