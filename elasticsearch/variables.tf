@@ -186,6 +186,12 @@ variable "s3_snapshots_enabled" {
   default     = false
 }
 
+variable "s3_snapshots_lambda_timeout" {
+  type        = number
+  description = "The execution timeout for the S3 snapshotting Lambda function"
+  default     = 180
+}
+
 variable "s3_snapshots_schedule_expression" {
   type        = string
   description = "The scheduling expression for running the S3 based Elasticsearch snapshot Lambda (eg. every day at 2AM)"

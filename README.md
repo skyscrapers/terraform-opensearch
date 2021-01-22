@@ -75,6 +75,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | options_indices_query_bool_max_clause_count | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
 | options_rest_action_multi_allow_explicit_index | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
 | s3_snapshots_enabled | Whether to create a custom snapshot S3 bucket and enable automated snapshots through Lambda | `bool` | `false` | no |
+| s3_snapshots_lambda_timeout | The execution timeout for the S3 snapshotting Lambda function | `number` | `180` | no |
 | s3_snapshots_logs_retention | How many days to retain logs for the S3 snapshot Lambda function | `number` | `30` | no |
 | s3_snapshots_retention | How many days to retain the Elasticsearch snapshots in S3 | `number` | `30` | no |
 | s3_snapshots_schedule_expression | The scheduling expression for running the S3 based Elasticsearch snapshot Lambda (eg. every day at 2AM) | `string` | `"cron(0 2 * * ? *)"` | no |
@@ -106,7 +107,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 
 ```terraform
 module "elasticsearch" {
-  source         = "github.com/skyscrapers/terraform-awselasticsearch//elasticsearch?ref=7.0.0"
+  source = "github.com/skyscrapers/terraform-awselasticsearch//elasticsearch?ref=7.0.0"
 
   project        = "logs"
   environment    = terraform.workspace
@@ -117,8 +118,8 @@ module "elasticsearch" {
   subnet_ids     = data.terraform_remote_state.networking.outputs.private_db_subnets
 
   s3_snapshots_enabled             = true
-  s3_snapshots_schedule_expression = "rate(1 hour)"
-  s3_snapshots_retention           = 15
+  s3_snapshots_schedule_expression = "rate(12 hours)"
+  s3_snapshots_retention           = 14
 }
 
 data "aws_iam_policy_document" "elasticsearch" {
@@ -145,9 +146,9 @@ resource "aws_elasticsearch_domain_policy" "elasticsearch" {
 
 **Important**: Behavior of this module in function of backups has changed much between versions 6.0.0 and 7.0.0. Make sure to read the [upgrade guide](#version-600-to-700).
 
-The AWS Elasticsearch Service handles backups automatically via daily snapshots. You can control when this happens by setting `snapshot_start_hour`.
+The AWS Elasticsearch Service handles backups [automatically via daily (<= 5.1) or hourly (>= 5.3) snapshots](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-snapshots.html).
 
-Next to the built-in AWS snapshots, this module also offers creating your own backups to an S3 bucket by setting `s3_snapshots_enabled = true`. This will create an S3 bucket for storing the snapshots and a Lambda function and all required resources to automatically:
+Next to the built-in AWS snapshots, this module also offers creating your own backups to an S3 bucket by setting `s3_snapshots_enabled = true`. This will create an S3 bucket for storing the snapshots, a Lambda function and all required resources to automatically:
 
 - Register the S3 bucket as snapshot repository (`s3-manual`) in Elasticsearch
 - Delete (automated) snapshots in this repo that are older than `s3_snapshots_retention`
@@ -157,11 +158,15 @@ Check the table above for all available `s3_snapshots_*` inputs.
 
 ### Logging
 
-This module by default creates Cloudwatch Log Groups & IAM permissions for ElasticSearch slow logging, but we don't enable these logs by default. You can control logging behavior via the `logging_enabled` and `logging_retention` parameters. When enabling this, make sure you also enable this on Elasticsearch side, following the [AWS documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createupdatedomains.html#es-createdomain-configure-slow-logs).
+This module by default creates Cloudwatch Log Groups & IAM permissions for ElasticSearch slow logging (search & index), but we don't enable these logs by default. You can control logging behavior via the `logging_enabled` and `logging_retention` parameters. When enabling this, make sure you also enable this on Elasticsearch side, following the [AWS documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createdomain-configure-slow-logs.html).
+
+You can also enable Elasticsearch error logs via `application_logging_enabled = true`.
 
 ### Monitoring
 
-See the [elasticsearch_k8s_monitoring](#elasticsearch_k8s_monitoring) module below.
+For a CloudWatch based solution, check out our [`terraform-cloudwatch` modules](https://github.com/skyscrapers/terraform-cloudwatch).
+
+For a Kubernetes & Prometheus based solution, see the [`elasticsearch_k8s_monitoring` module](#elasticsearch_k8s_monitoring) below.
 
 ### NOTES
 
@@ -276,4 +281,10 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 
 ### Version 6.0.0 to 7.0.0
 
-*TODO*
+Behavior of this module in function of backups has changed much between versions 6.0.0 and 7.0.0. Make sure to read the [upgrade guide](#version-600-to-700).
+
+- Replace the `snapshot_bucket_enabled` variable with `s3_snapshots_enabled`
+  - Note: This will also enable the Lambda for automated backups
+  - If you just want to keep the bucket, you can remove it from the terraform state and manage it outside the module: `terraform state rm aws_s3_bucket.snapshot[0]`
+- The IAM role for taking snapshots has been renamed. If you want to keep the old role too, you should remove it from the terraform state: `terraform state rm module.registrations.aws_iam_role.role[0]`
+  - Otherwise just let it destroy the old role and it will create a new one

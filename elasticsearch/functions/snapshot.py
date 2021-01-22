@@ -59,6 +59,7 @@ def lambda_handler(event, context):
 
     except (ElasticsearchException) as e:
         print(e)
+        raise
 
     # DELETE
     try:
@@ -71,8 +72,12 @@ def lambda_handler(event, context):
         curator.DeleteSnapshots(
             snapshot_list, retry_interval=30, retry_count=3).do_action()
 
-    except (curator.exceptions.SnapshotInProgress, curator.exceptions.NoSnapshots, curator.exceptions.FailedExecution) as e:
+    except (curator.exceptions.NoSnapshots) as e:
+        # This is fine
         print(e)
+    except (curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
+        print(e)
+        raise
 
     # CREATE
     try:
@@ -84,3 +89,4 @@ def lambda_handler(event, context):
 
     except (curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
         print(e)
+        raise
