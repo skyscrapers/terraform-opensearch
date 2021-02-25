@@ -1,6 +1,6 @@
 amazonService: true
 
-elasticsearch-exporter:
+prometheus-elasticsearch-exporter:
   resources:
     limits:
       memory: 48Mi
