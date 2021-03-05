@@ -9,6 +9,9 @@ prometheus-elasticsearch-exporter:
       memory: 48Mi
   es:
     uri: ${elasticsearch_endpoint}
+    indices: false
+    indices_settings: false
+    shards: false
 
 prometheus-cloudwatch-exporter:
   resources:
