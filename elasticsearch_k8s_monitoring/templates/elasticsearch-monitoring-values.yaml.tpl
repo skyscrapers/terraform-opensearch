@@ -11,6 +11,7 @@ prometheus-elasticsearch-exporter:
     uri: ${elasticsearch_endpoint}
     indices: false
     indices_settings: false
+    shards: false
 
 prometheus-cloudwatch-exporter:
   resources:
