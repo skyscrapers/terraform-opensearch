@@ -45,3 +45,9 @@ prometheus-cloudwatch-exporter:
       aws_dimension_select:
         DomainName: [${elasticsearch_domain}]
       aws_statistics: [Minimum, Maximum, Average, Sum]
+    - aws_namespace: AWS/ES
+      aws_metric_name: ClusterIndexWritesBlocked
+      aws_dimensions: [ClientId, DomainName]
+      aws_dimension_select:
+        DomainName: [${elasticsearch_domain}]
+      aws_statistics: [Maximum]
