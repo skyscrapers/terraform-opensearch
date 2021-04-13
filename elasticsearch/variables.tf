@@ -251,3 +251,16 @@ variable "endpoint_tls_security_policy" {
   description = "The name of the TLS security policy that needs to be applied to the HTTPS endpoint. Valid values: `Policy-Min-TLS-1-0-2019-07` and `Policy-Min-TLS-1-2-2019-07`"
   default     = "Policy-Min-TLS-1-2-2019-07"
 }
+
+
+variable "custom_endpoint" {
+  type        = string
+  description = "The domain name to use as custom endpoint for Elasicsearch"
+  default     = null
+}
+
+variable "custom_endpoint_certificate_arn" {
+  type        = string
+  description = "ARN of the ACM certificate to use for the custom endpoint. Required when custom endpoint is set along with enabling `endpoint_enforce_https`"
+  default     = null
+}

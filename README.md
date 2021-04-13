@@ -57,6 +57,8 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | cognito_identity_pool_id | Required when cognito_enabled is enabled: ID of the Cognito Identity Pool to use | `string` | `null` | no |
 | cognito_role_arn | Required when `cognito_enabled` is enabled: ARN of the IAM role that has the AmazonESCognitoAccess policy attached | `string` | `null` | no |
 | cognito_user_pool_id | Required when cognito_enabled is enabled: ID of the Cognito User Pool to use | `string` | `null` | no |
+| custom_endpoint | The domain name to use as custom endpoint for Elasicsearch | `string` | `null` | no |
+| custom_endpoint_certificate_arn | ARN of the ACM certificate to use for the custom endpoint. Required when custom endpoint is set along with enabling `endpoint_enforce_https` | `string` | `null` | no |
 | dedicated_master_count | Number of dedicated master nodes in the domain (can be 3 or 5) | `number` | `3` | no |
 | dedicated_master_enabled | Whether dedicated master nodes are enabled for the domain. Automatically enabled when `warm_enabled = true` | `bool` | `false` | no |
 | dedicated_master_type | Instance type of the dedicated master nodes in the domain | `string` | `"t3.small.elasticsearch"` | no |

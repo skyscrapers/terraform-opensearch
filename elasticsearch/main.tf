@@ -41,8 +41,8 @@ resource "aws_elasticsearch_domain" "es" {
   elasticsearch_version = var.elasticsearch_version
 
   cluster_config {
-    instance_count           = var.instance_count
-    instance_type            = var.instance_type
+    instance_count = var.instance_count
+    instance_type  = var.instance_type
 
     dedicated_master_enabled = var.warm_enabled || var.dedicated_master_enabled
     dedicated_master_count   = var.warm_enabled || var.dedicated_master_enabled ? var.dedicated_master_count : null
@@ -52,7 +52,7 @@ resource "aws_elasticsearch_domain" "es" {
     warm_count   = var.warm_enabled ? var.warm_count : null
     warm_type    = var.warm_enabled ? var.warm_type : null
 
-    zone_awareness_enabled   = var.zone_awareness_enabled != null ? var.zone_awareness_enabled : local.zone_awareness_enabled
+    zone_awareness_enabled = var.zone_awareness_enabled != null ? var.zone_awareness_enabled : local.zone_awareness_enabled
 
     dynamic "zone_awareness_config" {
       for_each = var.zone_awareness_enabled == true || local.zone_awareness_enabled == true ? [1] : []
@@ -91,8 +91,11 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   domain_endpoint_options {
-    enforce_https       = var.endpoint_enforce_https
-    tls_security_policy = var.endpoint_tls_security_policy
+    enforce_https                   = var.endpoint_enforce_https
+    tls_security_policy             = var.endpoint_tls_security_policy
+    custom_endpoint_enabled         = var.custom_endpoint == null ? false : true
+    custom_endpoint                 = var.custom_endpoint
+    custom_endpoint_certificate_arn = var.custom_endpoint_certificate_arn
   }
 
   log_publishing_options {
