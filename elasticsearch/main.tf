@@ -94,8 +94,8 @@ resource "aws_elasticsearch_domain" "es" {
     enforce_https                   = var.endpoint_enforce_https
     tls_security_policy             = var.endpoint_tls_security_policy
     custom_endpoint_enabled         = var.custom_endpoint == null ? false : true
-    custom_endpoint                 = var.custom_endpoint == null ? null : var.custom_endpoint
-    custom_endpoint_certificate_arn = var.custom_endpoint_certificate_arn == null ? null : var.custom_endpoint_certificate_arn
+    custom_endpoint                 = var.custom_endpoint
+    custom_endpoint_certificate_arn = var.custom_endpoint_certificate_arn
   }
 
   log_publishing_options {
