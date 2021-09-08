@@ -201,7 +201,7 @@ variable "s3_snapshots_schedule_expression" {
 variable "s3_snapshots_retention" {
   type        = number
   description = "How many days to retain the Elasticsearch snapshots in S3"
-  default     = 30
+  default     = 14
 }
 
 variable "s3_snapshots_logs_retention" {
