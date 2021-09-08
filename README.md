@@ -80,7 +80,7 @@ Terraform module to setup all resources needed for setting up an AWS Elasticsear
 | s3_snapshots_lambda_timeout | The execution timeout for the S3 snapshotting Lambda function | `number` | `180` | no |
 | s3_snapshots_logs_retention | How many days to retain logs for the S3 snapshot Lambda function | `number` | `30` | no |
 | s3_snapshots_monitoring_sns_topic_arn | ARN for the SNS Topic to send alerts to from the S3 snapshot Lambda function. Enables monitoring of the Lambda function | `string` | `null` | no |
-| s3_snapshots_retention | How many days to retain the Elasticsearch snapshots in S3 | `number` | `30` | no |
+| s3_snapshots_retention | How many days to retain the Elasticsearch snapshots in S3 | `number` | `14` | no |
 | s3_snapshots_schedule_expression | The scheduling expression for running the S3 based Elasticsearch snapshot Lambda (eg. every day at 2AM) | `string` | `"cron(0 2 * * ? *)"` | no |
 | security_group_ids | Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
 | snapshot_start_hour | Hour during which an automated daily snapshot is taken of the Elasticsearch indices | `number` | `3` | no |
