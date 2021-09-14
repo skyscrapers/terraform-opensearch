@@ -212,7 +212,6 @@ This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrap
 | elasticsearch_domain_region | Region of the AWS Elasticsearch domain | `string` | n/a | yes |
 | elasticsearch_endpoint | Endpoint of the AWS Elasticsearch domain | `string` | n/a | yes |
 | kubernetes_namespace | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | `string` | n/a | yes |
-| elasticsearch_monitoring_chart_version | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.2.3"` | no |
 | cw_exporter_memory | Memory request and limit for the prometheus-cloudwatch-exporter pod | `string` | `"160Mi"` | no |
 | elasticsearch_monitoring_chart_version | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.3.2"` | no |
 | es_exporter_memory | Memory request and limit for the prometheus-elasticsearch-exporter pod | `string` | `"48Mi"` | no |
