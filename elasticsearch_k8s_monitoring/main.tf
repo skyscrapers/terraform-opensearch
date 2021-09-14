@@ -11,6 +11,8 @@ data "template_file" "elasticsearch_monitoring_helm_values" {
     elasticsearch_endpoint   = local.elasticsearch_domain_endpoint
     irsa_enabled             = var.irsa_enabled
     region                   = var.elasticsearch_domain_region
+    es_exporter_memory       = var.es_exporter_memory
+    cw_exporter_memory       = var.cw_exporter_memory
   }
 }
 
