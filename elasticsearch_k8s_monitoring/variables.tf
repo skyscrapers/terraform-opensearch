@@ -19,6 +19,12 @@ variable "elasticsearch_domain_region" {
   description = "Region of the AWS Elasticsearch domain"
 }
 
+variable "es_exporter_memory" {
+  type        = string
+  description = "Memory request and limit for the prometheus-elasticsearch-exporter pod"
+  default     = "48Mi"
+}
+
 variable "kubernetes_namespace" {
   type        = string
   description = "Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart"
@@ -33,6 +39,12 @@ variable "irsa_enabled" {
 variable "cloudwatch_exporter_role_arn" {
   type        = string
   description = "IAM role ARN to use for the CloudWatch exporter. Used via either IRSA or kube2iam (see `var.irsa_enabled`)"
+}
+
+variable "cw_exporter_memory" {
+  type        = string
+  description = "Memory request and limit for the prometheus-cloudwatch-exporter pod"
+  default     = "160Mi"
 }
 
 variable "force_helm_update" {

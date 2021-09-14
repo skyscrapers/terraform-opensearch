@@ -3,10 +3,10 @@ amazonService: true
 prometheus-elasticsearch-exporter:
   resources:
     limits:
-      memory: 48Mi
+      memory: ${es_exporter_memory}
     requests:
       cpu: 5m
-      memory: 48Mi
+      memory: ${es_exporter_memory}
   es:
     uri: ${elasticsearch_endpoint}
     indices: false
@@ -16,10 +16,10 @@ prometheus-elasticsearch-exporter:
 prometheus-cloudwatch-exporter:
   resources:
     limits:
-      memory: 160Mi
+      memory: ${cw_exporter_memory}
     requests:
       cpu: 5m
-      memory: 160Mi
+      memory: ${cw_exporter_memory}
   aws:
     region: ${region}
 %{if ! irsa_enabled ~}
