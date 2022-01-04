@@ -1,28 +1,23 @@
-variable "project" {
-  type        = string
-  description = "Project name"
-}
-
-variable "environment" {
-  type        = string
-  description = "Environment name"
-}
-
 variable "name" {
   type        = string
-  description = "Name to use for the Elasticsearch domain"
-  default     = "es"
+  description = "Name to use for the OpenSearch domain"
 }
 
-variable "elasticsearch_version" {
+variable "search_version" {
   type        = string
-  description = "Version of the Elasticsearch domain"
-  default     = "7.9"
+  description = "Version of the OpenSearch domain"
+  default     = "OpenSearch_1.1"
+}
+
+variable "options_override_main_response_version" {
+  type        = bool
+  description = "Whether to enable compatibility mode when creating and OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work"
+  default     = true
 }
 
 variable "options_rest_action_multi_allow_explicit_index" {
   type        = bool
-  description = "Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, Elasticsearch will reject requests that have an explicit index specified in the request body"
+  description = "Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body"
   default     = true
 }
 
@@ -64,31 +59,31 @@ variable "cognito_role_arn" {
 
 variable "logging_enabled" {
   type        = bool
-  description = "Whether to enable Elasticsearch slow logs (index & search) in Cloudwatch"
+  description = "Whether to enable OpenSearch slow logs (index & search) in Cloudwatch"
   default     = false
 }
 
 variable "application_logging_enabled" {
   type        = bool
-  description = "Whether to enable Elasticsearch application logs (error) in Cloudwatch"
+  description = "Whether to enable OpenSearch application logs (error) in Cloudwatch"
   default     = false
 }
 
 variable "logging_retention" {
   type        = number
-  description = "How many days to retain Elasticsearch logs in Cloudwatch"
+  description = "How many days to retain OpenSearch logs in Cloudwatch"
   default     = 30
 }
 
 variable "instance_count" {
   type        = number
-  description = "Size of the Elasticsearch domain"
+  description = "Size of the OpenSearch domain"
   default     = 1
 }
 
 variable "instance_type" {
   type        = string
-  description = "Instance type to use for the Elasticsearch domain"
+  description = "Instance type to use for the OpenSearch domain"
 }
 
 variable "zone_awareness_enabled" {
@@ -112,7 +107,7 @@ variable "dedicated_master_enabled" {
 variable "dedicated_master_type" {
   type        = string
   description = "Instance type of the dedicated master nodes in the domain"
-  default     = "t3.small.elasticsearch"
+  default     = "t3.small.search"
 }
 
 variable "dedicated_master_count" {
@@ -130,7 +125,7 @@ variable "warm_enabled" {
 variable "warm_type" {
   type        = string
   description = "Instance type of the warm nodes"
-  default     = "ultrawarm1.medium.elasticsearch"
+  default     = "ultrawarm1.medium.search"
 }
 
 variable "warm_count" {
@@ -141,13 +136,13 @@ variable "warm_count" {
 
 variable "volume_type" {
   type        = string
-  description = "EBS volume type to use for the Elasticsearch domain"
+  description = "EBS volume type to use for the OpenSearch domain"
   default     = "gp2"
 }
 
 variable "volume_size" {
   type        = number
-  description = "EBS volume size (in GB) to use for the Elasticsearch domain"
+  description = "EBS volume size (in GB) to use for the OpenSearch domain"
 }
 
 variable "volume_iops" {
@@ -158,25 +153,25 @@ variable "volume_iops" {
 
 variable "vpc_id" {
   type        = string
-  description = "VPC ID where to deploy the Elasticsearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain"
+  description = "VPC ID where to deploy the OpenSearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain"
   default     = null
 }
 
 variable "subnet_ids" {
   type        = list(string)
-  description = "Required if vpc_id is specified: Subnet IDs for the VPC enabled Elasticsearch domain endpoints to be created in"
+  description = "Required if vpc_id is specified: Subnet IDs for the VPC enabled OpenSearch domain endpoints to be created in"
   default     = []
 }
 
 variable "security_group_ids" {
   type        = list(string)
-  description = "Extra security group IDs to attach to the Elasticsearch domain. Note: a default SG is already created and exposed via outputs"
+  description = "Extra security group IDs to attach to the OpenSearch domain. Note: a default SG is already created and exposed via outputs"
   default     = []
 }
 
 variable "snapshot_start_hour" {
   type        = number
-  description = "Hour during which an automated daily snapshot is taken of the Elasticsearch indices"
+  description = "Hour during which an automated daily snapshot is taken of the OpenSearch indices"
   default     = 3
 }
 
@@ -194,13 +189,13 @@ variable "s3_snapshots_lambda_timeout" {
 
 variable "s3_snapshots_schedule_expression" {
   type        = string
-  description = "The scheduling expression for running the S3 based Elasticsearch snapshot Lambda (eg. every day at 2AM)"
+  description = "The scheduling expression for running the S3 based OpenSearch snapshot Lambda (eg. every day at 2AM)"
   default     = "cron(0 2 * * ? *)"
 }
 
 variable "s3_snapshots_retention" {
   type        = number
-  description = "How many days to retain the Elasticsearch snapshots in S3"
+  description = "How many days to retain the OpenSearch snapshots in S3"
   default     = 14
 }
 
@@ -230,7 +225,7 @@ variable "encrypt_at_rest" {
 
 variable "encrypt_at_rest_kms_key_id" {
   type        = string
-  description = "The KMS key id to encrypt the Elasticsearch domain with. If not specified then it defaults to using the `aws/es` service KMS key"
+  description = "The KMS key id to encrypt the OpenSearch domain with. If not specified then it defaults to using the `aws/es` service KMS key"
   default     = null
 }
 

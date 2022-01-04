@@ -3,22 +3,18 @@ variable "ephemeral_list" {
   type = list(string)
 
   default = [
-    "i2.xlarge.elasticsearch",
-    "i2.2xlarge.elasticsearch",
-    "i3.large.elasticsearch",
-    "i3.xlarge.elasticsearch",
-    "i3.2xlarge.elasticsearch",
-    "i3.4xlarge.elasticsearch",
-    "i3.8xlarge.elasticsearch",
-    "i3.16xlarge.elasticsearch",
+    "i3.large.search",
+    "i3.xlarge.search",
+    "i3.2xlarge.search",
+    "i3.4xlarge.search",
+    "i3.8xlarge.search",
+    "i3.16xlarge.search",
+    "r6gd.large.search",
+    "r6gd.xlarge.search",
+    "r6gd.2xlarge.search",
+    "r6gd.4xlarge.search",
+    "r6gd.8xlarge.search",
+    "r6gd.12xlarge.search",
+    "r6gd.16xlarge.search"
   ]
-  # "m3.medium.elasticsearch",
-  # "m3.large.elasticsearch",
-  # "m3.xlarge.elasticsearch",
-  # "m3.2xlarge.elasticsearch",
-  # "r3.large.elasticsearch",
-  # "r3.xlarge.elasticsearch",
-  # "r3.2xlarge.elasticsearch",
-  # "r3.4xlarge.elasticsearch",
-  # "r3.8xlarge.elasticsearch",
 }
