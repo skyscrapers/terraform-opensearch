@@ -11,7 +11,7 @@ variable "search_version" {
 
 variable "options_override_main_response_version" {
   type        = bool
-  description = "Whether to enable compatibility mode when creating and OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work"
+  description = "Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work"
   default     = true
 }
 
