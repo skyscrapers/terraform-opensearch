@@ -27,6 +27,7 @@
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
   - [Upgrading](#upgrading)
+    - [Version 7.0.0 to 8.0.0](#version-700-to-800)
     - [Version 6.0.0 to 7.0.0](#version-600-to-700)
 
 ## opensearch
@@ -321,6 +322,24 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |
 
 ## Upgrading
+
+### Version 7.0.0 to 8.0.0
+
+This change migrates the `elasticsearch` module to `opensearch`. This is mostly a cosmetic change, however there's several breaking things to note:
+
+- Security Group description is updated, which would normally trigger a destroy/recreate. However existing setups won't be affected due to an ignore lifecycle
+- Variables `project` and `environment` have been removed. Only the `name` variable is now used. For existing setups, you can set `name = "<myproject>-<myenvironment>-<oldname>"` to retain the original "name".
+- CloudWatch Log Groups will be destroyed and recreated using the new name. If you wish to keep your older logs, it's best to remove the existing Log Groups from the TF state:
+
+```shell
+terraform state rm module.elasticsearch.aws_cloudwatch_log_group.cwl_index
+terraform state rm module.elasticsearch.aws_cloudwatch_log_group.cwl_search
+terraform state rm module.elasticsearch.aws_cloudwatch_log_group.cwl_application
+```
+
+- Variable `elasticsearch_version` has been renamed to `search_version`, with default value `OpenSearch_1.1`
+- We no longer merge the `tags` variable with our own hardcoded defaults (`Environment`, `Project`, `Name`) , all tags need to be passed through the `tags` variable and/or through the `default_tags` provider setting
+- Updated list of instance types with NVMe SSD storage
 
 ### Version 6.0.0 to 7.0.0
 
