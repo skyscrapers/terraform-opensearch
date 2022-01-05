@@ -1,22 +1,3 @@
-locals {
-  tags = merge(
-    var.tags,
-    {
-      "Name"        = "${var.project}-${var.environment}-${var.name}"
-      "Environment" = var.environment
-      "Project"     = var.project
-    },
-  )
-
-  tags_noname = merge(
-    var.tags,
-    {
-      "Environment" = var.environment
-      "Project"     = var.project
-    },
-  )
-}
-
 data "aws_region" "current" {}
 
 data "aws_subnet" "private" {
@@ -37,8 +18,9 @@ locals {
 }
 
 resource "aws_elasticsearch_domain" "es" {
-  domain_name           = "${var.project}-${var.environment}-${var.name}"
-  elasticsearch_version = var.elasticsearch_version
+  domain_name           = var.name
+  tags                  = var.tags
+  elasticsearch_version = var.search_version
 
   cluster_config {
     instance_count = var.instance_count
@@ -73,9 +55,8 @@ resource "aws_elasticsearch_domain" "es" {
     automated_snapshot_start_hour = var.snapshot_start_hour
   }
 
-  tags = local.tags
-
   advanced_options = {
+    "override_main_response_version"         = tostring(var.options_override_main_response_version)
     "rest.action.multi.allow_explicit_index" = tostring(var.options_rest_action_multi_allow_explicit_index)
     "indices.fielddata.cache.size"           = var.options_indices_fielddata_cache_size != null ? tostring(var.options_indices_fielddata_cache_size) : ""
     "indices.query.bool.max_clause_count"    = tostring(var.options_indices_query_bool_max_clause_count)

@@ -1,5 +1,5 @@
 locals {
-  snapshot_resource_name     = "${var.project}-${var.environment}-${var.name}-snapshot"
+  snapshot_resource_name     = "${var.name}-snapshot"
   snapshot_enabled_count     = var.s3_snapshots_enabled ? 1 : 0
   snapshot_enabled_vpc_count = var.s3_snapshots_enabled && var.vpc_id != null ? 1 : 0
 }
@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "snapshot" {
 
   bucket = local.snapshot_resource_name
   acl    = "private"
-  tags   = local.tags
+  tags   = var.tags
 
   server_side_encryption_configuration {
     rule {
@@ -37,8 +37,8 @@ resource "aws_s3_bucket_public_access_block" "snapshot" {
 resource "aws_cloudwatch_log_group" "snapshot_lambda" {
   count = local.snapshot_enabled_count
 
-  name              = "/aws/lambda/${var.project}-${var.environment}-${var.name}-snapshot"
-  tags              = local.tags_noname
+  name              = "/aws/lambda/${var.name}-snapshot"
+  tags              = var.tags
   retention_in_days = var.s3_snapshots_logs_retention
 }
 
@@ -85,8 +85,8 @@ resource "aws_iam_role" "snapshot_create" {
   count = local.snapshot_enabled_count
 
   name               = "${local.snapshot_resource_name}-s3put"
-  description        = "Role used by Elasticsearch for snapshotting to S3"
-  tags               = local.tags_noname
+  description        = "Role used by OpenSearch for snapshotting to S3"
+  tags               = var.tags
   assume_role_policy = data.aws_iam_policy_document.snapshot_create_assume[0].json
 }
 
@@ -164,7 +164,7 @@ resource "aws_iam_role" "snapshot_lambda" {
 
   name               = "${local.snapshot_resource_name}-lambda"
   description        = "Role for the Elasticsearh snapshot Lambda function"
-  tags               = local.tags_noname
+  tags               = var.tags
   assume_role_policy = data.aws_iam_policy_document.snapshot_lambda_assume[0].json
 }
 
@@ -181,9 +181,9 @@ resource "aws_security_group" "snapshot_lambda" {
   count = local.snapshot_enabled_vpc_count
 
   name        = local.snapshot_resource_name
-  description = "Security group for the ${var.project}-${var.environment}-${var.name}-snapshot Lambda function"
+  description = "Security group for the ${var.name}-snapshot Lambda function"
   vpc_id      = var.vpc_id
-  tags        = local.tags
+  tags        = var.tags
 }
 
 resource "aws_security_group_rule" "snapshot_lambda_egress" {
@@ -223,8 +223,8 @@ resource "aws_lambda_function" "snapshot_lambda" {
   count = local.snapshot_enabled_count
 
   function_name = local.snapshot_resource_name
-  description   = "Function to create S3-based Elasticsearch snapshots"
-  tags          = local.tags_noname
+  description   = "Function to create S3-based OpenSearch snapshots"
+  tags          = var.tags
 
   runtime          = "python3.8"
   handler          = "snapshot.lambda_handler"
@@ -260,7 +260,7 @@ resource "aws_cloudwatch_event_rule" "snapshot_lambda" {
   count = local.snapshot_enabled_count
 
   name                = local.snapshot_resource_name
-  tags                = local.tags_noname
+  tags                = var.tags
   schedule_expression = var.s3_snapshots_schedule_expression
 }
 
