@@ -1,5 +1,9 @@
 amazonService: true
 
+%{if sla ~}
+sla: ${sla}
+%{ endif ~}
+
 prometheus-elasticsearch-exporter:
   resources:
     limits:
