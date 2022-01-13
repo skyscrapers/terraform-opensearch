@@ -1,6 +1,6 @@
 amazonService: true
 
-%{if sla ~}
+%{ if length(sla) > 0 ~}
 sla: ${sla}
 %{ endif ~}
 

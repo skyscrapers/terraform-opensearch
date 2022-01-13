@@ -13,7 +13,7 @@ data "template_file" "elasticsearch_monitoring_helm_values" {
     region                   = var.elasticsearch_domain_region
     es_exporter_memory       = var.es_exporter_memory
     cw_exporter_memory       = var.cw_exporter_memory
-    sla                      = coalesce(var.sla, false)
+    sla                      = var.sla == null ? "" : var.sla
   }
 }
 
