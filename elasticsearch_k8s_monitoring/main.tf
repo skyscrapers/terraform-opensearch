@@ -2,21 +2,6 @@ locals {
   elasticsearch_domain_endpoint = "https://${var.elasticsearch_endpoint}:443"
 }
 
-data "template_file" "elasticsearch_monitoring_helm_values" {
-  template = file("${path.module}/templates/elasticsearch-monitoring-values.yaml.tpl")
-
-  vars = {
-    cloudwatch_exporter_role = var.cloudwatch_exporter_role_arn
-    elasticsearch_domain     = var.elasticsearch_domain_name
-    elasticsearch_endpoint   = local.elasticsearch_domain_endpoint
-    irsa_enabled             = var.irsa_enabled
-    region                   = var.elasticsearch_domain_region
-    es_exporter_memory       = var.es_exporter_memory
-    cw_exporter_memory       = var.cw_exporter_memory
-    sla                      = var.sla == null ? "" : var.sla
-  }
-}
-
 resource "helm_release" "elasticsearch_monitoring" {
   name        = "es-monitoring-${var.elasticsearch_domain_name}"
   repository  = "https://skyscrapers.github.io/charts"
@@ -26,7 +11,16 @@ resource "helm_release" "elasticsearch_monitoring" {
   max_history = 10
 
   values = [
-    data.template_file.elasticsearch_monitoring_helm_values.rendered,
+    templatefile("${path.module}/templates/elasticsearch-monitoring-values.yaml.tftpl", {
+      cloudwatch_exporter_role = var.cloudwatch_exporter_role_arn
+      elasticsearch_domain     = var.elasticsearch_domain_name
+      elasticsearch_endpoint   = local.elasticsearch_domain_endpoint
+      irsa_enabled             = var.irsa_enabled
+      region                   = var.elasticsearch_domain_region
+      es_exporter_memory       = var.es_exporter_memory
+      cw_exporter_memory       = var.cw_exporter_memory
+      sla                      = var.sla == null ? "" : var.sla
+    })
   ]
 
   set {
