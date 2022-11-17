@@ -1,7 +1,7 @@
 variable "elasticsearch_monitoring_chart_version" {
   type        = string
   description = "elasticsearch-monitoring Helm chart version to deploy"
-  default     = "1.8.0"
+  default     = "1.9.0"
 }
 
 variable "elasticsearch_endpoint" {
