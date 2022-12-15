@@ -13,17 +13,19 @@
     - [Logging](#logging)
     - [Monitoring](#monitoring)
     - [NOTES](#notes)
-  - [elasticsearch_k8s_monitoring](#elasticsearch_k8s_monitoring)
+  - [elasticsearch\_k8s\_monitoring](#elasticsearch_k8s_monitoring)
     - [Requirements](#requirements-1)
     - [Providers](#providers-1)
+    - [Modules](#modules-1)
+    - [Resources](#resources-1)
     - [Inputs](#inputs-1)
     - [Outputs](#outputs-1)
-  - [kibana_k8s_auth_ingress](#kibana_k8s_auth_ingress)
+  - [kibana\_k8s\_auth\_ingress](#kibana_k8s_auth_ingress)
     - [Requirements](#requirements-2)
     - [Providers](#providers-2)
     - [Inputs](#inputs-2)
     - [Outputs](#outputs-2)
-  - [kibana_k8s_auth_proxy](#kibana_k8s_auth_proxy)
+  - [kibana\_k8s\_auth\_proxy](#kibana_k8s_auth_proxy)
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
   - [Upgrading](#upgrading)
@@ -126,7 +128,7 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 | <a name="input_snapshot_start_hour"></a> [snapshot_start_hour](#input_snapshot_start_hour) | Hour during which an automated daily snapshot is taken of the OpenSearch indices | `number` | `3` | no |
 | <a name="input_subnet_ids"></a> [subnet_ids](#input_subnet_ids) | Required if vpc_id is specified: Subnet IDs for the VPC enabled OpenSearch domain endpoints to be created in | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input_tags) | Optional tags | `map(string)` | `{}` | no |
-| <a name="input_volume_iops"></a> [volume_iops](#input_volume_iops) | Required if volume_type="io1": Amount of provisioned IOPS for the EBS volume | `number` | `0` | no |
+| <a name="input_volume_iops"></a> [volume_iops](#input_volume_iops) | Required if volume_type="io1" or "gp3": Amount of provisioned IOPS for the EBS volume | `number` | `0` | no |
 | <a name="input_volume_type"></a> [volume_type](#input_volume_type) | EBS volume type to use for the OpenSearch domain | `string` | `"gp2"` | no |
 | <a name="input_vpc_id"></a> [vpc_id](#input_vpc_id) | VPC ID where to deploy the OpenSearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain | `string` | `null` | no |
 | <a name="input_warm_count"></a> [warm_count](#input_warm_count) | Number of warm nodes (2 - 150) | `number` | `2` | no |

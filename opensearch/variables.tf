@@ -147,7 +147,7 @@ variable "volume_size" {
 
 variable "volume_iops" {
   type        = number
-  description = "Required if volume_type=\"io1\": Amount of provisioned IOPS for the EBS volume"
+  description = "Required if volume_type=\"io1\" or \"gp3\": Amount of provisioned IOPS for the EBS volume"
   default     = 0
 }
 

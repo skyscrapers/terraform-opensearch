@@ -48,7 +48,7 @@ resource "aws_elasticsearch_domain" "es" {
     ebs_enabled = contains(var.ephemeral_list, var.instance_type) ? false : true
     volume_type = contains(var.ephemeral_list, var.instance_type) ? null : var.volume_type
     volume_size = contains(var.ephemeral_list, var.instance_type) ? null : var.volume_size
-    iops        = var.volume_type == "io1" ? var.volume_iops : null
+    iops        = contains(["io1", "gp3"], var.volume_type) ? var.volume_iops : null
   }
 
   snapshot_options {
