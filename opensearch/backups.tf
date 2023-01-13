@@ -211,13 +211,13 @@ resource "aws_security_group_rule" "snapshot_lambda_ingress" {
 ## LAMBDA
 
 ## Enable to (re-)build the zip
-data "archive_file" "snapshot_lambda" {
-  count = local.snapshot_enabled_count
+# data "archive_file" "snapshot_lambda" {
+#   count = local.snapshot_enabled_count
 
-  type        = "zip"
-  output_path = "${path.module}/snapshot_lambda.zip"
-  source_dir  = "${path.module}/functions/"
-}
+#   type        = "zip"
+#   output_path = "${path.module}/snapshot_lambda.zip"
+#   source_dir  = "${path.module}/functions/"
+# }
 
 resource "aws_lambda_function" "snapshot_lambda" {
   count = local.snapshot_enabled_count
