@@ -187,10 +187,10 @@ variable "s3_snapshots_lambda_timeout" {
   default     = 180
 }
 
-variable "s3_snapshots_schedule_expression" {
-  type        = string
-  description = "The scheduling expression for running the S3 based OpenSearch snapshot Lambda (eg. every day at 2AM)"
-  default     = "cron(0 2 * * ? *)"
+variable "s3_snapshots_schedule_period" {
+  type        = number
+  description = "Snapshot frequency specified in hours"
+  default     = 24
 }
 
 variable "s3_snapshots_retention" {
