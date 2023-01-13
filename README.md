@@ -29,6 +29,7 @@
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
   - [Upgrading](#upgrading)
+    - [Version 8.0.0 to 8.2.0](#version-800-to-820)
     - [Version 7.0.0 to 8.0.0](#version-700-to-800)
     - [Version 6.0.0 to 7.0.0](#version-600-to-700)
 
@@ -52,7 +53,7 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_snapshot_lambda_monitoring"></a> [snapshot_lambda_monitoring](#module_snapshot_lambda_monitoring) | github.com/skyscrapers/terraform-cloudwatch//lambda_function | 2.0.0 |
+| <a name="module_snapshot_lambda_monitoring"></a> [snapshot_lambda_monitoring](#module_snapshot_lambda_monitoring) | github.com/skyscrapers/terraform-cloudwatch//lambda_function | 2.2.0 |
 
 ### Resources
 
@@ -108,7 +109,7 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 | <a name="input_encrypt_at_rest_kms_key_id"></a> [encrypt_at_rest_kms_key_id](#input_encrypt_at_rest_kms_key_id) | The KMS key id to encrypt the OpenSearch domain with. If not specified then it defaults to using the `aws/es` service KMS key | `string` | `null` | no |
 | <a name="input_endpoint_enforce_https"></a> [endpoint_enforce_https](#input_endpoint_enforce_https) | Whether or not to require HTTPS | `bool` | `true` | no |
 | <a name="input_endpoint_tls_security_policy"></a> [endpoint_tls_security_policy](#input_endpoint_tls_security_policy) | The name of the TLS security policy that needs to be applied to the HTTPS endpoint. Valid values: `Policy-Min-TLS-1-0-2019-07` and `Policy-Min-TLS-1-2-2019-07` | `string` | `"Policy-Min-TLS-1-2-2019-07"` | no |
-| <a name="input_ephemeral_list"></a> [ephemeral_list](#input_ephemeral_list) | m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type | `list(string)` | <pre>[<br>  "i3.large.search",<br>  "i3.xlarge.search",<br>  "i3.2xlarge.search",<br>  "i3.4xlarge.search",<br>  "i3.8xlarge.search",<br>  "i3.16xlarge.search",<br>  "r6gd.large.search",<br>  "r6gd.xlarge.search",<br>  "r6gd.2xlarge.search",<br>  "r6gd.4xlarge.search",<br>  "r6gd.8xlarge.search",<br>  "r6gd.12xlarge.search",<br>  "r6gd.16xlarge.search"<br>]</pre> | no |
+| <a name="input_ephemeral_list"></a> [ephemeral_list](#input_ephemeral_list) | m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type | `list(string)` | <pre>[<br>  "i3.large.search",<br>  "i3.xlarge.search",<br>  "i3.2xlarge.search",<br>  "i3.4xlarge.search",<br>  "i3.8xlarge.search",<br>  "i3.16xlarge.search",<br>  "r6gd.large.search",<br>  "r6gd.xlarge.search",<br>  "r6gd.2xlarge.search",<br>  "r6gd.4xlarge.search",<br>  "r6gd.8xlarge.search",<br>  "r6gd.12xlarge.search",<br>  "r6gd.16xlarge.search",<br>  "i3.large.elasticsearch",<br>  "i3.xlarge.elasticsearch",<br>  "i3.2xlarge.elasticsearch",<br>  "i3.4xlarge.elasticsearch",<br>  "i3.8xlarge.elasticsearch",<br>  "i3.16xlarge.elasticsearch",<br>  "r6gd.large.elasticsearch",<br>  "r6gd.xlarge.elasticsearch",<br>  "r6gd.2xlarge.elasticsearch",<br>  "r6gd.4xlarge.elasticsearch",<br>  "r6gd.8xlarge.elasticsearch",<br>  "r6gd.12xlarge.elasticsearch",<br>  "r6gd.16xlarge.elasticsearch"<br>]</pre> | no |
 | <a name="input_instance_count"></a> [instance_count](#input_instance_count) | Size of the OpenSearch domain | `number` | `1` | no |
 | <a name="input_logging_enabled"></a> [logging_enabled](#input_logging_enabled) | Whether to enable OpenSearch slow logs (index & search) in Cloudwatch | `bool` | `false` | no |
 | <a name="input_logging_retention"></a> [logging_retention](#input_logging_retention) | How many days to retain OpenSearch logs in Cloudwatch | `number` | `30` | no |
@@ -122,7 +123,7 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 | <a name="input_s3_snapshots_logs_retention"></a> [s3_snapshots_logs_retention](#input_s3_snapshots_logs_retention) | How many days to retain logs for the S3 snapshot Lambda function | `number` | `30` | no |
 | <a name="input_s3_snapshots_monitoring_sns_topic_arn"></a> [s3_snapshots_monitoring_sns_topic_arn](#input_s3_snapshots_monitoring_sns_topic_arn) | ARN for the SNS Topic to send alerts to from the S3 snapshot Lambda function. Enables monitoring of the Lambda function | `string` | `null` | no |
 | <a name="input_s3_snapshots_retention"></a> [s3_snapshots_retention](#input_s3_snapshots_retention) | How many days to retain the OpenSearch snapshots in S3 | `number` | `14` | no |
-| <a name="input_s3_snapshots_schedule_expression"></a> [s3_snapshots_schedule_expression](#input_s3_snapshots_schedule_expression) | The scheduling expression for running the S3 based OpenSearch snapshot Lambda (eg. every day at 2AM) | `string` | `"cron(0 2 * * ? *)"` | no |
+| <a name="input_s3_snapshots_schedule_period"></a> [s3_snapshots_schedule_period](#input_s3_snapshots_schedule_period) | Snapshot frequency specified in hours | `number` | `24` | no |
 | <a name="input_search_version"></a> [search_version](#input_search_version) | Version of the OpenSearch domain | `string` | `"OpenSearch_1.1"` | no |
 | <a name="input_security_group_ids"></a> [security_group_ids](#input_security_group_ids) | Extra security group IDs to attach to the OpenSearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
 | <a name="input_snapshot_start_hour"></a> [snapshot_start_hour](#input_snapshot_start_hour) | Hour during which an automated daily snapshot is taken of the OpenSearch indices | `number` | `3` | no |
@@ -161,9 +162,9 @@ module "opensearch" {
   vpc_id         = data.terraform_remote_state.networking.outputs.vpc_id
   subnet_ids     = data.terraform_remote_state.networking.outputs.private_db_subnets
 
-  s3_snapshots_enabled             = true
-  s3_snapshots_schedule_expression = "rate(12 hours)"
-  s3_snapshots_retention           = 14
+  s3_snapshots_enabled         = true
+  s3_snapshots_schedule_period = 12
+  s3_snapshots_retention       = 14
 }
 
 data "aws_iam_policy_document" "opensearch" {
@@ -336,6 +337,10 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |
 
 ## Upgrading
+
+### Version 8.0.0 to 8.2.0
+
+In the `opensearch` module, the `s3_snapshots_schedule_expression` variable has been replaced with `s3_snapshots_schedule_period`. Instead of a cron expression, we only allow to specify a period in hours, which will be used as a `rate(x hours)`.
 
 ### Version 7.0.0 to 8.0.0
 
