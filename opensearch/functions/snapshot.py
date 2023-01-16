@@ -28,7 +28,6 @@ awsauth = AWS4Auth(credentials.access_key, credentials.secret_key,
 
 
 def lambda_handler(event, context):
-
     now = datetime.now()
     snapshot_prefix = 'automatic-'
     snapshot_name = snapshot_prefix + now.strftime("%Y%m%d%H%M%S")
@@ -61,6 +60,18 @@ def lambda_handler(event, context):
         print(e)
         raise
 
+    # CREATE
+    try:
+        index_list = curator.IndexList(es)
+
+        # Take a new snapshot. This operation can take a while, so we don't want to wait for it to complete.
+        curator.Snapshot(index_list, repository=repository_name,
+                         name=snapshot_name, wait_for_completion=False).do_action()
+
+    except (curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
+        print(e)
+        raise
+
     # DELETE
     try:
         snapshot_list = curator.SnapshotList(es, repository=repository_name)
@@ -75,18 +86,6 @@ def lambda_handler(event, context):
     except (curator.exceptions.NoSnapshots) as e:
         # This is fine
         print(e)
-    except (curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
-        print(e)
-        raise
-
-    # CREATE
-    try:
-        index_list = curator.IndexList(es)
-
-        # Take a new snapshot. This operation can take a while, so we don't want to wait for it to complete.
-        curator.Snapshot(index_list, repository=repository_name,
-                         name=snapshot_name, wait_for_completion=False).do_action()
-
     except (curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
         print(e)
         raise

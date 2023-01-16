@@ -261,7 +261,7 @@ resource "aws_cloudwatch_event_rule" "snapshot_lambda" {
 
   name                = local.snapshot_resource_name
   tags                = var.tags
-  schedule_expression = var.s3_snapshots_schedule_expression
+  schedule_expression = "rate(${var.s3_snapshots_schedule_period} hours)"
 }
 
 resource "aws_cloudwatch_event_target" "snapshot_lambda" {
@@ -284,10 +284,20 @@ resource "aws_lambda_permission" "snapshot_lambda" {
 
 ## MONITORING
 
-module "snapshot_lambda_monitoring" {
-  count = var.s3_snapshots_monitoring_sns_topic_arn != null ? 1 : 0
+locals {
+  lambda_invocation_error_period_initial = (var.s3_snapshots_schedule_period + 2) * 60 * 60 # 2 hours more than the snapshot period
+  lambda_invocation_error_period         = min(local.lambda_invocation_error_period_initial, 86400) # can be maximum 24 hrs
+}
 
-  source          = "github.com/skyscrapers/terraform-cloudwatch//lambda_function?ref=2.0.0"
+module "snapshot_lambda_monitoring" {
+  count = var.s3_snapshots_enabled && var.s3_snapshots_monitoring_sns_topic_arn != null ? 1 : 0
+
+  source          = "github.com/skyscrapers/terraform-cloudwatch//lambda_function?ref=2.2.0"
   lambda_function = aws_lambda_function.snapshot_lambda[0].function_name
   sns_topic_arn   = var.s3_snapshots_monitoring_sns_topic_arn
+
+  lambda_invocation_error_threshold          = 1
+  lambda_invocation_error_period             = local.lambda_invocation_error_period
+  lambda_invocation_error_evaluation_periods = 1
+  lambda_invocation_error_treat_missing_data = "breaching"
 }
