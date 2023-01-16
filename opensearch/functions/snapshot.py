@@ -40,7 +40,7 @@ def lambda_handler(event, context):
         verify_certs=True,
         connection_class=RequestsHttpConnection,
         # Deleting snapshots can take a while, so keep the connection open for long enough to get a response.
-        timeout=120
+        timeout=300
     )
 
     # REGISTER
@@ -60,19 +60,8 @@ def lambda_handler(event, context):
         print(e)
         raise
 
-    # CREATE
-    try:
-        index_list = curator.IndexList(es)
-
-        # Take a new snapshot. This operation can take a while, so we don't want to wait for it to complete.
-        curator.Snapshot(index_list, repository=repository_name,
-                         name=snapshot_name, wait_for_completion=False).do_action()
-
-    except (curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
-        print(e)
-        raise
-
     # DELETE
+    # Needs to happen before CREATE, because DELETE will fail if there's snapshots IN PROGRESS
     try:
         snapshot_list = curator.SnapshotList(es, repository=repository_name)
         snapshot_list.filter_by_regex(kind='prefix', value=snapshot_prefix)
@@ -83,9 +72,18 @@ def lambda_handler(event, context):
         curator.DeleteSnapshots(
             snapshot_list, retry_interval=30, retry_count=3).do_action()
 
-    except (curator.exceptions.NoSnapshots) as e:
-        # This is fine
+    except (curator.exceptions.NoSnapshots, curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
+        # Let's continue, delete failure is not too important
         print(e)
+
+    # CREATE
+    try:
+        index_list = curator.IndexList(es)
+
+        # Take a new snapshot. This operation can take a while, so we don't want to wait for it to complete.
+        curator.Snapshot(index_list, repository=repository_name,
+                         name=snapshot_name, wait_for_completion=False).do_action()
+
     except (curator.exceptions.SnapshotInProgress, curator.exceptions.FailedExecution) as e:
         print(e)
         raise
