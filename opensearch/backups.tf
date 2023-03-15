@@ -32,6 +32,35 @@ resource "aws_s3_bucket_public_access_block" "snapshot" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_policy" "deny_all_except_es" {
+  count = local.snapshot_enabled_count
+
+  bucket = aws_s3_bucket.snapshot[0].id
+  policy = data.aws_iam_policy_document.deny_all_except_es[0].json
+}
+
+data "aws_iam_policy_document" "deny_all_except_es" {
+  count = local.snapshot_enabled_count
+
+  statement {
+    effect = "Deny"
+
+    not_principals {
+      type = "AWS"
+      identifiers = [
+        aws_iam_role.snapshot_create[0].arn
+      ]
+    }
+    actions = [
+      "s3:*",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.snapshot[0].arn}/*",
+    ]
+  }
+}
+
 ## CW LOGS
 
 resource "aws_cloudwatch_log_group" "snapshot_lambda" {
@@ -285,7 +314,7 @@ resource "aws_lambda_permission" "snapshot_lambda" {
 ## MONITORING
 
 locals {
-  lambda_invocation_error_period_initial = (var.s3_snapshots_schedule_period + 2) * 60 * 60 # 2 hours more than the snapshot period
+  lambda_invocation_error_period_initial = (var.s3_snapshots_schedule_period + 2) * 60 * 60         # 2 hours more than the snapshot period
   lambda_invocation_error_period         = min(local.lambda_invocation_error_period_initial, 86400) # can be maximum 24 hrs
 }
 
