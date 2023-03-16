@@ -45,12 +45,11 @@ data "aws_iam_policy_document" "deny_all_except_es" {
   statement {
     effect = "Deny"
 
-    not_principals {
-      type = "AWS"
-      identifiers = [
-        aws_iam_role.snapshot_create[0].arn
-      ]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
     }
+
     actions = [
       "s3:*",
     ]
@@ -58,6 +57,15 @@ data "aws_iam_policy_document" "deny_all_except_es" {
     resources = [
       "${aws_s3_bucket.snapshot[0].arn}/*",
     ]
+
+    condition {
+      test     = "ForAnyValue:StringNotEquals"
+      variable = "aws:PrincipalArn"
+
+      values = [
+        aws_iam_role.snapshot_create[0].arn
+      ]
+    }
   }
 }
 
