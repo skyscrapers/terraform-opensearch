@@ -56,7 +56,7 @@ resource "aws_elasticsearch_domain" "es" {
   }
 
   advanced_options = {
-    "override_main_response_version"         = length(regexall("^OpenSearch", var.search_version)) > 0 && var.options_override_main_response_version ? "true" : ""
+    "override_main_response_version"         = length(regexall("^OpenSearch", var.search_version)) > 0 && var.options_override_main_response_version ? "true" : null
     "rest.action.multi.allow_explicit_index" = tostring(var.options_rest_action_multi_allow_explicit_index)
     "indices.fielddata.cache.size"           = var.options_indices_fielddata_cache_size != null ? tostring(var.options_indices_fielddata_cache_size) : ""
     "indices.query.bool.max_clause_count"    = tostring(var.options_indices_query_bool_max_clause_count)
