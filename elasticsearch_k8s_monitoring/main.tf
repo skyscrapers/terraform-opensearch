@@ -20,6 +20,9 @@ resource "helm_release" "elasticsearch_monitoring" {
       es_exporter_memory       = var.es_exporter_memory
       cw_exporter_memory       = var.cw_exporter_memory
       sla                      = var.sla == null ? "" : var.sla
+
+      tolerations  = var.system_tolerations != null ? yamlencode(var.system_tolerations) : ""
+      nodeSelector = var.system_nodeSelector != null ? yamlencode(var.system_nodeSelector) : ""
     })
   ]
 
