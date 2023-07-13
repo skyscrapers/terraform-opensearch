@@ -29,6 +29,7 @@
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
   - [Upgrading](#upgrading)
+  - [Version 9.1.4 to 10.0.0](#version-914-to-1000)
     - [Version 8.0.0 to 8.2.0](#version-800-to-820)
     - [Version 7.0.0 to 8.0.0](#version-700-to-800)
     - [Version 6.0.0 to 7.0.0](#version-600-to-700)
@@ -337,6 +338,10 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |
 
 ## Upgrading
+
+## Version 9.1.4 to 10.0.0
+
+In the `elasticsearch_k8s_monitoring` module, the variables `system_tolerations` and `system_nodeSelector` have been added to isolate the monitoring on a dedicated system node pool. If you don't want this you can override these variables to `null` to disable.
 
 ### Version 8.0.0 to 8.2.0
 
