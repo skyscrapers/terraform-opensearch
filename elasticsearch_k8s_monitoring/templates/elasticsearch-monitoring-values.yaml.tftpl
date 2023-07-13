@@ -11,6 +11,8 @@ prometheus-elasticsearch-exporter:
     requests:
       cpu: 5m
       memory: ${es_exporter_memory}
+  ${indent(2, nodeSelector) }
+  ${indent(2, tolerations) }
   es:
     uri: ${elasticsearch_endpoint}
     timeout: 60s
@@ -25,6 +27,8 @@ prometheus-cloudwatch-exporter:
     requests:
       cpu: 5m
       memory: ${cw_exporter_memory}
+  ${indent(2, nodeSelector) }
+  ${indent(2, tolerations) }
   aws:
     region: ${region}
 %{if ! irsa_enabled ~}

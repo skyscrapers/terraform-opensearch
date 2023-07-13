@@ -58,3 +58,26 @@ variable "sla" {
   description = "SLA of the monitored Elasticsearch cluster. Will default to the k8s cluster SLA if omited"
   default     = null
 }
+
+variable "system_tolerations" {
+  type    = any
+  description = "Tolerations to add to the kubernetes pods. Set to null to disable."
+  default = {
+    tolerations = [{
+      key      = "role"
+      operator = "Equal"
+      value    = "system"
+      effect   = "NoSchedule"
+    }]
+  }
+}
+
+variable "system_nodeSelector" {
+  description = "nodeSelector to add to the kubernetes pods. Set to null to disable."
+  type    = map(map(string))
+  default = {
+    nodeSelector = {
+      role = "system"
+    }
+  }
+}

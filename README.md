@@ -14,12 +14,12 @@
     - [Monitoring](#monitoring)
     - [NOTES](#notes)
   - [elasticsearch\_k8s\_monitoring](#elasticsearch_k8s_monitoring)
-    - [Requirements](#requirements-1)
-    - [Providers](#providers-1)
-    - [Modules](#modules-1)
-    - [Resources](#resources-1)
-    - [Inputs](#inputs-1)
-    - [Outputs](#outputs-1)
+  - [Requirements](#requirements-1)
+  - [Providers](#providers-1)
+  - [Modules](#modules-1)
+  - [Resources](#resources-1)
+  - [Inputs](#inputs-1)
+  - [Outputs](#outputs-1)
   - [kibana\_k8s\_auth\_ingress](#kibana_k8s_auth_ingress)
     - [Requirements](#requirements-2)
     - [Providers](#providers-2)
@@ -29,6 +29,7 @@
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
   - [Upgrading](#upgrading)
+  - [Version 9.1.4 to 10.0.0](#version-914-to-1000)
     - [Version 8.0.0 to 8.2.0](#version-800-to-820)
     - [Version 7.0.0 to 8.0.0](#version-700-to-800)
     - [Version 6.0.0 to 7.0.0](#version-600-to-700)
@@ -229,50 +230,50 @@ resource "aws_iam_service_linked_role" "es" {
 
 This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart on Kubernetes.
 
-### Requirements
+## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.24 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.55.0 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 1.1.1 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 1.11.1 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | ~> 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 4.0 |
+| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 2.5 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.11 |
 
-### Providers
+## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_helm"></a> [helm](#provider\_helm) | >= 1.1.1 |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
+| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 2.5 |
 
-### Modules
+## Modules
 
 No modules.
 
-### Resources
+## Resources
 
 | Name | Type |
 |------|------|
 | [helm_release.elasticsearch_monitoring](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [template_file.elasticsearch_monitoring_helm_values](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 
-### Inputs
+## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cloudwatch_exporter_role_arn"></a> [cloudwatch\_exporter\_role\_arn](#input\_cloudwatch\_exporter\_role\_arn) | IAM role ARN to use for the CloudWatch exporter. Used via either IRSA or kube2iam (see `var.irsa_enabled`) | `string` | n/a | yes |
-| <a name="input_cw_exporter_memory"></a> [cw\_exporter\_memory](#input\_cw\_exporter\_memory) | Memory request and limit for the prometheus-cloudwatch-exporter pod | `string` | `"160Mi"` | no |
-| <a name="input_elasticsearch_domain_name"></a> [elasticsearch\_domain\_name](#input\_elasticsearch\_domain\_name) | Domain name of the AWS Elasticsearch domain | `string` | n/a | yes |
-| <a name="input_elasticsearch_domain_region"></a> [elasticsearch\_domain\_region](#input\_elasticsearch\_domain\_region) | Region of the AWS Elasticsearch domain | `string` | n/a | yes |
-| <a name="input_elasticsearch_endpoint"></a> [elasticsearch\_endpoint](#input\_elasticsearch\_endpoint) | Endpoint of the AWS Elasticsearch domain | `string` | n/a | yes |
-| <a name="input_elasticsearch_monitoring_chart_version"></a> [elasticsearch\_monitoring\_chart\_version](#input\_elasticsearch\_monitoring\_chart\_version) | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.5.1"` | no |
-| <a name="input_es_exporter_memory"></a> [es\_exporter\_memory](#input\_es\_exporter\_memory) | Memory request and limit for the prometheus-elasticsearch-exporter pod | `string` | `"48Mi"` | no |
-| <a name="input_force_helm_update"></a> [force\_helm\_update](#input\_force\_helm\_update) | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on the deployed values | `string` | `"1"` | no |
-| <a name="input_irsa_enabled"></a> [irsa\_enabled](#input\_irsa\_enabled) | Whether to use [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html). When `true`, the Cloudwatch exporter's SA is appropriately annotated. If `false` a [kube2iam](https://github.com/jtblin/kube2iam) Pod annotation is set instead | `bool` | `true` | no |
-| <a name="input_kubernetes_namespace"></a> [kubernetes\_namespace](#input\_kubernetes\_namespace) | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | `string` | n/a | yes |
-| <a name="input_sla"></a> [sla](#input\_sla) | SLA of the monitored Elasticsearch cluster. Will default to the k8s cluster SLA if omited | `string` | `null` | no |
+| <a name="input_cloudwatch_exporter_role_arn"></a> [cloudwatch_exporter_role_arn](#input_cloudwatch_exporter_role_arn) | IAM role ARN to use for the CloudWatch exporter. Used via either IRSA or kube2iam (see `var.irsa_enabled`) | `string` | n/a | yes |
+| <a name="input_elasticsearch_domain_name"></a> [elasticsearch_domain_name](#input_elasticsearch_domain_name) | Domain name of the AWS Elasticsearch domain | `string` | n/a | yes |
+| <a name="input_elasticsearch_domain_region"></a> [elasticsearch_domain_region](#input_elasticsearch_domain_region) | Region of the AWS Elasticsearch domain | `string` | n/a | yes |
+| <a name="input_elasticsearch_endpoint"></a> [elasticsearch_endpoint](#input_elasticsearch_endpoint) | Endpoint of the AWS Elasticsearch domain | `string` | n/a | yes |
+| <a name="input_kubernetes_namespace"></a> [kubernetes_namespace](#input_kubernetes_namespace) | Kubernetes namespace where to deploy the `skyscrapers/elasticsearch-monitoring` chart | `string` | n/a | yes |
+| <a name="input_cw_exporter_memory"></a> [cw_exporter_memory](#input_cw_exporter_memory) | Memory request and limit for the prometheus-cloudwatch-exporter pod | `string` | `"160Mi"` | no |
+| <a name="input_elasticsearch_monitoring_chart_version"></a> [elasticsearch_monitoring_chart_version](#input_elasticsearch_monitoring_chart_version) | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.11.1"` | no |
+| <a name="input_es_exporter_memory"></a> [es_exporter_memory](#input_es_exporter_memory) | Memory request and limit for the prometheus-elasticsearch-exporter pod | `string` | `"48Mi"` | no |
+| <a name="input_force_helm_update"></a> [force_helm_update](#input_force_helm_update) | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on the deployed values | `string` | `"1"` | no |
+| <a name="input_irsa_enabled"></a> [irsa_enabled](#input_irsa_enabled) | Whether to use [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html). When `true`, the Cloudwatch exporter's SA is appropriately annotated. If `false` a [kube2iam](https://github.com/jtblin/kube2iam) Pod annotation is set instead | `bool` | `true` | no |
+| <a name="input_sla"></a> [sla](#input_sla) | SLA of the monitored Elasticsearch cluster. Will default to the k8s cluster SLA if omited | `string` | `null` | no |
+| <a name="input_system_nodeSelector"></a> [system_nodeSelector](#input_system_nodeSelector) | nodeSelector to add to the kubernetes pods. Set to null to disable. | `map(map(string))` | <pre>{<br>  "nodeSelector": {<br>    "role": "system"<br>  }<br>}</pre> | no |
+| <a name="input_system_tolerations"></a> [system_tolerations](#input_system_tolerations) | Tolerations to add to the kubernetes pods. Set to null to disable. | `any` | <pre>{<br>  "tolerations": [<br>    {<br>      "effect": "NoSchedule",<br>      "key": "role",<br>      "operator": "Equal",<br>      "value": "system"<br>    }<br>  ]<br>}</pre> | no |
 
-### Outputs
+## Outputs
 
 No outputs.
 
@@ -337,6 +338,10 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |
 
 ## Upgrading
+
+## Version 9.1.4 to 10.0.0
+
+In the `elasticsearch_k8s_monitoring` module, the variables `system_tolerations` and `system_nodeSelector` have been added to isolate the monitoring on a dedicated system node pool. If you don't want this you can override these variables to `null` to disable.
 
 ### Version 8.0.0 to 8.2.0
 
