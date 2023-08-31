@@ -212,6 +212,13 @@ resource "aws_iam_role_policy" "snapshot_lambda" {
   policy = data.aws_iam_policy_document.snapshot_lambda[0].json
 }
 
+resource "aws_iam_role_policy_attachment" "snapshot_lambda_exec_role" {
+  count = local.snapshot_enabled_count
+
+  role       = aws_iam_role.snapshot_lambda[0].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 ## SG
 
 resource "aws_security_group" "snapshot_lambda" {
