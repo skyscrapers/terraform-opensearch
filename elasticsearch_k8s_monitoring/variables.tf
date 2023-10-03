@@ -1,7 +1,7 @@
 variable "elasticsearch_monitoring_chart_version" {
   type        = string
   description = "elasticsearch-monitoring Helm chart version to deploy"
-  default     = "1.11.1"
+  default     = "1.11.2"
 }
 
 variable "elasticsearch_endpoint" {
@@ -60,7 +60,7 @@ variable "sla" {
 }
 
 variable "system_tolerations" {
-  type    = any
+  type        = any
   description = "Tolerations to add to the kubernetes pods. Set to null to disable."
   default = {
     tolerations = [{
@@ -74,7 +74,7 @@ variable "system_tolerations" {
 
 variable "system_nodeSelector" {
   description = "nodeSelector to add to the kubernetes pods. Set to null to disable."
-  type    = map(map(string))
+  type        = map(map(string))
   default = {
     nodeSelector = {
       role = "system"
