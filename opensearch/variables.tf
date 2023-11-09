@@ -175,42 +175,6 @@ variable "snapshot_start_hour" {
   default     = 3
 }
 
-variable "s3_snapshots_enabled" {
-  type        = bool
-  description = "Whether to create a custom snapshot S3 bucket and enable automated snapshots through Lambda"
-  default     = false
-}
-
-variable "s3_snapshots_lambda_timeout" {
-  type        = number
-  description = "The execution timeout for the S3 snapshotting Lambda function"
-  default     = 180
-}
-
-variable "s3_snapshots_schedule_period" {
-  type        = number
-  description = "Snapshot frequency specified in hours"
-  default     = 24
-}
-
-variable "s3_snapshots_retention" {
-  type        = number
-  description = "How many days to retain the OpenSearch snapshots in S3"
-  default     = 14
-}
-
-variable "s3_snapshots_logs_retention" {
-  type        = number
-  description = "How many days to retain logs for the S3 snapshot Lambda function"
-  default     = 30
-}
-
-variable "s3_snapshots_monitoring_sns_topic_arn" {
-  type        = string
-  description = "ARN for the SNS Topic to send alerts to from the S3 snapshot Lambda function. Enables monitoring of the Lambda function"
-  default     = null
-}
-
 variable "tags" {
   type        = map(string)
   description = "Optional tags"

@@ -29,6 +29,7 @@
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
   - [Upgrading](#upgrading)
+    - [Version 10.0.0 to 11.0.0](#version-1000-to-1100)
     - [Version 9.1.4 to 10.0.0](#version-914-to-1000)
     - [Version 8.0.0 to 8.2.0](#version-800-to-820)
     - [Version 7.0.0 to 8.0.0](#version-700-to-800)
@@ -338,6 +339,26 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |
 
 ## Upgrading
+
+### Version 10.0.0 to 11.0.0
+
+We removed the custom S3 backup mechanism (via Lambda) from the `opensearch` module. As an alternative we now offer a new `opensearch-backup` module, which relies on the OpenSearch [Snapshot Management API](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/sm-api) to create snapshots to S3.
+
+If you want to upgrade, without destroying your old S3 snapshot bucket, we recommend to remove the bucket from Terraform's state:
+
+```hcl
+terraform state rm aws_s3_bucket.snapshot[0]
+```
+
+If you wish to import the old bucket into the new module, you can run:
+
+```hcl
+terraform import module.s3_snapshot.aws_s3_bucket.this "<opensearch_domain_name>-snapshot"
+```
+
+Also make sure to set `var.name` of this module to `<opensearch_domain_name>-snapshot`.
+
+Alternatively you can just let the module create a new bucket.
 
 ### Version 9.1.4 to 10.0.0
 

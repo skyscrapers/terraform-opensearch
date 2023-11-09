@@ -10,6 +10,9 @@ module "s3_snapshot" {
   restrict_public_buckets  = true
   control_object_ownership = true
   object_ownership         = "BucketOwnerEnforced"
+  attach_policy            = true
+  policy                   = data.aws_iam_policy_document.s3_snapshot_bucket.json
+  force_destroy            = var.force_destroy
 
   server_side_encryption_configuration = {
     rule = {
@@ -23,9 +26,6 @@ module "s3_snapshot" {
   versioning = {
     enabled = false
   }
-
-  attach_policy = true
-  policy        = data.aws_iam_policy_document.s3_snapshot_bucket.json
 }
 
 data "aws_iam_policy_document" "s3_snapshot_bucket" {
