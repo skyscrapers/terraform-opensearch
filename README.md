@@ -1,6 +1,6 @@
-# terraform-awselasticsearch
+# terraform-opensearch
 
-- [terraform-awselasticsearch](#terraform-awselasticsearch)
+- [terraform-opensearch](#terraform-opensearch)
   - [opensearch](#opensearch)
     - [Requirements](#requirements)
     - [Providers](#providers)
