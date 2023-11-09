@@ -1,0 +1,30 @@
+{
+  "description": "${name} snapshot policy",
+  "creation": {
+    "schedule": {
+      "cron": {
+        "expression": "${create_cron_expression}",
+        "timezone": "UTC"
+      }
+    },
+    "time_limit": "${create_time_limit}"
+  },
+  "deletion": {
+    "schedule": {
+      "cron": {
+        "expression": "${delete_cron_expression}",
+        "timezone": "UTC"
+      }
+    },
+    "condition": {
+      "max_age": "${max_age}"
+    },
+    "time_limit": "${delete_time_limit}"
+  },
+  "snapshot_config": {
+    "timezone": "UTC",
+    "indices": "${indices}",
+    "repository": "${repository}"
+  }
+  //"notification": {} TODO future?
+}
