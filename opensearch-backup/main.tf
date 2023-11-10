@@ -12,8 +12,3 @@ terraform {
     }
   }
 }
-
-## TODO: Keep outside module? Write docs
-# provider "opensearch" {
-#   url = var.opensearch_url
-# }
