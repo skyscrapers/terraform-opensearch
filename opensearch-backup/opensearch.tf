@@ -3,9 +3,10 @@ resource "opensearch_snapshot_repository" "repo" {
   type = "s3"
 
   settings = {
-    bucket   = module.s3_snapshot.s3_bucket_id
-    region   = module.s3_snapshot.s3_bucket_region
-    role_arn = aws_iam_role.snapshot_create.arn
+    bucket                 = module.s3_snapshot.s3_bucket_id
+    region                 = module.s3_snapshot.s3_bucket_region
+    role_arn               = aws_iam_role.snapshot_create.arn
+    server_side_encryption = true
   }
 }
 
@@ -20,7 +21,7 @@ resource "opensearch_sm_policy" "snapshot" {
     create_time_limit      = var.create_time_limit
     delete_cron_expression = var.delete_cron_expression
     delete_time_limit      = var.delete_time_limit
-    max_age                = var.retention
+    max_age                = var.max_age
     indices                = var.indices
     repository             = opensearch_snapshot_repository.repo.name
   })
