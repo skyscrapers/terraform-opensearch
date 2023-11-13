@@ -10,9 +10,6 @@ resource "opensearch_snapshot_repository" "repo" {
   }
 }
 
-## TODO Create SM, not available yet
-## https://github.com/opensearch-project/terraform-provider-opensearch/issues/70
-## https://github.com/opensearch-project/terraform-provider-opensearch/pull/125
 resource "opensearch_sm_policy" "snapshot" {
   policy_name = "snapshot_to_${var.name}"
 

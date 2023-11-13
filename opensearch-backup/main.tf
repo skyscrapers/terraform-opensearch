@@ -8,7 +8,7 @@ terraform {
     }
     opensearch = {
       source  = "opensearch-project/opensearch"
-      version = "~> 2.1"
+      version = "~> 2.1" # TODO update once SM support has been merged & released
     }
   }
 }
