@@ -39,6 +39,18 @@ variable "max_age" {
   default     = "14d"
 }
 
+variable "max_count" {
+  description = "The maximum number of snapshots retained in S3"
+  type        = number
+  default     = 400
+}
+
+variable "min_count" {
+  description = "The minimum number of snapshot retained in S3"
+  type        = number
+  default     = 1
+}
+
 variable "indices" {
   description = "The names of the indexes in the snapshot. Multiple index names are separated by `,`. Supports wildcards (`*`)"
   type        = string

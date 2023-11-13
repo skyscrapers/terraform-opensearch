@@ -1,4 +1,5 @@
 {
+  "enabled": true,
   "description": "${name} snapshot policy",
   "creation": {
     "schedule": {
@@ -17,7 +18,9 @@
       }
     },
     "condition": {
-      "max_age": "${max_age}"
+      "max_age": "${max_age}",
+      "max_count": ${max_count},
+      "min_count": ${min_count}
     },
     "time_limit": "${delete_time_limit}"
   },
@@ -26,5 +29,4 @@
     "indices": "${indices}",
     "repository": "${repository}"
   }
-  //"notification": {} TODO future?
 }

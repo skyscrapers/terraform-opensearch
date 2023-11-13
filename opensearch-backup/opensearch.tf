@@ -13,7 +13,7 @@ resource "opensearch_snapshot_repository" "repo" {
 ## TODO Create SM, not available yet
 ## https://github.com/opensearch-project/terraform-provider-opensearch/issues/70
 resource "opensearch_sm_policy" "snapshot" {
-  policy_id = "snapshot_to_${var.name}"
+  policy_name = "snapshot_to_${var.name}"
 
   body = var.custom_sm_policy != null ? var.custom_sm_policy : templatefile("${path.module}/templates/snapshot_to_s3_sm.json.tftpl", {
     name                   = var.name
@@ -22,6 +22,8 @@ resource "opensearch_sm_policy" "snapshot" {
     delete_cron_expression = var.delete_cron_expression
     delete_time_limit      = var.delete_time_limit
     max_age                = var.max_age
+    max_count              = var.max_count
+    min_count              = var.min_count
     indices                = var.indices
     repository             = opensearch_snapshot_repository.repo.name
   })
