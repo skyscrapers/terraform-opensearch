@@ -21,12 +21,12 @@
     - [Outputs](#outputs-1)
     - [Example](#example-1)
   - [elasticsearch\_k8s\_monitoring](#elasticsearch_k8s_monitoring)
-  - [Requirements](#requirements-2)
-  - [Providers](#providers-2)
-  - [Modules](#modules-2)
-  - [Resources](#resources-2)
-  - [Inputs](#inputs-2)
-  - [Outputs](#outputs-2)
+    - [Requirements](#requirements-2)
+    - [Providers](#providers-2)
+    - [Modules](#modules-2)
+    - [Resources](#resources-2)
+    - [Inputs](#inputs-2)
+    - [Outputs](#outputs-2)
   - [kibana\_k8s\_auth\_ingress](#kibana_k8s_auth_ingress)
     - [Requirements](#requirements-3)
     - [Providers](#providers-3)
@@ -50,13 +50,14 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | ~> 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
 
 ### Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider_aws) | n/a |
+| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 5.0 |
 
 ### Modules
 
@@ -192,12 +193,15 @@ resource "aws_iam_service_linked_role" "es" {
 
 ## opensearch-backup
 
+This module can be used to create your own snapshots of Opensearch to S3, using [Snapshot Management](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-management/). It can also deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring snapshot success.
+
 ### Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
 | <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
 | <a name="requirement_opensearch"></a> [opensearch](#requirement_opensearch) | ~> 2.1 |
 
 ### Providers
@@ -205,6 +209,7 @@ resource "aws_iam_service_linked_role" "es" {
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider_aws) | ~> 5.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider_kubernetes) | ~> 2.23 |
 | <a name="provider_opensearch"></a> [opensearch](#provider_opensearch) | ~> 2.1 |
 
 ### Modules
@@ -219,6 +224,7 @@ resource "aws_iam_service_linked_role" "es" {
 |------|------|
 | [aws_iam_role.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [kubernetes_manifest.prometheusrule](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
 | [opensearch_sm_policy.snapshot](https://registry.terraform.io/providers/opensearch-project/opensearch/latest/docs/resources/sm_policy) | resource |
 | [opensearch_snapshot_repository.repo](https://registry.terraform.io/providers/opensearch-project/opensearch/latest/docs/resources/snapshot_repository) | resource |
 | [aws_iam_policy_document.s3_snapshot_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -236,11 +242,18 @@ resource "aws_iam_service_linked_role" "es" {
 | <a name="input_custom_sm_policy"></a> [custom_sm_policy](#input_custom_sm_policy) | Set this variable when you want to override the generated SM policy JSON with your own. Make sure to correctly set `snapshot_config.repository` to the same value as `var.name` (the bucket name) | `string` | `null` | no |
 | <a name="input_delete_cron_expression"></a> [delete_cron_expression](#input_delete_cron_expression) | The cron schedule used to delete snapshots | `string` | `"0 2 * * *"` | no |
 | <a name="input_delete_time_limit"></a> [delete_time_limit](#input_delete_time_limit) | Sets the maximum time to wait for snapshot deletion to finish | `string` | `"1h"` | no |
-| <a name="input_force_destroy"></a> [force_destroy](#input_force_destroy) | Whether to force-destroy and empty the S3 bucket when destroying this Terraform module. WARNING: Not recommended! | `bool` | `false` | no |
 | <a name="input_indices"></a> [indices](#input_indices) | The names of the indexes in the snapshot. Multiple index names are separated by `,`. Supports wildcards (`*`) | `string` | `"*"` | no |
 | <a name="input_max_age"></a> [max_age](#input_max_age) | The maximum time a snapshot is retained in S3 | `string` | `"14d"` | no |
 | <a name="input_max_count"></a> [max_count](#input_max_count) | The maximum number of snapshots retained in S3 | `number` | `400` | no |
 | <a name="input_min_count"></a> [min_count](#input_min_count) | The minimum number of snapshot retained in S3 | `number` | `1` | no |
+| <a name="input_prometheusrule_alertlabels"></a> [prometheusrule_alertlabels](#input_prometheusrule_alertlabels) | Additional labels to add to the PrometheusRule alert | `map(string)` | <pre>{<br>  "prometheus": "opensearch-backup"<br>}</pre> | no |
+| <a name="input_prometheusrule_enabled"></a> [prometheusrule_enabled](#input_prometheusrule_enabled) | Whether to deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) and [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) to be deployed | `bool` | `true` | no |
+| <a name="input_prometheusrule_labels"></a> [prometheusrule_labels](#input_prometheusrule_labels) | Additional K8s labels to add to the PrometheusRule | `map(string)` | <pre>{<br>  "prometheus": "opensearch-backup"<br>}</pre> | no |
+| <a name="input_prometheusrule_namespace"></a> [prometheusrule_namespace](#input_prometheusrule_namespace) | Namespace where to deploy the PrometheusRule | `string` | `"infrastructure"` | no |
+| <a name="input_prometheusrule_query_period"></a> [prometheusrule_query_period](#input_prometheusrule_query_period) | Period to apply to the PrometheusRule queries. Make sure this is bigger than the `create_cron_expression` interval | `string` | `"32h"` | no |
+| <a name="input_prometheusrule_severity"></a> [prometheusrule_severity](#input_prometheusrule_severity) | Severity of the PrometheusRule alert. Usual values are: `info`, `warning` and `critical` | `string` | `"warning"` | no |
+| <a name="input_s3_force_destroy"></a> [s3_force_destroy](#input_s3_force_destroy) | Whether to force-destroy and empty the S3 bucket when destroying this Terraform module. WARNING: Not recommended! | `bool` | `false` | no |
+| <a name="input_s3_replication_configuration"></a> [s3_replication_configuration](#input_s3_replication_configuration) | Replication configuration block for the S3 bucket. See <https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/v3.15.1/examples/s3-replication> for an example | `any` | `{}` | no |
 
 ### Outputs
 
@@ -277,32 +290,32 @@ module "opensearch_snapshots" {
 
 This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart on Kubernetes.
 
-## Requirements
+### Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | ~> 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 4.0 |
-| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 2.5 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.11 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
+| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 2.11 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
 
-## Providers
+### Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 2.5 |
+| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 2.11 |
 
-## Modules
+### Modules
 
 No modules.
 
-## Resources
+### Resources
 
 | Name | Type |
 |------|------|
 | [helm_release.elasticsearch_monitoring](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 
-## Inputs
+### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -320,7 +333,7 @@ No modules.
 | <a name="input_system_nodeSelector"></a> [system_nodeSelector](#input_system_nodeSelector) | nodeSelector to add to the kubernetes pods. Set to null to disable. | `map(map(string))` | <pre>{<br>  "nodeSelector": {<br>    "role": "system"<br>  }<br>}</pre> | no |
 | <a name="input_system_tolerations"></a> [system_tolerations](#input_system_tolerations) | Tolerations to add to the kubernetes pods. Set to null to disable. | `any` | <pre>{<br>  "tolerations": [<br>    {<br>      "effect": "NoSchedule",<br>      "key": "role",<br>      "operator": "Equal",<br>      "value": "system"<br>    }<br>  ]<br>}</pre> | no |
 
-## Outputs
+### Outputs
 
 No outputs.
 

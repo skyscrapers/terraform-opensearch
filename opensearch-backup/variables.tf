@@ -63,8 +63,50 @@ variable "custom_sm_policy" {
   default     = null
 }
 
-variable "force_destroy" {
+variable "s3_force_destroy" {
   description = "Whether to force-destroy and empty the S3 bucket when destroying this Terraform module. WARNING: Not recommended!"
   type        = bool
   default     = false
+}
+
+variable "s3_replication_configuration" {
+  description = "Replication configuration block for the S3 bucket. See <https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/v3.15.1/examples/s3-replication> for an example"
+  type        = any
+  default     = {}
+}
+
+variable "prometheusrule_enabled" {
+  description = "Whether to deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) and [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) to be deployed"
+  type        = bool
+  default     = true
+}
+
+variable "prometheusrule_alertlabels" {
+  description = "Additional labels to add to the PrometheusRule alert"
+  type        = map(string)
+  default     = { prometheus = "opensearch-backup" }
+}
+
+variable "prometheusrule_labels" {
+  description = "Additional K8s labels to add to the PrometheusRule"
+  type        = map(string)
+  default     = { prometheus = "opensearch-backup" }
+}
+
+variable "prometheusrule_namespace" {
+  description = "Namespace where to deploy the PrometheusRule"
+  type        = string
+  default     = "infrastructure"
+}
+
+variable "prometheusrule_query_period" {
+  description = "Period to apply to the PrometheusRule queries. Make sure this is bigger than the `create_cron_expression` interval"
+  type        = string
+  default     = "32h"
+}
+
+variable "prometheusrule_severity" {
+  description = "Severity of the PrometheusRule alert. Usual values are: `info`, `warning` and `critical`"
+  type        = string
+  default     = "warning"
 }

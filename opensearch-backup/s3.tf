@@ -4,15 +4,16 @@ module "s3_snapshot" {
 
   bucket = var.name
 
-  block_public_acls        = true
-  block_public_policy      = true
-  ignore_public_acls       = true
-  restrict_public_buckets  = true
-  control_object_ownership = true
-  object_ownership         = "BucketOwnerEnforced"
-  attach_policy            = true
-  policy                   = data.aws_iam_policy_document.s3_snapshot_bucket.json
-  force_destroy            = var.force_destroy
+  block_public_acls         = true
+  block_public_policy       = true
+  ignore_public_acls        = true
+  restrict_public_buckets   = true
+  control_object_ownership  = true
+  object_ownership          = "BucketOwnerEnforced"
+  attach_policy             = true
+  policy                    = data.aws_iam_policy_document.s3_snapshot_bucket.json
+  replication_configuration = var.s3_replication_configuration
+  force_destroy             = var.s3_force_destroy
 
   server_side_encryption_configuration = {
     rule = {

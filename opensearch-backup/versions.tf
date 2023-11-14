@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.23"
+    }
     opensearch = {
       source  = "opensearch-project/opensearch"
       version = "~> 2.1" # TODO update once SM support has been merged & released
