@@ -19,6 +19,6 @@ spec:
             severity: ${severity}
             ${indent(12, alert_labels)}
           annotations:
-            description: 'The Elasticsearch metrics exporter for {{`{{ $labels.job }}`}} is down!'
-            summary: Elasticsearch monitoring is DOWN!
-            runbook_url: 'https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-elasticsearchexporterdown'
+            description: 'The are Elasticsearch snapshot failures for {{ $labels.job }} on repository {{ $labels.repository }}!'
+            summary: Elasticsearch snapshot FAILURE!
+            runbook_url: 'https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-elasticsearchsnaphotfailures'
