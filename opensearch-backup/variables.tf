@@ -81,10 +81,10 @@ variable "prometheusrule_enabled" {
   default     = true
 }
 
-variable "prometheusrule_alertlabels" {
+variable "prometheusrule_alert_labels" {
   description = "Additional labels to add to the PrometheusRule alert"
   type        = map(string)
-  default     = { prometheus = "opensearch-backup" }
+  default     = {}
 }
 
 variable "prometheusrule_labels" {
