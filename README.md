@@ -202,7 +202,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
 | <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
-| <a name="requirement_opensearch"></a> [opensearch](#requirement_opensearch) | ~> 2.1 |
+| <a name="requirement_opensearch"></a> [opensearch](#requirement_opensearch) | ~> 2.2 |
 
 ### Providers
 
@@ -210,7 +210,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider_aws) | ~> 5.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider_kubernetes) | ~> 2.23 |
-| <a name="provider_opensearch"></a> [opensearch](#provider_opensearch) | ~> 2.1 |
+| <a name="provider_opensearch"></a> [opensearch](#provider_opensearch) | ~> 2.2 |
 
 ### Modules
 
@@ -246,7 +246,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | <a name="input_max_age"></a> [max_age](#input_max_age) | The maximum time a snapshot is retained in S3 | `string` | `"14d"` | no |
 | <a name="input_max_count"></a> [max_count](#input_max_count) | The maximum number of snapshots retained in S3 | `number` | `400` | no |
 | <a name="input_min_count"></a> [min_count](#input_min_count) | The minimum number of snapshot retained in S3 | `number` | `1` | no |
-| <a name="input_prometheusrule_alertlabels"></a> [prometheusrule_alertlabels](#input_prometheusrule_alertlabels) | Additional labels to add to the PrometheusRule alert | `map(string)` | <pre>{<br>  "prometheus": "opensearch-backup"<br>}</pre> | no |
+| <a name="input_prometheusrule_alert_labels"></a> [prometheusrule_alert_labels](#input_prometheusrule_alert_labels) | Additional labels to add to the PrometheusRule alert | `map(string)` | `{}` | no |
 | <a name="input_prometheusrule_enabled"></a> [prometheusrule_enabled](#input_prometheusrule_enabled) | Whether to deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) and [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) to be deployed | `bool` | `true` | no |
 | <a name="input_prometheusrule_labels"></a> [prometheusrule_labels](#input_prometheusrule_labels) | Additional K8s labels to add to the PrometheusRule | `map(string)` | <pre>{<br>  "prometheus": "opensearch-backup"<br>}</pre> | no |
 | <a name="input_prometheusrule_namespace"></a> [prometheusrule_namespace](#input_prometheusrule_namespace) | Namespace where to deploy the PrometheusRule | `string` | `"infrastructure"` | no |
