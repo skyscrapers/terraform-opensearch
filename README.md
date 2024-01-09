@@ -1,6 +1,6 @@
-# terraform-awselasticsearch
+# terraform-opensearch
 
-- [terraform-awselasticsearch](#terraform-awselasticsearch)
+- [terraform-opensearch](#terraform-opensearch)
   - [opensearch](#opensearch)
     - [Requirements](#requirements)
     - [Providers](#providers)
@@ -9,26 +9,34 @@
     - [Inputs](#inputs)
     - [Outputs](#outputs)
     - [Example](#example)
-    - [Backups](#backups)
     - [Logging](#logging)
     - [Monitoring](#monitoring)
     - [NOTES](#notes)
+  - [opensearch-backup](#opensearch-backup)
+    - [Requirements](#requirements-1)
+    - [Providers](#providers-1)
+    - [Modules](#modules-1)
+    - [Resources](#resources-1)
+    - [Inputs](#inputs-1)
+    - [Outputs](#outputs-1)
+    - [Example](#example-1)
   - [elasticsearch\_k8s\_monitoring](#elasticsearch_k8s_monitoring)
-  - [Requirements](#requirements-1)
-  - [Providers](#providers-1)
-  - [Modules](#modules-1)
-  - [Resources](#resources-1)
-  - [Inputs](#inputs-1)
-  - [Outputs](#outputs-1)
-  - [kibana\_k8s\_auth\_ingress](#kibana_k8s_auth_ingress)
     - [Requirements](#requirements-2)
     - [Providers](#providers-2)
+    - [Modules](#modules-2)
+    - [Resources](#resources-2)
     - [Inputs](#inputs-2)
     - [Outputs](#outputs-2)
-  - [kibana\_k8s\_auth\_proxy](#kibana_k8s_auth_proxy)
+  - [kibana\_k8s\_auth\_ingress](#kibana_k8s_auth_ingress)
+    - [Requirements](#requirements-3)
+    - [Providers](#providers-3)
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
+  - [kibana\_k8s\_auth\_proxy](#kibana_k8s_auth_proxy)
+    - [Inputs](#inputs-4)
+    - [Outputs](#outputs-4)
   - [Upgrading](#upgrading)
+    - [Version 10.0.0 to 11.0.0](#version-1000-to-1100)
     - [Version 9.1.4 to 10.0.0](#version-914-to-1000)
     - [Version 8.0.0 to 8.2.0](#version-800-to-820)
     - [Version 7.0.0 to 8.0.0](#version-700-to-800)
@@ -42,49 +50,30 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | ~> 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
 
 ### Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider_aws) | n/a |
+| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 5.0 |
 
 ### Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_snapshot_lambda_monitoring"></a> [snapshot_lambda_monitoring](#module_snapshot_lambda_monitoring) | github.com/skyscrapers/terraform-cloudwatch//lambda_function | 2.2.0 |
+No modules.
 
 ### Resources
 
 | Name | Type |
 |------|------|
-| [aws_cloudwatch_event_rule.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource |
-| [aws_cloudwatch_event_target.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource |
 | [aws_cloudwatch_log_group.cwl_application](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_group.cwl_index](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_group.cwl_search](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
-| [aws_cloudwatch_log_group.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_resource_policy.cwl_resource_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_resource_policy) | resource |
 | [aws_elasticsearch_domain.es](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticsearch_domain) | resource |
-| [aws_iam_role.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_iam_role_policy.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [aws_lambda_function.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
-| [aws_lambda_permission.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
-| [aws_s3_bucket.snapshot](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_public_access_block.snapshot](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_security_group.sg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_security_group.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_security_group_rule.snapshot_lambda_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.snapshot_lambda_ingress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_iam_policy_document.cwl_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.snapshot_create_assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.snapshot_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [aws_iam_policy_document.snapshot_lambda_assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
 
@@ -119,12 +108,6 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 | <a name="input_options_indices_query_bool_max_clause_count"></a> [options_indices_query_bool_max_clause_count](#input_options_indices_query_bool_max_clause_count) | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
 | <a name="input_options_override_main_response_version"></a> [options_override_main_response_version](#input_options_override_main_response_version) | Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work | `bool` | `true` | no |
 | <a name="input_options_rest_action_multi_allow_explicit_index"></a> [options_rest_action_multi_allow_explicit_index](#input_options_rest_action_multi_allow_explicit_index) | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
-| <a name="input_s3_snapshots_enabled"></a> [s3_snapshots_enabled](#input_s3_snapshots_enabled) | Whether to create a custom snapshot S3 bucket and enable automated snapshots through Lambda | `bool` | `false` | no |
-| <a name="input_s3_snapshots_lambda_timeout"></a> [s3_snapshots_lambda_timeout](#input_s3_snapshots_lambda_timeout) | The execution timeout for the S3 snapshotting Lambda function | `number` | `180` | no |
-| <a name="input_s3_snapshots_logs_retention"></a> [s3_snapshots_logs_retention](#input_s3_snapshots_logs_retention) | How many days to retain logs for the S3 snapshot Lambda function | `number` | `30` | no |
-| <a name="input_s3_snapshots_monitoring_sns_topic_arn"></a> [s3_snapshots_monitoring_sns_topic_arn](#input_s3_snapshots_monitoring_sns_topic_arn) | ARN for the SNS Topic to send alerts to from the S3 snapshot Lambda function. Enables monitoring of the Lambda function | `string` | `null` | no |
-| <a name="input_s3_snapshots_retention"></a> [s3_snapshots_retention](#input_s3_snapshots_retention) | How many days to retain the OpenSearch snapshots in S3 | `number` | `14` | no |
-| <a name="input_s3_snapshots_schedule_period"></a> [s3_snapshots_schedule_period](#input_s3_snapshots_schedule_period) | Snapshot frequency specified in hours | `number` | `24` | no |
 | <a name="input_search_version"></a> [search_version](#input_search_version) | Version of the OpenSearch domain | `string` | `"OpenSearch_1.1"` | no |
 | <a name="input_security_group_ids"></a> [security_group_ids](#input_security_group_ids) | Extra security group IDs to attach to the OpenSearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
 | <a name="input_snapshot_start_hour"></a> [snapshot_start_hour](#input_snapshot_start_hour) | Hour during which an automated daily snapshot is taken of the OpenSearch indices | `number` | `3` | no |
@@ -154,7 +137,7 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 
 ```terraform
 module "opensearch" {
-  source = "github.com/skyscrapers/terraform-awselasticsearch//opensearch?ref=8.0.0"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.0.0"
 
   name           = "logs-${terraform.workspace}-es"
   instance_count = 3
@@ -162,10 +145,6 @@ module "opensearch" {
   volume_size    = 100
   vpc_id         = data.terraform_remote_state.networking.outputs.vpc_id
   subnet_ids     = data.terraform_remote_state.networking.outputs.private_db_subnets
-
-  s3_snapshots_enabled         = true
-  s3_snapshots_schedule_period = 12
-  s3_snapshots_retention       = 14
 }
 
 data "aws_iam_policy_document" "opensearch" {
@@ -187,20 +166,6 @@ resource "aws_elasticsearch_domain_policy" "opensearch" {
   access_policies = data.aws_iam_policy_document.opensearch.json
 }
 ```
-
-### Backups
-
-**Important**: Behavior of this module in function of backups has changed much between versions 6.0.0 and 7.0.0. Make sure to read the [upgrade guide](#version-600-to-700).
-
-The AWS Elasticsearch Service handles backups [automatically via daily (<= 5.1) or hourly (>= 5.3) snapshots](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-snapshots.html).
-
-Next to the built-in AWS snapshots, this module also offers creating your own backups to an S3 bucket by setting `s3_snapshots_enabled = true`. This will create an S3 bucket for storing the snapshots, a Lambda function and all required resources to automatically:
-
-- Register the S3 bucket as snapshot repository (`s3-manual`) in Elasticsearch
-- Delete (automated) snapshots in this repo that are older than `s3_snapshots_retention`
-- Create a new snapshot in this repo with name `automatic-<datetime>`
-
-Check the table above for all available `s3_snapshots_*` inputs.
 
 ### Logging
 
@@ -226,36 +191,131 @@ resource "aws_iam_service_linked_role" "es" {
 }
 ```
 
+## opensearch-backup
+
+This module can be used to create your own snapshots of Opensearch to S3, using [Snapshot Management](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-management/). It can also deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring snapshot success.
+
+### Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
+| <a name="requirement_opensearch"></a> [opensearch](#requirement_opensearch) | ~> 2.2 |
+
+### Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 5.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider_kubernetes) | ~> 2.23 |
+| <a name="provider_opensearch"></a> [opensearch](#provider_opensearch) | ~> 2.2 |
+
+### Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_s3_snapshot"></a> [s3_snapshot](#module_s3_snapshot) | terraform-aws-modules/s3-bucket/aws | ~> 3.15 |
+
+### Resources
+
+| Name | Type |
+|------|------|
+| [aws_iam_role.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [kubernetes_manifest.prometheusrule](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
+| [opensearch_sm_policy.snapshot](https://registry.terraform.io/providers/opensearch-project/opensearch/latest/docs/resources/sm_policy) | resource |
+| [opensearch_snapshot_repository.repo](https://registry.terraform.io/providers/opensearch-project/opensearch/latest/docs/resources/snapshot_repository) | resource |
+| [aws_iam_policy_document.s3_snapshot_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.snapshot_create_assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_name"></a> [name](#input_name) | Name for the snapshot system, S3 bucket, etc. | `string` | n/a | yes |
+| <a name="input_aws_kms_key_arn"></a> [aws_kms_key_arn](#input_aws_kms_key_arn) | ARN of the CMK used for S3 Server Side Encryption. When specified, we'll use the `aws:kms` SSE algorithm. When not specified, falls back to using `AES256` | `string` | `null` | no |
+| <a name="input_create_cron_expression"></a> [create_cron_expression](#input_create_cron_expression) | The cron schedule used to create snapshots | `string` | `"0 0 * * *"` | no |
+| <a name="input_create_time_limit"></a> [create_time_limit](#input_create_time_limit) | Sets the maximum time to wait for snapshot creation to finish. If time_limit is longer than the scheduled time interval for taking snapshots, no scheduled snapshots are taken until time_limit elapses. For example, if time_limit is set to 35 minutes and snapshots are taken every 30 minutes starting at midnight, the snapshots at 00:00 and 01:00 are taken, but the snapshot at 00:30 is skipped | `string` | `"1h"` | no |
+| <a name="input_custom_sm_policy"></a> [custom_sm_policy](#input_custom_sm_policy) | Set this variable when you want to override the generated SM policy JSON with your own. Make sure to correctly set `snapshot_config.repository` to the same value as `var.name` (the bucket name) | `string` | `null` | no |
+| <a name="input_delete_cron_expression"></a> [delete_cron_expression](#input_delete_cron_expression) | The cron schedule used to delete snapshots | `string` | `"0 2 * * *"` | no |
+| <a name="input_delete_time_limit"></a> [delete_time_limit](#input_delete_time_limit) | Sets the maximum time to wait for snapshot deletion to finish | `string` | `"1h"` | no |
+| <a name="input_indices"></a> [indices](#input_indices) | The names of the indexes in the snapshot. Multiple index names are separated by `,`. Supports wildcards (`*`) | `string` | `"*"` | no |
+| <a name="input_max_age"></a> [max_age](#input_max_age) | The maximum time a snapshot is retained in S3 | `string` | `"14d"` | no |
+| <a name="input_max_count"></a> [max_count](#input_max_count) | The maximum number of snapshots retained in S3 | `number` | `400` | no |
+| <a name="input_min_count"></a> [min_count](#input_min_count) | The minimum number of snapshot retained in S3 | `number` | `1` | no |
+| <a name="input_prometheusrule_alert_labels"></a> [prometheusrule_alert_labels](#input_prometheusrule_alert_labels) | Additional labels to add to the PrometheusRule alert | `map(string)` | `{}` | no |
+| <a name="input_prometheusrule_enabled"></a> [prometheusrule_enabled](#input_prometheusrule_enabled) | Whether to deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) and [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) to be deployed | `bool` | `true` | no |
+| <a name="input_prometheusrule_labels"></a> [prometheusrule_labels](#input_prometheusrule_labels) | Additional K8s labels to add to the PrometheusRule | `map(string)` | <pre>{<br>  "prometheus": "opensearch-backup"<br>}</pre> | no |
+| <a name="input_prometheusrule_namespace"></a> [prometheusrule_namespace](#input_prometheusrule_namespace) | Namespace where to deploy the PrometheusRule | `string` | `"infrastructure"` | no |
+| <a name="input_prometheusrule_query_period"></a> [prometheusrule_query_period](#input_prometheusrule_query_period) | Period to apply to the PrometheusRule queries. Make sure this is bigger than the `create_cron_expression` interval | `string` | `"32h"` | no |
+| <a name="input_prometheusrule_severity"></a> [prometheusrule_severity](#input_prometheusrule_severity) | Severity of the PrometheusRule alert. Usual values are: `info`, `warning` and `critical` | `string` | `"warning"` | no |
+| <a name="input_s3_force_destroy"></a> [s3_force_destroy](#input_s3_force_destroy) | Whether to force-destroy and empty the S3 bucket when destroying this Terraform module. WARNING: Not recommended! | `bool` | `false` | no |
+| <a name="input_s3_replication_configuration"></a> [s3_replication_configuration](#input_s3_replication_configuration) | Replication configuration block for the S3 bucket. See <https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/v3.15.1/examples/s3-replication> for an example | `any` | `{}` | no |
+
+### Outputs
+
+No outputs.
+
+### Example
+
+```terraform
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+    }
+    opensearch = {
+      source = "opensearch-project/opensearch"
+    }
+  }
+}
+
+provider "opensearch" {
+  url                 = module.opensearch.endpoint
+  aws_region          = var._aws_provider_region
+  aws_profile         = var._aws_provider_profile
+  aws_assume_role_arn = "arn:aws:iam::${var._aws_provider_account_id}:role/${var._aws_provider_assume_role}"
+}
+
+module "opensearch_snapshots" {
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.0.0"
+  name   = "${module.opensearch.domain_name}-snapshots"
+}
+```
+
 ## elasticsearch_k8s_monitoring
 
 This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrapers/charts/elasticsearch-monitoring) chart on Kubernetes.
 
-## Requirements
+### Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | ~> 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 4.0 |
-| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 2.5 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.11 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
+| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 2.11 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
 
-## Providers
+### Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 2.5 |
+| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 2.11 |
 
-## Modules
+### Modules
 
 No modules.
 
-## Resources
+### Resources
 
 | Name | Type |
 |------|------|
 | [helm_release.elasticsearch_monitoring](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 
-## Inputs
+### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -273,7 +333,7 @@ No modules.
 | <a name="input_system_nodeSelector"></a> [system_nodeSelector](#input_system_nodeSelector) | nodeSelector to add to the kubernetes pods. Set to null to disable. | `map(map(string))` | <pre>{<br>  "nodeSelector": {<br>    "role": "system"<br>  }<br>}</pre> | no |
 | <a name="input_system_tolerations"></a> [system_tolerations](#input_system_tolerations) | Tolerations to add to the kubernetes pods. Set to null to disable. | `any` | <pre>{<br>  "tolerations": [<br>    {<br>      "effect": "NoSchedule",<br>      "key": "role",<br>      "operator": "Equal",<br>      "value": "system"<br>    }<br>  ]<br>}</pre> | no |
 
-## Outputs
+### Outputs
 
 No outputs.
 
@@ -338,6 +398,26 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 | callback\_uri | Callback URI. You might need to register this to your OIDC provider (like CoreOS Dex) |
 
 ## Upgrading
+
+### Version 10.0.0 to 11.0.0
+
+We removed the custom S3 backup mechanism (via Lambda) from the `opensearch` module. As an alternative we now offer a new `opensearch-backup` module, which relies on the OpenSearch [Snapshot Management API](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/sm-api) to create snapshots to S3.
+
+If you want to upgrade, without destroying your old S3 snapshot bucket, we recommend to remove the bucket from Terraform's state:
+
+```hcl
+terraform state rm aws_s3_bucket.snapshot[0]
+```
+
+If you wish to import the old bucket into the new module, you can run:
+
+```hcl
+terraform import module.s3_snapshot.aws_s3_bucket.this "<opensearch_domain_name>-snapshot"
+```
+
+Also make sure to set `var.name` of this module to `<opensearch_domain_name>-snapshot`.
+
+Alternatively you can just let the module create a new bucket.
 
 ### Version 9.1.4 to 10.0.0
 

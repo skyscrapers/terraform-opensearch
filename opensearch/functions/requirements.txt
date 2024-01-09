@@ -1,3 +1,0 @@
-elasticsearch<7.14.0
-elasticsearch-curator
-requests_aws4auth

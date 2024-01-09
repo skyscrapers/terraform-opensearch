@@ -16,7 +16,6 @@ resource "aws_cloudwatch_log_group" "cwl_application" {
   tags              = var.tags
 }
 
-
 data "aws_iam_policy_document" "cwl_policy" {
   statement {
     actions = [
