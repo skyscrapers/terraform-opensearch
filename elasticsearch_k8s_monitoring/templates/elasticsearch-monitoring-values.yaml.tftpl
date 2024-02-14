@@ -5,6 +5,8 @@ sla: ${sla}
 %{ endif ~}
 
 prometheus-elasticsearch-exporter:
+  image:
+    repository: quay.io/prometheuscommunity/elasticsearch-exporter
   resources:
     limits:
       memory: ${es_exporter_memory}
@@ -21,6 +23,8 @@ prometheus-elasticsearch-exporter:
     shards: false
 
 prometheus-cloudwatch-exporter:
+  image:
+    repository: quay.io/prometheus/cloudwatch-exporter
   resources:
     limits:
       memory: ${cw_exporter_memory}
