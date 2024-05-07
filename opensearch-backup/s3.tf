@@ -17,6 +17,8 @@ module "s3_snapshot" {
 
   server_side_encryption_configuration = {
     rule = {
+      bucket_key_enabled = var.bucket_key_enabled
+
       apply_server_side_encryption_by_default = {
         kms_master_key_id = var.aws_kms_key_arn
         sse_algorithm     = var.aws_kms_key_arn != null ? "aws:kms" : "AES256"

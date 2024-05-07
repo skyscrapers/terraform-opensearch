@@ -116,3 +116,9 @@ variable "extra_bucket_policy" {
   type        = string
   default     = null
 }
+
+variable "bucket_key_enabled" {
+  description = "Whether to use Amazon S3 Bucket Keys for encryption, which reduces API costs"
+  type        = bool
+  default     = false
+}

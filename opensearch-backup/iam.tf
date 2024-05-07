@@ -25,6 +25,7 @@ data "aws_iam_policy_document" "snapshot_create" {
       "s3:GetObject",
       "s3:PutObject",
       "s3:DeleteObject",
+      "iam:PassRole"
     ]
 
     resources = ["${module.s3_snapshot.s3_bucket_arn}/*"]
