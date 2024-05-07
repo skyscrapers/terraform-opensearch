@@ -199,7 +199,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9 |
 | <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
 | <a name="requirement_opensearch"></a> [opensearch](#requirement_opensearch) | ~> 2.2 |
@@ -242,6 +242,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | <a name="input_custom_sm_policy"></a> [custom_sm_policy](#input_custom_sm_policy) | Set this variable when you want to override the generated SM policy JSON with your own. Make sure to correctly set `snapshot_config.repository` to the same value as `var.name` (the bucket name) | `string` | `null` | no |
 | <a name="input_delete_cron_expression"></a> [delete_cron_expression](#input_delete_cron_expression) | The cron schedule used to delete snapshots | `string` | `"0 2 * * *"` | no |
 | <a name="input_delete_time_limit"></a> [delete_time_limit](#input_delete_time_limit) | Sets the maximum time to wait for snapshot deletion to finish | `string` | `"1h"` | no |
+| <a name="input_extra_bucket_policy"></a> [extra_bucket_policy](#input_extra_bucket_policy) | Extra bucket policy to attach to the S3 bucket (JSON string formatted) | `string` | `null` | no |
 | <a name="input_indices"></a> [indices](#input_indices) | The names of the indexes in the snapshot. Multiple index names are separated by `,`. Supports wildcards (`*`) | `string` | `"*"` | no |
 | <a name="input_max_age"></a> [max_age](#input_max_age) | The maximum time a snapshot is retained in S3 | `string` | `"14d"` | no |
 | <a name="input_max_count"></a> [max_count](#input_max_count) | The maximum number of snapshots retained in S3 | `number` | `400` | no |

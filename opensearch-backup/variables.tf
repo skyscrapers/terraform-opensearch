@@ -110,3 +110,9 @@ variable "prometheusrule_severity" {
   type        = string
   default     = "warning"
 }
+
+variable "extra_bucket_policy" {
+  description = "Extra bucket policy to attach to the S3 bucket (JSON string formatted)"
+  type        = string
+  default     = null
+}

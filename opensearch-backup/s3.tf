@@ -31,6 +31,7 @@ module "s3_snapshot" {
 
 data "aws_iam_policy_document" "s3_snapshot_bucket" {
   statement {
+    sid    = "DenyWriteNonSnapshotRole"
     effect = "Deny"
 
     principals {
@@ -39,7 +40,8 @@ data "aws_iam_policy_document" "s3_snapshot_bucket" {
     }
 
     actions = [
-      "s3:*",
+      "s3:Put*",
+      "s3:Delete*",
     ]
 
     resources = [
@@ -56,5 +58,5 @@ data "aws_iam_policy_document" "s3_snapshot_bucket" {
     }
   }
 
-  #statement {}  # Replication?
+  source_policy_documents = [var.extra_bucket_policy]
 }
