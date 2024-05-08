@@ -3,10 +3,9 @@ resource "opensearch_snapshot_repository" "repo" {
   type = "s3"
 
   settings = {
-    bucket                 = module.s3_snapshot.s3_bucket_id
-    region                 = module.s3_snapshot.s3_bucket_region
-    role_arn               = aws_iam_role.snapshot_create.arn
-    server_side_encryption = true
+    bucket   = module.s3_snapshot.s3_bucket_id
+    region   = module.s3_snapshot.s3_bucket_region
+    role_arn = aws_iam_role.snapshot_create.arn
   }
 }
 
