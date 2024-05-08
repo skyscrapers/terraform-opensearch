@@ -17,6 +17,8 @@ module "s3_snapshot" {
 
   server_side_encryption_configuration = {
     rule = {
+      bucket_key_enabled = var.bucket_key_enabled
+
       apply_server_side_encryption_by_default = {
         kms_master_key_id = var.aws_kms_key_arn
         sse_algorithm     = var.aws_kms_key_arn != null ? "aws:kms" : "AES256"
@@ -31,6 +33,7 @@ module "s3_snapshot" {
 
 data "aws_iam_policy_document" "s3_snapshot_bucket" {
   statement {
+    sid    = "DenyWriteNonSnapshotRole"
     effect = "Deny"
 
     principals {
@@ -39,7 +42,8 @@ data "aws_iam_policy_document" "s3_snapshot_bucket" {
     }
 
     actions = [
-      "s3:*",
+      "s3:Put*",
+      "s3:Delete*",
     ]
 
     resources = [
@@ -56,5 +60,5 @@ data "aws_iam_policy_document" "s3_snapshot_bucket" {
     }
   }
 
-  #statement {}  # Replication?
+  source_policy_documents = [var.extra_bucket_policy]
 }

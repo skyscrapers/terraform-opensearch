@@ -42,7 +42,7 @@ resource "kubernetes_deployment" "gatekeeper" {
         container {
           name  = "gatekeeper"
           image = var.gatekeeper_image
-          args  = concat([
+          args = concat([
             "--listen=0.0.0.0:3000",
             "--discovery-url=${var.gatekeeper_discovery_url}",
             "--client-id=${var.gatekeeper_client_id}",
@@ -61,11 +61,11 @@ resource "kubernetes_deployment" "gatekeeper" {
             "--enable-authorization-header=false"
           ], var.gatekeeper_extra_args)
 
-          resources{
-            limits{
+          resources {
+            limits {
               memory = "32Mi"
             }
-            requests{
+            requests {
               cpu    = "1m"
               memory = "32Mi"
             }
@@ -163,7 +163,7 @@ resource "kubernetes_ingress" "gatekeeper" {
 
     tls {
       secret_name = "${local.name}-tls"
-      hosts = [var.gatekeeper_ingress_host]
+      hosts       = [var.gatekeeper_ingress_host]
     }
   }
 }

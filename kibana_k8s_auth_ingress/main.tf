@@ -60,7 +60,7 @@ resource "kubernetes_ingress" "kibana" {
 
     tls {
       secret_name = "${local.name}-tls"
-      hosts = [var.ingress_host]
+      hosts       = [var.ingress_host]
     }
   }
 }
