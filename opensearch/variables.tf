@@ -6,7 +6,7 @@ variable "name" {
 variable "search_version" {
   type        = string
   description = "Version of the OpenSearch domain"
-  default     = "OpenSearch_1.1"
+  default     = "OpenSearch_2.5"
 }
 
 variable "options_override_main_response_version" {

@@ -137,7 +137,7 @@ No modules.
 
 ```terraform
 module "opensearch" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.2.1"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.3.0"
 
   name           = "logs-${terraform.workspace}-es"
   instance_count = 3
@@ -194,6 +194,9 @@ resource "aws_iam_service_linked_role" "es" {
 ## opensearch-backup
 
 This module can be used to create your own snapshots of Opensearch to S3, using [Snapshot Management](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-management/). It can also deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring snapshot success.
+
+> [!IMPORTANT]
+> This requires Opensearch >= 2.5!
 
 ### Requirements
 
@@ -283,7 +286,7 @@ provider "opensearch" {
 }
 
 module "opensearch_snapshots" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.2.1"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.3.0"
   name   = "${module.opensearch.domain_name}-snapshots"
 }
 ```
@@ -409,12 +412,12 @@ If you want to upgrade, without destroying your old S3 snapshot bucket, we recom
 
 ```hcl
 module "opensearch" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.2.1"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.3.0"
   ...
 }
 
 module "opensearch_backup" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.2.1"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.3.0"
   name   = "${module.opensearch.domain_name}-snapshot"
 }
 ```
