@@ -137,7 +137,7 @@ No modules.
 
 ```terraform
 module "opensearch" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.0.0"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.2.1"
 
   name           = "logs-${terraform.workspace}-es"
   instance_count = 3
@@ -283,7 +283,7 @@ provider "opensearch" {
 }
 
 module "opensearch_snapshots" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.0.0"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.2.1"
   name   = "${module.opensearch.domain_name}-snapshots"
 }
 ```
@@ -405,19 +405,28 @@ This module deploys [keycloack-gatekeeper](https://github.com/keycloak/keycloak-
 
 We removed the custom S3 backup mechanism (via Lambda) from the `opensearch` module. As an alternative we now offer a new `opensearch-backup` module, which relies on the OpenSearch [Snapshot Management API](https://opensearch.org/docs/latest/tuning-your-cluster/availability-and-recovery/snapshots/sm-api) to create snapshots to S3.
 
-If you want to upgrade, without destroying your old S3 snapshot bucket, we recommend to remove the bucket from Terraform's state:
+If you want to upgrade, without destroying your old S3 snapshot bucket, we recommend to remove the bucket from Terraform's state and re-import it into the new backup module. For example, consider your code like this:
 
 ```hcl
-terraform state rm aws_s3_bucket.snapshot[0]
+module "opensearch" {
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.2.1"
+  ...
+}
+
+module "opensearch_backup" {
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.2.1"
+  name   = "${module.opensearch.domain_name}-snapshot"
+}
 ```
 
-If you wish to import the old bucket into the new module, you can run:
+Then you can migrate your snapshots S3 bucket like this:
 
 ```hcl
-terraform import module.s3_snapshot.aws_s3_bucket.this "<opensearch_domain_name>-snapshot"
+terraform state rm module.opensearch.aws_s3_bucket.snapshot[0]
+terraform import module.opensearch_backup.module.s3_snapshot.aws_s3_bucket.this[0] "<opensearch_domain_name>-snapshot"
 ```
 
-Also make sure to set `var.name` of this module to `<opensearch_domain_name>-snapshot`.
+Also make sure to set `var.name` of this module to `<opensearch_domain_name>-snapshot`!
 
 Alternatively you can just let the module create a new bucket.
 
