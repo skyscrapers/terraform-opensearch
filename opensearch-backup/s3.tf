@@ -60,5 +60,5 @@ data "aws_iam_policy_document" "s3_snapshot_bucket" {
     }
   }
 
-  source_policy_documents = [var.extra_bucket_policy]
+  source_policy_documents = var.extra_bucket_policy == null ? null : [var.extra_bucket_policy]
 }
