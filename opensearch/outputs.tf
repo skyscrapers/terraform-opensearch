@@ -25,7 +25,7 @@ output "kibana_endpoint" {
 
 output "domain_region" {
   description = "Region of the OpenSearch domain"
-  value       = data.aws_region.current.name
+  value       = data.aws_region.current.region
 }
 
 output "sg_id" {

@@ -1,6 +1,6 @@
 module "s3_snapshot" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 3.15"
+  version = "~> 5.0"
 
   bucket = var.name
 
