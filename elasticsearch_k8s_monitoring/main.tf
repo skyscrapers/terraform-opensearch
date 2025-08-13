@@ -25,10 +25,4 @@ resource "helm_release" "elasticsearch_monitoring" {
       nodeSelector = var.system_nodeSelector != null ? yamlencode(var.system_nodeSelector) : ""
     })
   ]
-
-  set {
-    type  = "string"
-    name  = "terraform_force_update_this_is_not_used"
-    value = var.force_helm_update
-  }
 }

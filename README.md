@@ -26,15 +26,10 @@
     - [Modules](#modules-2)
     - [Resources](#resources-2)
     - [Inputs](#inputs-2)
-    - [Outputs](#outputs-2)
-  - [kibana\_k8s\_auth\_ingress](#kibana_k8s_auth_ingress)
-    - [Requirements](#requirements-3)
-    - [Providers](#providers-3)
+  - [Outputs](#outputs-2)
+  - [kibana\_k8s\_auth\_proxy](#kibana_k8s_auth_proxy)
     - [Inputs](#inputs-3)
     - [Outputs](#outputs-3)
-  - [kibana\_k8s\_auth\_proxy](#kibana_k8s_auth_proxy)
-    - [Inputs](#inputs-4)
-    - [Outputs](#outputs-4)
   - [Upgrading](#upgrading)
     - [Version 10.0.0 to 11.0.0](#version-1000-to-1100)
     - [Version 9.1.4 to 10.0.0](#version-914-to-1000)
@@ -50,14 +45,14 @@ Terraform module to setup all resources needed for setting up an AWS OpenSearch 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
-| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 6.0 |
 
 ### Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 5.0 |
+| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 6.0 |
 
 ### Modules
 
@@ -99,7 +94,7 @@ No modules.
 | <a name="input_encrypt_at_rest_kms_key_id"></a> [encrypt_at_rest_kms_key_id](#input_encrypt_at_rest_kms_key_id) | The KMS key id to encrypt the OpenSearch domain with. If not specified then it defaults to using the `aws/es` service KMS key | `string` | `null` | no |
 | <a name="input_endpoint_enforce_https"></a> [endpoint_enforce_https](#input_endpoint_enforce_https) | Whether or not to require HTTPS | `bool` | `true` | no |
 | <a name="input_endpoint_tls_security_policy"></a> [endpoint_tls_security_policy](#input_endpoint_tls_security_policy) | The name of the TLS security policy that needs to be applied to the HTTPS endpoint. Valid values: `Policy-Min-TLS-1-0-2019-07` and `Policy-Min-TLS-1-2-2019-07` | `string` | `"Policy-Min-TLS-1-2-2019-07"` | no |
-| <a name="input_ephemeral_list"></a> [ephemeral_list](#input_ephemeral_list) | m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type | `list(string)` | <pre>[<br>  "i3.large.search",<br>  "i3.xlarge.search",<br>  "i3.2xlarge.search",<br>  "i3.4xlarge.search",<br>  "i3.8xlarge.search",<br>  "i3.16xlarge.search",<br>  "r6gd.large.search",<br>  "r6gd.xlarge.search",<br>  "r6gd.2xlarge.search",<br>  "r6gd.4xlarge.search",<br>  "r6gd.8xlarge.search",<br>  "r6gd.12xlarge.search",<br>  "r6gd.16xlarge.search",<br>  "i3.large.elasticsearch",<br>  "i3.xlarge.elasticsearch",<br>  "i3.2xlarge.elasticsearch",<br>  "i3.4xlarge.elasticsearch",<br>  "i3.8xlarge.elasticsearch",<br>  "i3.16xlarge.elasticsearch",<br>  "r6gd.large.elasticsearch",<br>  "r6gd.xlarge.elasticsearch",<br>  "r6gd.2xlarge.elasticsearch",<br>  "r6gd.4xlarge.elasticsearch",<br>  "r6gd.8xlarge.elasticsearch",<br>  "r6gd.12xlarge.elasticsearch",<br>  "r6gd.16xlarge.elasticsearch"<br>]</pre> | no |
+| <a name="input_ephemeral_list"></a> [ephemeral_list](#input_ephemeral_list) | m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type | `list(string)` | <pre>[<br/>  "i3.large.search",<br/>  "i3.xlarge.search",<br/>  "i3.2xlarge.search",<br/>  "i3.4xlarge.search",<br/>  "i3.8xlarge.search",<br/>  "i3.16xlarge.search",<br/>  "r6gd.large.search",<br/>  "r6gd.xlarge.search",<br/>  "r6gd.2xlarge.search",<br/>  "r6gd.4xlarge.search",<br/>  "r6gd.8xlarge.search",<br/>  "r6gd.12xlarge.search",<br/>  "r6gd.16xlarge.search",<br/>  "i3.large.elasticsearch",<br/>  "i3.xlarge.elasticsearch",<br/>  "i3.2xlarge.elasticsearch",<br/>  "i3.4xlarge.elasticsearch",<br/>  "i3.8xlarge.elasticsearch",<br/>  "i3.16xlarge.elasticsearch",<br/>  "r6gd.large.elasticsearch",<br/>  "r6gd.xlarge.elasticsearch",<br/>  "r6gd.2xlarge.elasticsearch",<br/>  "r6gd.4xlarge.elasticsearch",<br/>  "r6gd.8xlarge.elasticsearch",<br/>  "r6gd.12xlarge.elasticsearch",<br/>  "r6gd.16xlarge.elasticsearch"<br/>]</pre> | no |
 | <a name="input_instance_count"></a> [instance_count](#input_instance_count) | Size of the OpenSearch domain | `number` | `1` | no |
 | <a name="input_logging_enabled"></a> [logging_enabled](#input_logging_enabled) | Whether to enable OpenSearch slow logs (index & search) in Cloudwatch | `bool` | `false` | no |
 | <a name="input_logging_retention"></a> [logging_retention](#input_logging_retention) | How many days to retain OpenSearch logs in Cloudwatch | `number` | `30` | no |
@@ -108,7 +103,7 @@ No modules.
 | <a name="input_options_indices_query_bool_max_clause_count"></a> [options_indices_query_bool_max_clause_count](#input_options_indices_query_bool_max_clause_count) | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
 | <a name="input_options_override_main_response_version"></a> [options_override_main_response_version](#input_options_override_main_response_version) | Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work | `bool` | `true` | no |
 | <a name="input_options_rest_action_multi_allow_explicit_index"></a> [options_rest_action_multi_allow_explicit_index](#input_options_rest_action_multi_allow_explicit_index) | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
-| <a name="input_search_version"></a> [search_version](#input_search_version) | Version of the OpenSearch domain | `string` | `"OpenSearch_1.1"` | no |
+| <a name="input_search_version"></a> [search_version](#input_search_version) | Version of the OpenSearch domain | `string` | `"OpenSearch_2.5"` | no |
 | <a name="input_security_group_ids"></a> [security_group_ids](#input_security_group_ids) | Extra security group IDs to attach to the OpenSearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
 | <a name="input_snapshot_start_hour"></a> [snapshot_start_hour](#input_snapshot_start_hour) | Hour during which an automated daily snapshot is taken of the OpenSearch indices | `number` | `3` | no |
 | <a name="input_subnet_ids"></a> [subnet_ids](#input_subnet_ids) | Required if vpc_id is specified: Subnet IDs for the VPC enabled OpenSearch domain endpoints to be created in | `list(string)` | `[]` | no |
@@ -203,7 +198,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9 |
-| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 6.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
 | <a name="requirement_opensearch"></a> [opensearch](#requirement_opensearch) | ~> 2.2 |
 
@@ -211,7 +206,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 5.0 |
+| <a name="provider_aws"></a> [aws](#provider_aws) | ~> 6.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider_kubernetes) | ~> 2.23 |
 | <a name="provider_opensearch"></a> [opensearch](#provider_opensearch) | ~> 2.2 |
 
@@ -219,7 +214,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_s3_snapshot"></a> [s3_snapshot](#module_s3_snapshot) | terraform-aws-modules/s3-bucket/aws | ~> 3.15 |
+| <a name="module_s3_snapshot"></a> [s3_snapshot](#module_s3_snapshot) | terraform-aws-modules/s3-bucket/aws | ~> 5.0 |
 
 ### Resources
 
@@ -253,7 +248,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | <a name="input_min_count"></a> [min_count](#input_min_count) | The minimum number of snapshot retained in S3 | `number` | `1` | no |
 | <a name="input_prometheusrule_alert_labels"></a> [prometheusrule_alert_labels](#input_prometheusrule_alert_labels) | Additional labels to add to the PrometheusRule alert | `map(string)` | `{}` | no |
 | <a name="input_prometheusrule_enabled"></a> [prometheusrule_enabled](#input_prometheusrule_enabled) | Whether to deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) and [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) to be deployed | `bool` | `true` | no |
-| <a name="input_prometheusrule_labels"></a> [prometheusrule_labels](#input_prometheusrule_labels) | Additional K8s labels to add to the PrometheusRule | `map(string)` | <pre>{<br>  "prometheus": "opensearch-backup"<br>}</pre> | no |
+| <a name="input_prometheusrule_labels"></a> [prometheusrule_labels](#input_prometheusrule_labels) | Additional K8s labels to add to the PrometheusRule | `map(string)` | <pre>{<br/>  "prometheus": "opensearch-backup"<br/>}</pre> | no |
 | <a name="input_prometheusrule_namespace"></a> [prometheusrule_namespace](#input_prometheusrule_namespace) | Namespace where to deploy the PrometheusRule | `string` | `"infrastructure"` | no |
 | <a name="input_prometheusrule_query_period"></a> [prometheusrule_query_period](#input_prometheusrule_query_period) | Period to apply to the PrometheusRule queries. Make sure this is bigger than the `create_cron_expression` interval | `string` | `"32h"` | no |
 | <a name="input_prometheusrule_severity"></a> [prometheusrule_severity](#input_prometheusrule_severity) | Severity of the PrometheusRule alert. Usual values are: `info`, `warning` and `critical` | `string` | `"warning"` | no |
@@ -299,16 +294,16 @@ This module deploys our [`elasticsearch/monitoring`](https://github.com/skyscrap
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9, < 1.6.0 |
-| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 5.0 |
-| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 2.11 |
+| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9 |
+| <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 6.0 |
+| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 3.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
 
 ### Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 2.11 |
+| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 3.0 |
 
 ### Modules
 
@@ -332,47 +327,14 @@ No modules.
 | <a name="input_cw_exporter_memory"></a> [cw_exporter_memory](#input_cw_exporter_memory) | Memory request and limit for the prometheus-cloudwatch-exporter pod | `string` | `"160Mi"` | no |
 | <a name="input_elasticsearch_monitoring_chart_version"></a> [elasticsearch_monitoring_chart_version](#input_elasticsearch_monitoring_chart_version) | elasticsearch-monitoring Helm chart version to deploy | `string` | `"1.11.2"` | no |
 | <a name="input_es_exporter_memory"></a> [es_exporter_memory](#input_es_exporter_memory) | Memory request and limit for the prometheus-elasticsearch-exporter pod | `string` | `"48Mi"` | no |
-| <a name="input_force_helm_update"></a> [force_helm_update](#input_force_helm_update) | Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on the deployed values | `string` | `"1"` | no |
 | <a name="input_irsa_enabled"></a> [irsa_enabled](#input_irsa_enabled) | Whether to use [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html). When `true`, the Cloudwatch exporter's SA is appropriately annotated. If `false` a [kube2iam](https://github.com/jtblin/kube2iam) Pod annotation is set instead | `bool` | `true` | no |
 | <a name="input_sla"></a> [sla](#input_sla) | SLA of the monitored Elasticsearch cluster. Will default to the k8s cluster SLA if omited | `string` | `null` | no |
-| <a name="input_system_nodeSelector"></a> [system_nodeSelector](#input_system_nodeSelector) | nodeSelector to add to the kubernetes pods. Set to null to disable. | `map(map(string))` | <pre>{<br>  "nodeSelector": {<br>    "role": "system"<br>  }<br>}</pre> | no |
-| <a name="input_system_tolerations"></a> [system_tolerations](#input_system_tolerations) | Tolerations to add to the kubernetes pods. Set to null to disable. | `any` | <pre>{<br>  "tolerations": [<br>    {<br>      "effect": "NoSchedule",<br>      "key": "role",<br>      "operator": "Equal",<br>      "value": "system"<br>    }<br>  ]<br>}</pre> | no |
+| <a name="input_system_nodeSelector"></a> [system_nodeSelector](#input_system_nodeSelector) | nodeSelector to add to the kubernetes pods. Set to null to disable. | `map(map(string))` | <pre>{<br/>  "nodeSelector": {<br/>    "role": "system"<br/>  }<br/>}</pre> | no |
+| <a name="input_system_tolerations"></a> [system_tolerations](#input_system_tolerations) | Tolerations to add to the kubernetes pods. Set to null to disable. | `any` | <pre>{<br/>  "tolerations": [<br/>    {<br/>      "effect": "NoSchedule",<br/>      "key": "role",<br/>      "operator": "Equal",<br/>      "value": "system"<br/>    }<br/>  ]<br/>}</pre> | no |
 
-### Outputs
+## Outputs
 
 No outputs.
-
-## kibana_k8s_auth_ingress
-
-This module deploys an Ingress with [external authentication](https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/) on Kubernetes to reach the AWS Elasticsearch Kibana endpoint.
-
-### Requirements
-
-| Name | Version |
-|------|---------|
-| terraform | >= 0.12 |
-
-### Providers
-
-| Name | Version |
-|------|---------|
-| kubernetes | n/a |
-
-### Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| elasticsearch_domain_name | Domain name of the AWS Elasticsearch domain | `string` | n/a | yes |
-| elasticsearch_endpoint | Endpoint of the AWS Elasticsearch domain | `string` | n/a | yes |
-| ingress_auth_signin | Value to set for the `nginx.ingress.kubernetes.io/auth-signin` annotation | `string` | n/a | yes |
-| ingress_auth_url | Value to set for the `nginx.ingress.kubernetes.io/auth-url` annotation | `string` | n/a | yes |
-| ingress_host | Hostname to use for the Ingress | `string` | n/a | yes |
-| kubernetes_namespace | Kubernetes namespace where to deploy the Ingress | `string` | n/a | yes |
-| ingress_configuration_snippet | Value to set for the `nginx.ingress.kubernetes.io/configuration-snippet` annotation | `string` | `null` | no |
-
-### Outputs
-
-No output.
 
 ## kibana_k8s_auth_proxy
 

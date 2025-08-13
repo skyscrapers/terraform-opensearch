@@ -47,12 +47,6 @@ variable "cw_exporter_memory" {
   default     = "160Mi"
 }
 
-variable "force_helm_update" {
-  type        = string
-  description = "Modify this variable to trigger an update on all Helm charts (you can set any value). Due to current limitations of the Helm provider, it doesn't detect drift on the deployed values"
-  default     = "1"
-}
-
 variable "sla" {
   type        = string
   description = "SLA of the monitored Elasticsearch cluster. Will default to the k8s cluster SLA if omited"
