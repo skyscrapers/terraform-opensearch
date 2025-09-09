@@ -6,7 +6,7 @@ variable "name" {
 variable "search_version" {
   type        = string
   description = "Version of the OpenSearch domain"
-  default     = "OpenSearch_2.5"
+  default     = "OpenSearch_2.19"
 }
 
 variable "options_override_main_response_version" {
@@ -148,6 +148,12 @@ variable "volume_size" {
 variable "volume_iops" {
   type        = number
   description = "Required if volume_type=\"io1\" or \"gp3\": Amount of provisioned IOPS for the EBS volume"
+  default     = 0
+}
+
+variable "volume_throughput" {
+  type        = number
+  description = "Required if volume_type=\"gp3\": Amount of throughput in MiB/s for the EBS volume. For more information, check <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html#current-general-purpose>"
   default     = 0
 }
 

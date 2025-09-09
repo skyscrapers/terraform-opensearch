@@ -17,10 +17,10 @@ locals {
   availability_zone_count = local.instance_az == 3 ? 3 : local.subnet_az == 3 ? 3 : 2
 }
 
-resource "aws_elasticsearch_domain" "es" {
-  domain_name           = var.name
-  tags                  = var.tags
-  elasticsearch_version = var.search_version
+resource "aws_opensearch_domain" "os" {
+  domain_name    = var.name
+  tags           = var.tags
+  engine_version = var.search_version
 
   cluster_config {
     instance_count = var.instance_count
@@ -49,6 +49,7 @@ resource "aws_elasticsearch_domain" "es" {
     volume_type = contains(var.ephemeral_list, var.instance_type) ? null : var.volume_type
     volume_size = contains(var.ephemeral_list, var.instance_type) ? null : var.volume_size
     iops        = contains(["io1", "gp3"], var.volume_type) ? var.volume_iops : null
+    throughput  = contains(["gp3"], var.volume_type) ? var.volume_throughput : null
   }
 
   snapshot_options {

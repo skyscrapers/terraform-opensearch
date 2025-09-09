@@ -1,8 +1,37 @@
 # m3 and r3 are supported by aws using ephemeral storage but are a legacy instance type
+# https://docs.aws.amazon.com/opensearch-service/latest/developerguide/supported-instance-types.html
 variable "ephemeral_list" {
   type = list(string)
 
   default = [
+    "i4i.large.search",
+    "i4i.xlarge.search",
+    "i4i.2xlarge.search",
+    "i4i.4xlarge.search",
+    "i4i.8xlarge.search",
+    "i4i.12xlarge.search",
+    "i4i.16xlarge.search",
+    "i4i.24xlarge.search",
+    "i4i.32xlarge.search",
+    "i4g.large.search",
+    "i4g.xlarge.search",
+    "i4g.2xlarge.search",
+    "i4g.4xlarge.search",
+    "i4g.8xlarge.search",
+    "i4g.16xlarge.search",
+    "i8g.large.search",
+    "i8g.xlarge.search",
+    "i8g.2xlarge.search",
+    "i8g.4xlarge.search",
+    "i8g.8xlarge.search",
+    "i8g.12xlarge.search",
+    "i8g.16xlarge.search",
+    "im4gn.large.search",
+    "im4gn.xlarge.search",
+    "im4gn.2xlarge.search",
+    "im4gn.4xlarge.search",
+    "im4gn.8xlarge.search",
+    "im4gn.16xlarge.search",
     "i3.large.search",
     "i3.xlarge.search",
     "i3.2xlarge.search",
@@ -16,19 +45,5 @@ variable "ephemeral_list" {
     "r6gd.8xlarge.search",
     "r6gd.12xlarge.search",
     "r6gd.16xlarge.search",
-    ## Compatibility
-    "i3.large.elasticsearch",
-    "i3.xlarge.elasticsearch",
-    "i3.2xlarge.elasticsearch",
-    "i3.4xlarge.elasticsearch",
-    "i3.8xlarge.elasticsearch",
-    "i3.16xlarge.elasticsearch",
-    "r6gd.large.elasticsearch",
-    "r6gd.xlarge.elasticsearch",
-    "r6gd.2xlarge.elasticsearch",
-    "r6gd.4xlarge.elasticsearch",
-    "r6gd.8xlarge.elasticsearch",
-    "r6gd.12xlarge.elasticsearch",
-    "r6gd.16xlarge.elasticsearch",
   ]
 }
