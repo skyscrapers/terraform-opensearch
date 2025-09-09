@@ -75,37 +75,66 @@ variable "s3_replication_configuration" {
   default     = {}
 }
 
-variable "prometheusrule_enabled" {
-  description = "Whether to deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) and [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) to be deployed"
+variable "monitoring_enabled" {
+  description = "Whether to deploy an [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) and [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) to be deployed"
   type        = bool
   default     = true
 }
 
-variable "prometheusrule_alert_labels" {
-  description = "Additional labels to add to the PrometheusRule alert"
-  type        = map(string)
-  default     = {}
+variable "monitoring_elasticsearch_exporter_version" {
+  description = "Version of the prometheus-elasticsearch-exporter Helm chart to deploy"
+  type        = string
+  default     = "7.0.0"
 }
 
-variable "prometheusrule_labels" {
-  description = "Additional K8s labels to add to the PrometheusRule"
-  type        = map(string)
-  default     = { prometheus = "opensearch-backup" }
+variable "monitoring_elasticsearch_exporter_tolerations" {
+  type        = any
+  description = "Tolerations to add to the kubernetes pods. Set to null to disable."
+  default = {
+    tolerations = [{
+      key      = "role"
+      operator = "Equal"
+      value    = "system"
+      effect   = "NoSchedule"
+    }]
+  }
 }
 
-variable "prometheusrule_namespace" {
+variable "monitoring_elasticsearch_exporter_nodeSelector" {
+  description = "nodeSelector to add to the kubernetes pods. Set to null to disable."
+  type        = map(map(string))
+  default = {
+    nodeSelector = {
+      role = "system"
+    }
+  }
+}
+
+variable "monitoring_namespace" {
   description = "Namespace where to deploy the PrometheusRule"
   type        = string
   default     = "infrastructure"
 }
 
-variable "prometheusrule_query_period" {
+variable "monitoring_prometheusrule_alert_labels" {
+  description = "Additional labels to add to the PrometheusRule alert"
+  type        = map(string)
+  default     = {}
+}
+
+variable "monitoring_prometheusrule_labels" {
+  description = "Additional K8s labels to add to the PrometheusRule"
+  type        = map(string)
+  default     = { prometheus = "opensearch-backup" }
+}
+
+variable "monitoring_prometheusrule_query_period" {
   description = "Period to apply to the PrometheusRule queries. Make sure this is bigger than the `create_cron_expression` interval"
   type        = string
   default     = "32h"
 }
 
-variable "prometheusrule_severity" {
+variable "monitoring_prometheusrule_severity" {
   description = "Severity of the PrometheusRule alert. Usual values are: `info`, `warning` and `critical`"
   type        = string
   default     = "warning"

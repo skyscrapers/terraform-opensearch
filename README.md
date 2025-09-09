@@ -122,7 +122,7 @@ No modules.
 
 ```terraform
 module "opensearch" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=11.3.0"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch?ref=14.0.0"
 
   name           = "logs-${terraform.workspace}-es"
   instance_count = 3
@@ -265,7 +265,7 @@ provider "opensearch" {
 }
 
 module "opensearch_snapshots" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=11.3.0"
+  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=14.0.0"
   name   = "${module.opensearch.domain_name}-snapshots"
 }
 ```
