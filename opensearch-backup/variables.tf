@@ -76,7 +76,7 @@ variable "s3_replication_configuration" {
 }
 
 variable "monitoring_enabled" {
-  description = "Whether to deploy an [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) and [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) to be deployed"
+  description = "Whether to deploy a small [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) with [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) to be deployed"
   type        = bool
   default     = true
 }
@@ -116,16 +116,16 @@ variable "monitoring_namespace" {
   default     = "infrastructure"
 }
 
+variable "monitoring_prometheus_labels" {
+  description = "Additional K8s labels to add to the ServiceMonitor and PrometheusRule"
+  type        = map(string)
+  default     = { prometheus = "opensearch-backup" }
+}
+
 variable "monitoring_prometheusrule_alert_labels" {
   description = "Additional labels to add to the PrometheusRule alert"
   type        = map(string)
   default     = {}
-}
-
-variable "monitoring_prometheusrule_labels" {
-  description = "Additional K8s labels to add to the PrometheusRule"
-  type        = map(string)
-  default     = { prometheus = "opensearch-backup" }
 }
 
 variable "monitoring_prometheusrule_query_period" {

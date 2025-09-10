@@ -7,8 +7,8 @@ terraform {
       version = "~> 6.0"
     }
     kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.23"
+      source  = "hashicorp/helm"
+      version = "~> 3.0"
     }
     opensearch = {
       source  = "opensearch-project/opensearch"
