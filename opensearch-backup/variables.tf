@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "opensearch_endpoint" {
+  description = "Endpoint of the OpenSearch domain (including https://)"
+  type        = string
+}
+
 variable "aws_kms_key_arn" {
   description = "ARN of the CMK used for S3 Server Side Encryption. When specified, we'll use the `aws:kms` SSE algorithm. When not specified, falls back to using `AES256`"
   type        = string

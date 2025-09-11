@@ -9,12 +9,6 @@ variable "search_version" {
   default     = "OpenSearch_2.19"
 }
 
-variable "options_override_main_response_version" {
-  type        = bool
-  description = "Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work"
-  default     = true
-}
-
 variable "options_rest_action_multi_allow_explicit_index" {
   type        = bool
   description = "Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body"
@@ -154,7 +148,7 @@ variable "volume_iops" {
 variable "volume_throughput" {
   type        = number
   description = "Required if volume_type=\"gp3\": Amount of throughput in MiB/s for the EBS volume. For more information, check <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html#current-general-purpose>"
-  default     = 0
+  default     = 125
 }
 
 variable "vpc_id" {
@@ -228,4 +222,10 @@ variable "custom_endpoint_certificate_arn" {
   type        = string
   description = "ARN of the ACM certificate to use for the custom endpoint. Required when custom endpoint is set along with enabling `endpoint_enforce_https`"
   default     = null
+}
+
+variable "auto_software_update_enabled" {
+  type        = bool
+  description = "Whether automatic service software updates are enabled for the domain"
+  default     = true
 }

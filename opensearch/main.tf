@@ -49,7 +49,7 @@ resource "aws_opensearch_domain" "os" {
     volume_type = contains(var.ephemeral_list, var.instance_type) ? null : var.volume_type
     volume_size = contains(var.ephemeral_list, var.instance_type) ? null : var.volume_size
     iops        = contains(["io1", "gp3"], var.volume_type) ? var.volume_iops : null
-    throughput  = contains(["gp3"], var.volume_type) ? var.volume_throughput : null
+    throughput  = var.volume_type == "gp3" ? var.volume_throughput : null
   }
 
   snapshot_options {
@@ -57,7 +57,6 @@ resource "aws_opensearch_domain" "os" {
   }
 
   advanced_options = {
-    "override_main_response_version"         = length(regexall("^OpenSearch", var.search_version)) > 0 && var.options_override_main_response_version ? "true" : null
     "rest.action.multi.allow_explicit_index" = tostring(var.options_rest_action_multi_allow_explicit_index)
     "indices.fielddata.cache.size"           = var.options_indices_fielddata_cache_size != null ? tostring(var.options_indices_fielddata_cache_size) : ""
     "indices.query.bool.max_clause_count"    = tostring(var.options_indices_query_bool_max_clause_count)
@@ -112,5 +111,9 @@ resource "aws_opensearch_domain" "os" {
     user_pool_id     = var.cognito_enabled ? var.cognito_user_pool_id : ""
     identity_pool_id = var.cognito_enabled ? var.cognito_identity_pool_id : ""
     role_arn         = var.cognito_enabled ? var.cognito_role_arn : ""
+  }
+
+  software_update_options {
+    auto_software_update_enabled = var.auto_software_update_enabled
   }
 }

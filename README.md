@@ -15,7 +15,7 @@
     - [Requirements](#requirements-1)
     - [Providers](#providers-1)
     - [Modules](#modules-1)
-    - [Resources](#resources-1)
+  - [Resources](#resources-1)
     - [Inputs](#inputs-1)
     - [Outputs](#outputs-1)
     - [Example](#example-1)
@@ -70,6 +70,7 @@ No modules.
 | <a name="input_name"></a> [name](#input_name) | Name to use for the OpenSearch domain | `string` | n/a | yes |
 | <a name="input_volume_size"></a> [volume_size](#input_volume_size) | EBS volume size (in GB) to use for the OpenSearch domain | `number` | n/a | yes |
 | <a name="input_application_logging_enabled"></a> [application_logging_enabled](#input_application_logging_enabled) | Whether to enable OpenSearch application logs (error) in Cloudwatch | `bool` | `false` | no |
+| <a name="input_auto_software_update_enabled"></a> [auto_software_update_enabled](#input_auto_software_update_enabled) | Whether automatic service software updates are enabled for the domain | `bool` | `true` | no |
 | <a name="input_availability_zone_count"></a> [availability_zone_count](#input_availability_zone_count) | Number of Availability Zones for the domain to use with zone_awareness_enabled.Valid values: 2 or 3. Automatically configured through number of instances/subnets available if not set. | `number` | `null` | no |
 | <a name="input_cognito_enabled"></a> [cognito_enabled](#input_cognito_enabled) | Whether to enable Cognito for authentication in Kibana | `bool` | `false` | no |
 | <a name="input_cognito_identity_pool_id"></a> [cognito_identity_pool_id](#input_cognito_identity_pool_id) | Required when cognito_enabled is enabled: ID of the Cognito Identity Pool to use | `string` | `null` | no |
@@ -91,7 +92,6 @@ No modules.
 | <a name="input_node_to_node_encryption"></a> [node_to_node_encryption](#input_node_to_node_encryption) | Whether to enable node-to-node encryption. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | <a name="input_options_indices_fielddata_cache_size"></a> [options_indices_fielddata_cache_size](#input_options_indices_fielddata_cache_size) | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | `number` | `null` | no |
 | <a name="input_options_indices_query_bool_max_clause_count"></a> [options_indices_query_bool_max_clause_count](#input_options_indices_query_bool_max_clause_count) | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
-| <a name="input_options_override_main_response_version"></a> [options_override_main_response_version](#input_options_override_main_response_version) | Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work | `bool` | `true` | no |
 | <a name="input_options_rest_action_multi_allow_explicit_index"></a> [options_rest_action_multi_allow_explicit_index](#input_options_rest_action_multi_allow_explicit_index) | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
 | <a name="input_search_version"></a> [search_version](#input_search_version) | Version of the OpenSearch domain | `string` | `"OpenSearch_2.19"` | no |
 | <a name="input_security_group_ids"></a> [security_group_ids](#input_security_group_ids) | Extra security group IDs to attach to the OpenSearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
@@ -99,6 +99,7 @@ No modules.
 | <a name="input_subnet_ids"></a> [subnet_ids](#input_subnet_ids) | Required if vpc_id is specified: Subnet IDs for the VPC enabled OpenSearch domain endpoints to be created in | `list(string)` | `[]` | no |
 | <a name="input_tags"></a> [tags](#input_tags) | Optional tags | `map(string)` | `{}` | no |
 | <a name="input_volume_iops"></a> [volume_iops](#input_volume_iops) | Required if volume_type="io1" or "gp3": Amount of provisioned IOPS for the EBS volume | `number` | `0` | no |
+| <a name="input_volume_throughput"></a> [volume_throughput](#input_volume_throughput) | Required if volume_type="gp3": Amount of throughput in MiB/s for the EBS volume. For more information, check <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html#current-general-purpose> | `number` | `125` | no |
 | <a name="input_volume_type"></a> [volume_type](#input_volume_type) | EBS volume type to use for the OpenSearch domain | `string` | `"gp2"` | no |
 | <a name="input_vpc_id"></a> [vpc_id](#input_vpc_id) | VPC ID where to deploy the OpenSearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain | `string` | `null` | no |
 | <a name="input_warm_count"></a> [warm_count](#input_warm_count) | Number of warm nodes (2 - 150) | `number` | `2` | no |
@@ -183,7 +184,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 1.3.9 |
 | <a name="requirement_aws"></a> [aws](#requirement_aws) | ~> 6.0 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement_kubernetes) | ~> 2.23 |
+| <a name="requirement_helm"></a> [helm](#requirement_helm) | ~> 3.0 |
 | <a name="requirement_opensearch"></a> [opensearch](#requirement_opensearch) | ~> 2.2 |
 
 ### Providers
@@ -191,7 +192,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider_aws) | ~> 6.0 |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider_kubernetes) | ~> 2.23 |
+| <a name="provider_helm"></a> [helm](#provider_helm) | ~> 3.0 |
 | <a name="provider_opensearch"></a> [opensearch](#provider_opensearch) | ~> 2.2 |
 
 ### Modules
@@ -200,13 +201,13 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 |------|--------|---------|
 | <a name="module_s3_snapshot"></a> [s3_snapshot](#module_s3_snapshot) | terraform-aws-modules/s3-bucket/aws | ~> 5.0 |
 
-### Resources
+## Resources
 
 | Name | Type |
 |------|------|
 | [aws_iam_role.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
-| [kubernetes_manifest.prometheusrule](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/manifest) | resource |
+| [helm_release.elasticsearch_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [opensearch_sm_policy.snapshot](https://registry.terraform.io/providers/opensearch-project/opensearch/latest/docs/resources/sm_policy) | resource |
 | [opensearch_snapshot_repository.repo](https://registry.terraform.io/providers/opensearch-project/opensearch/latest/docs/resources/snapshot_repository) | resource |
 | [aws_iam_policy_document.s3_snapshot_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -218,6 +219,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_name"></a> [name](#input_name) | Name for the snapshot system, S3 bucket, etc. | `string` | n/a | yes |
+| <a name="input_opensearch_endpoint"></a> [opensearch_endpoint](#input_opensearch_endpoint) | Endpoint of the OpenSearch domain (including https://) | `string` | n/a | yes |
 | <a name="input_aws_kms_key_arn"></a> [aws_kms_key_arn](#input_aws_kms_key_arn) | ARN of the CMK used for S3 Server Side Encryption. When specified, we'll use the `aws:kms` SSE algorithm. When not specified, falls back to using `AES256` | `string` | `null` | no |
 | <a name="input_bucket_key_enabled"></a> [bucket_key_enabled](#input_bucket_key_enabled) | Whether to use Amazon S3 Bucket Keys for encryption, which reduces API costs | `bool` | `false` | no |
 | <a name="input_create_cron_expression"></a> [create_cron_expression](#input_create_cron_expression) | The cron schedule used to create snapshots | `string` | `"0 0 * * *"` | no |
@@ -230,12 +232,15 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | <a name="input_max_age"></a> [max_age](#input_max_age) | The maximum time a snapshot is retained in S3 | `string` | `"14d"` | no |
 | <a name="input_max_count"></a> [max_count](#input_max_count) | The maximum number of snapshots retained in S3 | `number` | `400` | no |
 | <a name="input_min_count"></a> [min_count](#input_min_count) | The minimum number of snapshot retained in S3 | `number` | `1` | no |
-| <a name="input_prometheusrule_alert_labels"></a> [prometheusrule_alert_labels](#input_prometheusrule_alert_labels) | Additional labels to add to the PrometheusRule alert | `map(string)` | `{}` | no |
-| <a name="input_prometheusrule_enabled"></a> [prometheusrule_enabled](#input_prometheusrule_enabled) | Whether to deploy a [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) and [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) to be deployed | `bool` | `true` | no |
-| <a name="input_prometheusrule_labels"></a> [prometheusrule_labels](#input_prometheusrule_labels) | Additional K8s labels to add to the PrometheusRule | `map(string)` | <pre>{<br/>  "prometheus": "opensearch-backup"<br/>}</pre> | no |
-| <a name="input_prometheusrule_namespace"></a> [prometheusrule_namespace](#input_prometheusrule_namespace) | Namespace where to deploy the PrometheusRule | `string` | `"infrastructure"` | no |
-| <a name="input_prometheusrule_query_period"></a> [prometheusrule_query_period](#input_prometheusrule_query_period) | Period to apply to the PrometheusRule queries. Make sure this is bigger than the `create_cron_expression` interval | `string` | `"32h"` | no |
-| <a name="input_prometheusrule_severity"></a> [prometheusrule_severity](#input_prometheusrule_severity) | Severity of the PrometheusRule alert. Usual values are: `info`, `warning` and `critical` | `string` | `"warning"` | no |
+| <a name="input_monitoring_elasticsearch_exporter_nodeSelector"></a> [monitoring_elasticsearch_exporter_nodeSelector](#input_monitoring_elasticsearch_exporter_nodeSelector) | nodeSelector to add to the kubernetes pods. Set to null to disable. | `map(map(string))` | <pre>{<br/>  "nodeSelector": {<br/>    "role": "system"<br/>  }<br/>}</pre> | no |
+| <a name="input_monitoring_elasticsearch_exporter_tolerations"></a> [monitoring_elasticsearch_exporter_tolerations](#input_monitoring_elasticsearch_exporter_tolerations) | Tolerations to add to the kubernetes pods. Set to null to disable. | `any` | <pre>{<br/>  "tolerations": [<br/>    {<br/>      "effect": "NoSchedule",<br/>      "key": "role",<br/>      "operator": "Equal",<br/>      "value": "system"<br/>    }<br/>  ]<br/>}</pre> | no |
+| <a name="input_monitoring_elasticsearch_exporter_version"></a> [monitoring_elasticsearch_exporter_version](#input_monitoring_elasticsearch_exporter_version) | Version of the prometheus-elasticsearch-exporter Helm chart to deploy | `string` | `"7.0.0"` | no |
+| <a name="input_monitoring_enabled"></a> [monitoring_enabled](#input_monitoring_enabled) | Whether to deploy a small [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) with [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) to be deployed | `bool` | `true` | no |
+| <a name="input_monitoring_namespace"></a> [monitoring_namespace](#input_monitoring_namespace) | Namespace where to deploy the PrometheusRule | `string` | `"infrastructure"` | no |
+| <a name="input_monitoring_prometheus_labels"></a> [monitoring_prometheus_labels](#input_monitoring_prometheus_labels) | Additional K8s labels to add to the ServiceMonitor and PrometheusRule | `map(string)` | <pre>{<br/>  "prometheus": "opensearch-backup"<br/>}</pre> | no |
+| <a name="input_monitoring_prometheusrule_alert_labels"></a> [monitoring_prometheusrule_alert_labels](#input_monitoring_prometheusrule_alert_labels) | Additional labels to add to the PrometheusRule alert | `map(string)` | `{}` | no |
+| <a name="input_monitoring_prometheusrule_query_period"></a> [monitoring_prometheusrule_query_period](#input_monitoring_prometheusrule_query_period) | Period to apply to the PrometheusRule queries. Make sure this is bigger than the `create_cron_expression` interval | `string` | `"32h"` | no |
+| <a name="input_monitoring_prometheusrule_severity"></a> [monitoring_prometheusrule_severity](#input_monitoring_prometheusrule_severity) | Severity of the PrometheusRule alert. Usual values are: `info`, `warning` and `critical` | `string` | `"warning"` | no |
 | <a name="input_s3_force_destroy"></a> [s3_force_destroy](#input_s3_force_destroy) | Whether to force-destroy and empty the S3 bucket when destroying this Terraform module. WARNING: Not recommended! | `bool` | `false` | no |
 | <a name="input_s3_replication_configuration"></a> [s3_replication_configuration](#input_s3_replication_configuration) | Replication configuration block for the S3 bucket. See <https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/v3.15.1/examples/s3-replication> for an example | `any` | `{}` | no |
 
@@ -258,6 +263,15 @@ terraform {
 }
 
 provider "opensearch" {
+  url                 = "https://${module.opensearch.endpoint}"
+  sign_aws_requests   = true
+  aws_region          = var._aws_provider_region
+  aws_profile         = var._aws_provider_profile
+  aws_assume_role_arn = "arn:aws:iam::${var._aws_provider_account_id}:role/${var._aws_provider_assume_role}"
+  healthcheck         = false
+}
+
+provider "opensearch" {
   url                 = module.opensearch.endpoint
   aws_region          = var._aws_provider_region
   aws_profile         = var._aws_provider_profile
@@ -265,8 +279,9 @@ provider "opensearch" {
 }
 
 module "opensearch_snapshots" {
-  source = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=14.0.0"
-  name   = "${module.opensearch.domain_name}-snapshots"
+  source              = "github.com/skyscrapers/terraform-opensearch//opensearch-backup?ref=14.0.0"
+  name                = "${module.opensearch.domain_name}-snapshots"
+  opensearch_endpoint = "https://${module.opensearch.endpoint}"
 }
 ```
 
@@ -299,7 +314,6 @@ import {
   to = module.opensearch.aws_opensearch_domain.os
   id = var.name
 }
-
 ```
 
 ### Version 10.0.0 to 11.0.0
