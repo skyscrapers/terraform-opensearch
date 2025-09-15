@@ -201,7 +201,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 |------|--------|---------|
 | <a name="module_s3_snapshot"></a> [s3_snapshot](#module_s3_snapshot) | terraform-aws-modules/s3-bucket/aws | ~> 5.0 |
 
-## Resources
+### Resources
 
 | Name | Type |
 |------|------|
