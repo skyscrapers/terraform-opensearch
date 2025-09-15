@@ -6,13 +6,7 @@ variable "name" {
 variable "search_version" {
   type        = string
   description = "Version of the OpenSearch domain"
-  default     = "OpenSearch_2.5"
-}
-
-variable "options_override_main_response_version" {
-  type        = bool
-  description = "Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work"
-  default     = true
+  default     = "OpenSearch_2.19"
 }
 
 variable "options_rest_action_multi_allow_explicit_index" {
@@ -151,6 +145,12 @@ variable "volume_iops" {
   default     = 0
 }
 
+variable "volume_throughput" {
+  type        = number
+  description = "Required if volume_type=\"gp3\": Amount of throughput in MiB/s for the EBS volume. For more information, check <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html#current-general-purpose>"
+  default     = 125
+}
+
 variable "vpc_id" {
   type        = string
   description = "VPC ID where to deploy the OpenSearch domain. If set, you also need to specify `subnet_ids`. If not set, the module creates a public domain"
@@ -222,4 +222,10 @@ variable "custom_endpoint_certificate_arn" {
   type        = string
   description = "ARN of the ACM certificate to use for the custom endpoint. Required when custom endpoint is set along with enabling `endpoint_enforce_https`"
   default     = null
+}
+
+variable "auto_software_update_enabled" {
+  type        = bool
+  description = "Whether automatic service software updates are enabled for the domain"
+  default     = true
 }

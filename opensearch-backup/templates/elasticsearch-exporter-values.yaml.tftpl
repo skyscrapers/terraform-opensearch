@@ -1,0 +1,59 @@
+## All values: https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-elasticsearch-exporter/values.yaml
+
+nameOverride: ${name}
+fullnameOverride: ${name}
+
+image:
+  repository: quay.io/prometheuscommunity/elasticsearch-exporter
+
+resources:
+  limits:
+    memory: 48Mi
+  requests:
+    cpu: 5m
+    memory: 48Mi
+
+${nodeSelector ~}
+${tolerations ~}
+
+# Only extract snapshot metrics
+es:
+  uri: ${opensearch_uri}
+  all: true
+  indices: false
+  indices_settings: false
+  indices_mappings: false
+  aliases: false
+  shards: false
+  snapshots: true
+  cluster_settings: false
+  slm: false
+  data_stream: false
+  ilm: false
+  timeout: 60s
+  ssl:
+    enabled: true
+
+serviceMonitor:
+  enabled: true
+  labels:
+    ${indent(4, prometheus_labels)}
+  interval: 60s
+  scrapeTimeout: 30s
+  scheme: http
+
+prometheusRule:
+  enabled: true
+  labels:
+    ${indent(4, prometheus_labels)}
+  rules:
+    - alert: OpenSearchSnaphotFailures
+      annotations:
+        description: |
+          There are OpenSearch snapshot failures for {{`{{ $labels.job }}`}} on repository {{`{{ $labels.repository }}`}}!
+        summary: OpenSearch snapshot FAILURE!
+        runbook_url: 'https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-opensearchsnaphotfailures'
+      expr: increase(elasticsearch_snapshot_stats_snapshot_number_of_failures{repository="${repository}"}[rule_query_period]) > 0
+      for: 5m
+      labels:
+        ${indent(8, alert_labels)}
