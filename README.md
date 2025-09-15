@@ -289,8 +289,6 @@ module "opensearch_snapshots" {
 
 ### Version 13.0.0 to 14.0.0
 
-TODO
-
 - Removes unmaintained modules `elasticsearch_k8s_monitoring`, `kibana_k8s_auth_ingress` and `kibana_k8s_auth_proxy`
 - Deploys prometheus-elasticsearch-exporter for monitoring snapshots
 - Replaces `aws_elasticsearch_domain` with `aws_opensearch_domain`, and remove other references to "Elasticsearch"
