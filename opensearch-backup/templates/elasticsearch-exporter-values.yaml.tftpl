@@ -31,8 +31,6 @@ es:
   data_stream: false
   ilm: false
   timeout: 60s
-  ssl:
-    enabled: true
 
 serviceMonitor:
   enabled: true
@@ -49,11 +47,10 @@ prometheusRule:
   rules:
     - alert: OpenSearchSnaphotFailures
       annotations:
-        description: |
-          There are OpenSearch snapshot failures for {{`{{ $labels.job }}`}} on repository {{`{{ $labels.repository }}`}}!
+        description: There are OpenSearch snapshot failures for ${name} on repository ${repository}!
         summary: OpenSearch snapshot FAILURE!
         runbook_url: 'https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-opensearchsnaphotfailures'
-      expr: increase(elasticsearch_snapshot_stats_snapshot_number_of_failures{repository="${repository}"}[rule_query_period]) > 0
+      expr: increase(elasticsearch_snapshot_stats_snapshot_number_of_failures{repository="${repository}"}[${rule_query_period}]) > 0
       for: 5m
       labels:
         ${indent(8, alert_labels)}
