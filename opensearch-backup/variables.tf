@@ -3,8 +3,8 @@ variable "name" {
   type        = string
 }
 
-variable "opensearch_endpoint" {
-  description = "Endpoint of the OpenSearch domain (including https://)"
+variable "domain_name" {
+  description = "Name / ID of the OpenSearch domain"
   type        = string
 }
 
@@ -80,6 +80,20 @@ variable "s3_replication_configuration" {
   default     = {}
 }
 
+variable "extra_bucket_policy" {
+  description = "Extra bucket policy to attach to the S3 bucket (JSON string formatted)"
+  type        = string
+  default     = null
+}
+
+variable "bucket_key_enabled" {
+  description = "Whether to use Amazon S3 Bucket Keys for encryption, which reduces API costs"
+  type        = bool
+  default     = false
+}
+
+### Monitoring variables (optional)
+
 variable "monitoring_enabled" {
   description = "Whether to deploy a small [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) with [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) to be deployed"
   type        = bool
@@ -145,14 +159,14 @@ variable "monitoring_prometheusrule_severity" {
   default     = "warning"
 }
 
-variable "extra_bucket_policy" {
-  description = "Extra bucket policy to attach to the S3 bucket (JSON string formatted)"
+variable "eks_cluster_oidc_provider_arn" {
+  description = "ARN of the EKS cluster OIDC provider to setup IRSA for the elasticsearch-exporter. Required when `monitoring_enabled` is true"
   type        = string
   default     = null
 }
 
-variable "bucket_key_enabled" {
-  description = "Whether to use Amazon S3 Bucket Keys for encryption, which reduces API costs"
-  type        = bool
-  default     = false
+variable "eks_cluster_oidc_provider_name" {
+  description = "Name of the EKS cluster OIDC provider to setup IRSA for the elasticsearch-exporter. Required when `monitoring_enabled` is true"
+  type        = string
+  default     = null
 }

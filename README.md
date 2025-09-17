@@ -15,7 +15,7 @@
     - [Requirements](#requirements-1)
     - [Providers](#providers-1)
     - [Modules](#modules-1)
-  - [Resources](#resources-1)
+    - [Resources](#resources-1)
     - [Inputs](#inputs-1)
     - [Outputs](#outputs-1)
     - [Example](#example-1)
@@ -92,6 +92,7 @@ No modules.
 | <a name="input_node_to_node_encryption"></a> [node_to_node_encryption](#input_node_to_node_encryption) | Whether to enable node-to-node encryption. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | <a name="input_options_indices_fielddata_cache_size"></a> [options_indices_fielddata_cache_size](#input_options_indices_fielddata_cache_size) | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | `number` | `null` | no |
 | <a name="input_options_indices_query_bool_max_clause_count"></a> [options_indices_query_bool_max_clause_count](#input_options_indices_query_bool_max_clause_count) | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
+| <a name="input_options_override_main_response_version"></a> [options_override_main_response_version](#input_options_override_main_response_version) | Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work | `bool` | `null` | no |
 | <a name="input_options_rest_action_multi_allow_explicit_index"></a> [options_rest_action_multi_allow_explicit_index](#input_options_rest_action_multi_allow_explicit_index) | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
 | <a name="input_search_version"></a> [search_version](#input_search_version) | Version of the OpenSearch domain | `string` | `"OpenSearch_2.19"` | no |
 | <a name="input_security_group_ids"></a> [security_group_ids](#input_security_group_ids) | Extra security group IDs to attach to the OpenSearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
