@@ -3,11 +3,6 @@ variable "name" {
   type        = string
 }
 
-variable "domain_name" {
-  description = "Name / ID of the OpenSearch domain"
-  type        = string
-}
-
 variable "aws_kms_key_arn" {
   description = "ARN of the CMK used for S3 Server Side Encryption. When specified, we'll use the `aws:kms` SSE algorithm. When not specified, falls back to using `AES256`"
   type        = string
@@ -98,6 +93,12 @@ variable "monitoring_enabled" {
   description = "Whether to deploy a small [elasticsearch-exporter](https://github.com/prometheus-community/elasticsearch_exporter) with [PrometheusRule](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PrometheusRule) for monitoring the snapshots. Requires the [prometheus-operator](https://prometheus-operator.dev/) to be deployed"
   type        = bool
   default     = true
+}
+
+variable "domain_name" {
+  description = "Name / ID of the OpenSearch domain. Required to set when monitoring_enabled is true"
+  type        = string
+  default     = null
 }
 
 variable "monitoring_elasticsearch_exporter_version" {

@@ -1,4 +1,5 @@
 data "aws_opensearch_domain" "os" {
+  count       = var.monitoring_enabled ? 1 : 0
   domain_name = var.domain_name
 }
 
@@ -15,7 +16,7 @@ resource "helm_release" "elasticsearch_exporter" {
   values = [
     templatefile("${path.module}/templates/elasticsearch-exporter-values.yaml.tftpl", {
       name              = "${var.name}-monitoring"
-      opensearch_uri    = "https://${data.aws_opensearch_domain.os.endpoint}"
+      opensearch_uri    = "https://${data.aws_opensearch_domain.os[0].endpoint}"
       prometheus_labels = yamlencode(var.monitoring_prometheus_labels)
       repository        = opensearch_snapshot_repository.repo.name
       rule_query_period = var.monitoring_prometheusrule_query_period
