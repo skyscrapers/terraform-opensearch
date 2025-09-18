@@ -57,9 +57,10 @@ resource "aws_opensearch_domain" "os" {
   }
 
   advanced_options = {
-    "rest.action.multi.allow_explicit_index" = tostring(var.options_rest_action_multi_allow_explicit_index)
     "indices.fielddata.cache.size"           = var.options_indices_fielddata_cache_size != null ? tostring(var.options_indices_fielddata_cache_size) : ""
     "indices.query.bool.max_clause_count"    = tostring(var.options_indices_query_bool_max_clause_count)
+    "override_main_response_version"         = var.options_override_main_response_version ? "true" : null
+    "rest.action.multi.allow_explicit_index" = var.options_rest_action_multi_allow_explicit_index ? "true" : null
   }
 
   encrypt_at_rest {
@@ -115,5 +116,13 @@ resource "aws_opensearch_domain" "os" {
 
   software_update_options {
     auto_software_update_enabled = var.auto_software_update_enabled
+  }
+
+  # Not ideal, but workardound on existing setups for https://github.com/hashicorp/terraform-provider-aws/issues/27371
+  # For new setups, by default we don't set the compatibility option.
+  lifecycle {
+    ignore_changes = [
+      advanced_options["override_main_response_version"],
+    ]
   }
 }

@@ -15,7 +15,7 @@
     - [Requirements](#requirements-1)
     - [Providers](#providers-1)
     - [Modules](#modules-1)
-  - [Resources](#resources-1)
+    - [Resources](#resources-1)
     - [Inputs](#inputs-1)
     - [Outputs](#outputs-1)
     - [Example](#example-1)
@@ -92,6 +92,7 @@ No modules.
 | <a name="input_node_to_node_encryption"></a> [node_to_node_encryption](#input_node_to_node_encryption) | Whether to enable node-to-node encryption. Changing this on an existing cluster will force a new resource! | `bool` | `true` | no |
 | <a name="input_options_indices_fielddata_cache_size"></a> [options_indices_fielddata_cache_size](#input_options_indices_fielddata_cache_size) | Sets the `indices.fielddata.cache.size` advanced option. Specifies the percentage of heap space that is allocated to fielddata | `number` | `null` | no |
 | <a name="input_options_indices_query_bool_max_clause_count"></a> [options_indices_query_bool_max_clause_count](#input_options_indices_query_bool_max_clause_count) | Sets the `indices.query.bool.max_clause_count` advanced option. Specifies the maximum number of allowed boolean clauses in a query | `number` | `1024` | no |
+| <a name="input_options_override_main_response_version"></a> [options_override_main_response_version](#input_options_override_main_response_version) | Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work | `bool` | `null` | no |
 | <a name="input_options_rest_action_multi_allow_explicit_index"></a> [options_rest_action_multi_allow_explicit_index](#input_options_rest_action_multi_allow_explicit_index) | Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body | `bool` | `true` | no |
 | <a name="input_search_version"></a> [search_version](#input_search_version) | Version of the OpenSearch domain | `string` | `"OpenSearch_2.19"` | no |
 | <a name="input_security_group_ids"></a> [security_group_ids](#input_security_group_ids) | Extra security group IDs to attach to the OpenSearch domain. Note: a default SG is already created and exposed via outputs | `list(string)` | `[]` | no |
@@ -213,13 +214,13 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | [aws_iam_policy_document.s3_snapshot_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.snapshot_create_assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_opensearch_domain.os](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/opensearch_domain) | data source |
 
 ### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_name"></a> [name](#input_name) | Name for the snapshot system, S3 bucket, etc. | `string` | n/a | yes |
-| <a name="input_opensearch_endpoint"></a> [opensearch_endpoint](#input_opensearch_endpoint) | Endpoint of the OpenSearch domain (including https://) | `string` | n/a | yes |
 | <a name="input_aws_kms_key_arn"></a> [aws_kms_key_arn](#input_aws_kms_key_arn) | ARN of the CMK used for S3 Server Side Encryption. When specified, we'll use the `aws:kms` SSE algorithm. When not specified, falls back to using `AES256` | `string` | `null` | no |
 | <a name="input_bucket_key_enabled"></a> [bucket_key_enabled](#input_bucket_key_enabled) | Whether to use Amazon S3 Bucket Keys for encryption, which reduces API costs | `bool` | `false` | no |
 | <a name="input_create_cron_expression"></a> [create_cron_expression](#input_create_cron_expression) | The cron schedule used to create snapshots | `string` | `"0 0 * * *"` | no |
@@ -227,6 +228,7 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | <a name="input_custom_sm_policy"></a> [custom_sm_policy](#input_custom_sm_policy) | Set this variable when you want to override the generated SM policy JSON with your own. Make sure to correctly set `snapshot_config.repository` to the same value as `var.name` (the bucket name) | `string` | `null` | no |
 | <a name="input_delete_cron_expression"></a> [delete_cron_expression](#input_delete_cron_expression) | The cron schedule used to delete snapshots | `string` | `"0 2 * * *"` | no |
 | <a name="input_delete_time_limit"></a> [delete_time_limit](#input_delete_time_limit) | Sets the maximum time to wait for snapshot deletion to finish | `string` | `"1h"` | no |
+| <a name="input_domain_name"></a> [domain_name](#input_domain_name) | Name / ID of the OpenSearch domain. Required to set when monitoring_enabled is true | `string` | `null` | no |
 | <a name="input_extra_bucket_policy"></a> [extra_bucket_policy](#input_extra_bucket_policy) | Extra bucket policy to attach to the S3 bucket (JSON string formatted) | `string` | `null` | no |
 | <a name="input_indices"></a> [indices](#input_indices) | The names of the indexes in the snapshot. Multiple index names are separated by `,`. Supports wildcards (`*`) | `string` | `"*"` | no |
 | <a name="input_max_age"></a> [max_age](#input_max_age) | The maximum time a snapshot is retained in S3 | `string` | `"14d"` | no |

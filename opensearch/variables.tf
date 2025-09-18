@@ -9,6 +9,13 @@ variable "search_version" {
   default     = "OpenSearch_2.19"
 }
 
+variable "options_override_main_response_version" {
+  type        = bool
+  description = "Whether to enable compatibility mode when creating an OpenSearch domain. Because certain Elasticsearch OSS clients and plugins check the cluster version before connecting, compatibility mode sets OpenSearch to report its version as 7.10 so these clients continue to work"
+  default     = null
+}
+
+
 variable "options_rest_action_multi_allow_explicit_index" {
   type        = bool
   description = "Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body"
