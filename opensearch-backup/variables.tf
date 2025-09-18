@@ -158,15 +158,3 @@ variable "monitoring_prometheusrule_severity" {
   type        = string
   default     = "warning"
 }
-
-variable "eks_cluster_oidc_provider_arn" {
-  description = "ARN of the EKS cluster OIDC provider to setup IRSA for the elasticsearch-exporter. Required when `monitoring_enabled` is true"
-  type        = string
-  default     = null
-}
-
-variable "eks_cluster_oidc_provider_name" {
-  description = "Name of the EKS cluster OIDC provider to setup IRSA for the elasticsearch-exporter. Required when `monitoring_enabled` is true"
-  type        = string
-  default     = null
-}

@@ -54,9 +54,3 @@ prometheusRule:
       for: 5m
       labels:
         ${indent(8, alert_labels)}
-
-serviceAccount:
-  create: true
-  name: ${name}
-  annotations:
-    eks.amazonaws.com/role-arn: ${role_arn}

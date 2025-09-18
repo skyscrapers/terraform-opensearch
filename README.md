@@ -214,13 +214,14 @@ This module can be used to create your own snapshots of Opensearch to S3, using 
 | [aws_iam_policy_document.s3_snapshot_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.snapshot_create](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.snapshot_create_assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_opensearch_domain.os](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/opensearch_domain) | data source |
 
 ### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_domain_name"></a> [domain_name](#input_domain_name) | Name / ID of the OpenSearch domain | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input_name) | Name for the snapshot system, S3 bucket, etc. | `string` | n/a | yes |
-| <a name="input_opensearch_endpoint"></a> [opensearch_endpoint](#input_opensearch_endpoint) | Endpoint of the OpenSearch domain (including https://) | `string` | n/a | yes |
 | <a name="input_aws_kms_key_arn"></a> [aws_kms_key_arn](#input_aws_kms_key_arn) | ARN of the CMK used for S3 Server Side Encryption. When specified, we'll use the `aws:kms` SSE algorithm. When not specified, falls back to using `AES256` | `string` | `null` | no |
 | <a name="input_bucket_key_enabled"></a> [bucket_key_enabled](#input_bucket_key_enabled) | Whether to use Amazon S3 Bucket Keys for encryption, which reduces API costs | `bool` | `false` | no |
 | <a name="input_create_cron_expression"></a> [create_cron_expression](#input_create_cron_expression) | The cron schedule used to create snapshots | `string` | `"0 0 * * *"` | no |
