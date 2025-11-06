@@ -15,7 +15,6 @@ variable "options_override_main_response_version" {
   default     = false
 }
 
-
 variable "options_rest_action_multi_allow_explicit_index" {
   type        = bool
   description = "Sets the `rest.action.multi.allow_explicit_index` advanced option. When set to `false`, OpenSearch will reject requests that have an explicit index specified in the request body"
@@ -235,4 +234,10 @@ variable "auto_software_update_enabled" {
   type        = bool
   description = "Whether automatic service software updates are enabled for the domain"
   default     = true
+}
+
+variable "advanced_security_options" {
+  description = "Configuration block for [fine-grained access control](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/fgac.html)"
+  type        = any
+  default     = {}
 }

@@ -63,6 +63,26 @@ resource "aws_opensearch_domain" "os" {
     "rest.action.multi.allow_explicit_index" = var.options_rest_action_multi_allow_explicit_index ? "true" : null
   }
 
+  dynamic "advanced_security_options" {
+    for_each = length(var.advanced_security_options) > 0 ? [var.advanced_security_options] : []
+
+    content {
+      anonymous_auth_enabled         = try(advanced_security_options.value.anonymous_auth_enabled, false)
+      enabled                        = try(advanced_security_options.value.enabled, true)
+      internal_user_database_enabled = try(advanced_security_options.value.internal_user_database_enabled, null)
+
+      dynamic "master_user_options" {
+        for_each = try([advanced_security_options.value.master_user_options], [{}])
+
+        content {
+          master_user_arn      = try(master_user_options.value.master_user_arn, null) != null ? try(master_user_options.value.master_user_arn, data.aws_iam_session_context.current[0].issuer_arn) : null
+          master_user_name     = try(master_user_options.value.master_user_arn, null) == null ? try(master_user_options.value.master_user_name, null) : null
+          master_user_password = try(master_user_options.value.master_user_arn, null) == null ? try(master_user_options.value.master_user_password, null) : null
+        }
+      }
+    }
+  }
+
   encrypt_at_rest {
     enabled    = var.encrypt_at_rest
     kms_key_id = var.encrypt_at_rest_kms_key_id
