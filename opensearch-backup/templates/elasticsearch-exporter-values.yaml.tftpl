@@ -49,7 +49,7 @@ prometheusRule:
       annotations:
         description: There are OpenSearch snapshot failures for {{`{{ $labels.job }}`}} on repository {{`{{ $labels.repository }}`}}!
         summary: OpenSearch snapshot FAILURE!
-        runbook_url: 'https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-opensearchsnaphotfailures'
+        runbook_url: 'https://docs.skyscrapers.eu/docs/reference/runbook/#alert-name-opensearchsnaphotfailures'
       expr: increase(elasticsearch_snapshot_stats_snapshot_number_of_failures{repository="${repository}"}[${rule_query_period}]) > 0
       for: 5m
       labels:
