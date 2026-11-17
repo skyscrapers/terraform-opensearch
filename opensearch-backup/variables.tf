@@ -104,7 +104,7 @@ variable "domain_name" {
 variable "monitoring_elasticsearch_exporter_version" {
   description = "Version of the prometheus-elasticsearch-exporter Helm chart to deploy"
   type        = string
-  default     = "7.0.0"
+  default     = "7.5.0"
 }
 
 variable "monitoring_elasticsearch_exporter_tolerations" {
